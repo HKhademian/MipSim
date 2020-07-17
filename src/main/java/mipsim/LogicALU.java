@@ -1,9 +1,14 @@
 package mipsim;
 
+import sim.base.Value;
 import sim.base.Variable;
 import sim.gates.AndGate;
 import sim.gates.NotGate;
 import sim.gates.OrGate;
+import sim.gates.XorGate;
+import sim.real.AdderKt;
+
+import java.util.List;
 
 public final class LogicALU {
 	public static void  thirtyTwoBitOr(Variable[] A,Variable[] B,Variable[] outPut)
@@ -146,6 +151,76 @@ public final class LogicALU {
 
 	 */
 
+	}
+	/**
+	 * in this function we Make a decision to add or sub
+	 * if select variable is true or (1) we do subtract
+	 * else we do add
+	 * carry out when we need to set carry flag
+	 */
+	public static void AddSub(Variable[] input1,Variable[] input2,Variable select,Variable[] result,Variable carryOut){
+		carryOut.set(select.get());
+		for(int i = 31 ; i >= 0 ; i--){
+			AdderKt.fullAdder(input1[1],new Variable(new XorGate(input2[i],select)),carryOut,result[i],carryOut);
+		}
+	}
+	public static void setLess(Variable[] input1 , Variable[] input2 ,Variable[] result){
+
+		Com2bit compare = new Com2bit();
+		for (int i = 0 ; i <= 31 ; i++){
+			   compare.setFirSec(input1[i],input2[i]);
+				 if(compare.isLess()){
+				 		for (int j = 0 ; j <= 30 ;j++ )
+				 			result[i] = new Variable(false);
+				 		result[31] = new Variable(true);  //result equal 1
+				 		break;
+				 }
+				 else if(compare.isBigger()){
+					 for (int j = 0 ; j <= 31 ;j++ )
+						 result[i] = new Variable(false); // result equal zero
+					 break;
+				 }
+				 else
+				 			result[i] = new Variable(false); // if two bit is equal result bit be zero
+		}
+
+		//Todo check it friends
+	}
+
+
+	public static void AluInStage(Variable[]input1,Variable[]input2,int function,int AluControlUnit,Variable[]result,Variable zero){
+		 switch (AluControlUnit){
+			 case 0:
+			 		AddSub(input1,input2,new Variable(false),result,new Variable(false));
+			 		break;
+			 case 2:
+			 		switch (function){
+						case 0:
+							//toDo shift left
+						case 2:
+							//toDo shift reghit
+						case 32:
+							AddSub(input1,input2,new Variable(false),result,new Variable(false));
+							break;
+						case 34:
+							AddSub(input1,input2,new Variable(true),result,new Variable(false));
+							break;
+						case 36:
+							thirtyTwoBitAnd(input1,input2,result);
+							break;
+						case 37:
+							thirtyTwoBitOr(input1,input2,result);
+							break;
+						case 39:
+							thirtyTwoBitNor(input1,input2,result);
+							break;
+						case 42:
+							//toDo set less than
+							break;
+					}
+					break;
+			 		//Todo to Make a decision branch happen in this stage or id stage
+		 }
 	}
 
 }
