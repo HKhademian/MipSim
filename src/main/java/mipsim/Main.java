@@ -1,13 +1,16 @@
 package mipsim;
 
-import sim.base.ConstValue;
+
+import sim.base.MutableValue;
 import sim.base.Value;
-import sim.gates.AndGate;
+import sim.base.Variable;
+import sim.gates.XorGate;
 
 public class Main {
 	public static void main(String[] args) {
-		Value val1 = new ConstValue(false);
-		AndGate g1 = new AndGate(val1);
-		System.out.println("Hello World, " + g1);
+		var m = new Variable(true);
+		var i = new Variable(true);
+		XorGate x = new XorGate(i,m);
+		System.out.println("Hello World, " +x);
 	}
 }
