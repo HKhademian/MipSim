@@ -10,7 +10,7 @@ import java.util.List;
 final class ShiftHelper{
 	public static void oneBitShifterLeft(Variable[] shift, List<Variable> shiftma, int position , Variable[] output){
 		try {
-			output[position+ HelpersKt.toInt(shiftma)] = new Variable(shift[position].get());
+			output[position+ HelpersKt.toInt(shiftma)].set(new Variable(shift[position].get())) ;
 		}catch (Exception e){
 			// the output is only contain 32 bit and shiftma an position show location that is out of 32 (above of 31)so we ignore the result
 		}
@@ -18,7 +18,7 @@ final class ShiftHelper{
 
 	public static void oneBitShifterRight(Variable[] shift, List<Variable> shiftma, int position , Variable[] output){
 		try {
-			output[position- HelpersKt.toInt(shiftma)] = new Variable(shift[position].get());
+			output[position- HelpersKt.toInt(shiftma)].set(new Variable(shift[position].get())); ;
 		}catch (Exception e){
 			// the output is only contain 32 bit and shiftma an position show location that is out of 32(below of 0) so we ignore the result
 		}
