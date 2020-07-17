@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
 	implementation(kotlin("stdlib-jdk8"))
-	implementation(project(":lib:SimKT"))
+	implementation(project(":lib:SimKT", configuration = "default"))
 }
 
 configure<JavaPluginConvention> {
