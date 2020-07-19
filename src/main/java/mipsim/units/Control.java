@@ -17,26 +17,29 @@ public class Control {
 		/*
 		opcode is 6 bit and opCode.get(5) is most significant
 
-		regDst = (opcode[5] != 1 && opcode[2] != 1)?1:0;
+		regDst = (all bit all 0 )?1:0;
 		ALUsrc = (opcode[3] == 1 || opcode[0] == 1)?1:0;
 		memToReg = (opcode[5] == 1 && opcode[3] != 1)?1:0;
-		regWrite = not( ((opcode[5]==1 && opcode[3] == 1) || opcode[2] == 1)?1:0 )
+		regWrite = not( ((opcode[5]==1 && opcode[3] == 1) || opcode[2] == 1 ||( opcode[1] == 1 && opcode[5]!= 1))?1:0 )
 		memRead = like memToReg
 		memWrite = opcode[5] == 1 && opcode[3] == 1)?1:0;
 		branch = (opcode[2] === 1)?1:0;
 		ALUop[1] = (all bit all 0 )?1:0;
 		ALUop[0] = like branch;
+		jmp = (opCode[5] != 1 && opcode[1] == 1)?1:0;
 		 */
-		regDst.set(and(not(opcode.get(5)),not(opcode.get(2))));
-		ALUsrc.set(or(opcode.get(3),opcode.get(0)));
+		regDst.set(not(or(opcode)));
+		ALUsrc.set(or(opcode.get(3),opcode.get(5)));
 		memToReg.set(and(opcode.get(5),not(opcode.get(3))));
 		regWrite.set( not(
-			or(and(opcode.get(5),opcode.get(3)),opcode.get(2))
+			or(and(opcode.get(5),opcode.get(3)),opcode.get(2),and(opcode.get(1),not(opcode.get(5)))
+			)
 		) );
 		memRead.set(and(opcode.get(5),not(opcode.get(3))));
 		memWrite.set(and(opcode.get(5),opcode.get(3)));
 		branch.set(opcode.get(2));
 		aluOp.get(1).set(not(or(opcode)));
 		aluOp.get(0).set(opcode.get(2));
+		jump.set(and(not(opcode.get(5)),opcode.get(1)));
 	}
 }
