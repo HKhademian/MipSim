@@ -1,13 +1,12 @@
 package mipsim;
 
 import mipsim.pipeline.*;
-import mipsim.units.DataMemory;
-import mipsim.units.InstructionMemory;
-import mipsim.units.RegisterFile;
+import mipsim.units.*;
 import sim.base.BusKt;
 import sim.base.Eval;
 
 public class Simulator implements Eval {
+	final Memory pc;
 	final InstructionMemory instructionMemory;
 	final DataMemory dataMemory;
 	final RegisterFile registerFile;
@@ -26,6 +25,7 @@ public class Simulator implements Eval {
 	final MEMWB_PipelineRegister memwb;
 
 	public Simulator() {
+		pc = MemoryKt.createWords(1);
 		instructionMemory = new InstructionMemory(100);
 		dataMemory = new DataMemory(100);
 		registerFile = new RegisterFile();
@@ -54,6 +54,23 @@ public class Simulator implements Eval {
 
 	@Override
 	public void eval() {
+		// i have some eval follow:
+		// 1. all components start to end
+		// 2. all components end to start
+		// 3,4,5,6. first pipeline-regs then stages (each like 1 or 2)
+		// 7,8,9,10. first stages then pipeline-regs (each like 1 or 2)
+		// TODO: we must investigate to relize  which one is correct
+		// plz do not remove this comment, to keep eye one the results
 
+		pc.eval();
+		ifStage.eval();
+		ifid.eval();
+		idStage.eval();
+		idex.eval();
+		exStage.eval();
+		exmem.eval();
+		memStage.eval();
+		memwb.eval();
+		wbStage.eval();
 	}
 }
