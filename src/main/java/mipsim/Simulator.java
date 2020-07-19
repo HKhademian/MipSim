@@ -1,15 +1,25 @@
 package mipsim;
 
 import mipsim.stage.InstructionDecodeStage;
+import mipsim.units.DataMemory;
+import mipsim.units.InstructionMemory;
+import mipsim.units.RegisterFile;
 import sim.base.BusKt;
 
 public class Simulator {
-	InstructionDecodeStage instructionDecodeStage;
+	final InstructionMemory instructionMemory;
+	final DataMemory dataMemory;
+	final RegisterFile registerFile;
 
+	// stages
+	final InstructionDecodeStage instructionDecodeStage;
 
-	public Simulator(int sizeOfMemory, String fileName) {
+	public Simulator() {
+		instructionMemory = new InstructionMemory(100);
+		dataMemory = new DataMemory(100);
+		registerFile = new RegisterFile();
+
 		instructionDecodeStage = new InstructionDecodeStage();
-
 	}
 
 	public void run() {
