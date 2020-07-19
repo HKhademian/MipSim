@@ -2,13 +2,16 @@ package mipsim;
 
 
 import sim.HelpersKt;
+import sim.base.BusKt;
+import sim.base.MutableValue;
+import sim.base.Value;
 import sim.base.Variable;
 
 import java.util.List;
 
 //@param shiftma -> a number show number of bit will shift
 final class ShiftHelper{
-	public static void oneBitShifterLeft(Variable[] shift, List<Variable> shiftma, int position , Variable[] output){
+	public static void oneBitShifterLeft(List<Value> shift, List<Value> shiftma, int position , List<MutableValue> output){
 		try {
 			output[position+ HelpersKt.toInt(shiftma)].set(new Variable(shift[position].get())) ;
 		}catch (Exception e){
@@ -16,7 +19,7 @@ final class ShiftHelper{
 		}
 	}
 
-	public static void oneBitShifterRight(Variable[] shift, List<Variable> shiftma, int position , Variable[] output){
+	public static void oneBitShifterRight(List<Value> shift, List<Value> shiftma, int position , List<MutableValue> output){
 		try {
 			output[position- HelpersKt.toInt(shiftma)].set(new Variable(shift[position].get())); ;
 		}catch (Exception e){
@@ -28,13 +31,13 @@ final class ShiftHelper{
 
 public  class ShiftLogical {
 
-	public static void thirtyTwoBitShifterLeft(Variable[] shift, List<Variable> shiftma , Variable[] output)
+	public static void thirtyTwoBitShifterLeft(List<Value> shift, List<Value> shiftma , List<MutableValue> output)
 	{
 		for(int position = 31; position >=0 ; position--)
 			ShiftHelper.oneBitShifterLeft(shift,shiftma,position,output);
 	}
 
-	public static void thirtyTwoBitShifterRight(Variable[] shift, List<Variable> shiftma , Variable[] output)
+	public static void thirtyTwoBitShifterRight(List<Value> shift, List<Value> shiftma , List<MutableValue> output)
 	{
 		for(int position = 31; position >=0 ; position--)
 			ShiftHelper.oneBitShifterRight(shift,shiftma,position,output);

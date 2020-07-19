@@ -4,6 +4,9 @@ import sim.base.Variable;
 
 import static sim.gates.GatesKt.xor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 	public static void main(String[] args) {
 		var m = new Variable(true);
