@@ -6,7 +6,7 @@ import java.util.List;
 
 import static sim.base.BusKt.ZERO_BUS;
 
-public class RegisterFile implements Eval {
+public final class RegisterFile implements Eval {
 	private final Memory memory;
 	private final List<MutableValue> readData1Bus = BusKt.bus(32);
 	private final List<MutableValue> readData2Bus = BusKt.bus(32);

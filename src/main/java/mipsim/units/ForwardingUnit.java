@@ -9,7 +9,7 @@ import java.util.List;
 
 import static sim.gates.GatesKt.*;
 
-public class ForwardingUnit {
+public final class ForwardingUnit {
 
 	static List<Value> zeroRegister;
 

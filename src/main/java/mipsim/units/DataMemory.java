@@ -8,7 +8,7 @@ import static sim.base.BusKt.EMPTY_BUS;
 import static sim.base.BusKt.ZERO_BUS;
 import static sim.real.MuxKt.mux2;
 
-public class DataMemory implements Eval {
+public final class DataMemory implements Eval {
 	private final Memory memory;
 	private final List<MutableValue> readDataBus = BusKt.bus(32);
 

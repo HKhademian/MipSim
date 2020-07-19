@@ -8,7 +8,7 @@ import java.util.List;
 import static sim.gates.GatesKt.and;
 import static sim.gates.GatesKt.xor;
 
-public class HazardDetectionUnit {
+public final class HazardDetectionUnit {
 	public static void hazardDetectionUnit(
 		Value ID_EX_memRead,
 		List<Value> ID_EX_registerRt,

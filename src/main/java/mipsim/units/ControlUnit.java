@@ -7,10 +7,10 @@ import java.util.List;
 
 import static sim.gates.GatesKt.*;
 
-public class Control {
-	public static void control(List<Value> opcode, MutableValue regDst,MutableValue ALUsrc,MutableValue memToReg
-		,MutableValue regWrite,MutableValue memRead,MutableValue memWrite,MutableValue branch,
-														 MutableValue jump,List<MutableValue> aluOp)//alu op is two bit
+public final class ControlUnit {
+	public static void control(List<Value> opcode, MutableValue regDst, MutableValue ALUsrc, MutableValue memToReg
+		, MutableValue regWrite, MutableValue memRead, MutableValue memWrite, MutableValue branch,
+														 MutableValue jump, List<MutableValue> aluOp)//alu op is two bit
 	{
 		//todo use this link create control http://fourier.eng.hmc.edu/e85_old/lectures/processor/node5.html
 
@@ -29,17 +29,17 @@ public class Control {
 		jmp = (opCode[5] != 1 && opcode[1] == 1)?1:0;
 		 */
 		regDst.set(not(or(opcode)));
-		ALUsrc.set(or(opcode.get(3),opcode.get(5)));
-		memToReg.set(and(opcode.get(5),not(opcode.get(3))));
-		regWrite.set( not(
-			or(and(opcode.get(5),opcode.get(3)),opcode.get(2),and(opcode.get(1),not(opcode.get(5)))
+		ALUsrc.set(or(opcode.get(3), opcode.get(5)));
+		memToReg.set(and(opcode.get(5), not(opcode.get(3))));
+		regWrite.set(not(
+			or(and(opcode.get(5), opcode.get(3)), opcode.get(2), and(opcode.get(1), not(opcode.get(5)))
 			)
-		) );
-		memRead.set(and(opcode.get(5),not(opcode.get(3))));
-		memWrite.set(and(opcode.get(5),opcode.get(3)));
+		));
+		memRead.set(and(opcode.get(5), not(opcode.get(3))));
+		memWrite.set(and(opcode.get(5), opcode.get(3)));
 		branch.set(opcode.get(2));
 		aluOp.get(1).set(not(or(opcode)));
 		aluOp.get(0).set(opcode.get(2));
-		jump.set(and(not(opcode.get(5)),opcode.get(1)));
+		jump.set(and(not(opcode.get(5)), opcode.get(1)));
 	}
 }

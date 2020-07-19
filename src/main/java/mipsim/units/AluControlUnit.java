@@ -8,7 +8,7 @@ import java.util.List;
 
 import static sim.gates.GatesKt.*;
 
-public class AluControlUnit {
+public final class AluControlUnit {
 	//@param ,2 bit aluOp and 6 bit func will create 4 bit aluControlInput
 	public static void aluControlUnit(List<Value> aluOp, List<Value> func, List<MutableValue> aluControlInput)
 	{
