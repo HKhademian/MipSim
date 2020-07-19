@@ -26,15 +26,16 @@ public class Compare {
 		var e = new Variable(false,"");
 		var l = new Variable(false,"");
 		var g	= new Variable(false,"");
-		for (i = 1,j=27; i < 8 ; i++){
+		for (i = 1,j = 27; i < 8 ; i++){
 			comp4Bit(input1.get(j),input1.get(j-1),input1.get(j-2),input1.get(j-3),input2.get(j),input2.get(j-1),input2.get(j-2),input2.get(j-3),e,l,g);
 			AeqB.get(i).set(and(AeqB.get(i-1),e));
 			AgtB.get(i).set(or(and(AeqB.get(i-1),e),AgtB.get(i-1)));
+			AltB.get(i).set(or(and(l,AeqB.get(i-1)),AltB.get(i-1)));
 			j -= 4 ;
 		}
-
-
-
+		AEB.set(AeqB.get(7));
+		AGB.set(AgtB.get(7));
+		ALB.set(AltB.get(7));
 
 	}
 }
