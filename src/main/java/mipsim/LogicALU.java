@@ -1,5 +1,6 @@
 package mipsim;
 
+import mipsim.units.Compare;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.Value;
@@ -43,8 +44,11 @@ public final class LogicALU {
 		}
 	}
 	public static void setLess(List<Value> input1 , List<Value> input2 ,List<MutableValue> result){
-
-
+		var E = new Variable(false);
+		var L = new Variable(false);
+		var G = new Variable(false);
+		Compare.com32Bit(input1,input2,E,L,G);
+		BusKt.set(result,(MuxKt.mux2(L,BusKt.toBus(0,32),BusKt.toBus(1,32))));
 		//Todo check it friends
 	}
 
