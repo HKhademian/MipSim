@@ -10,7 +10,7 @@ import sim.real.AdderKt;
 
 import java.util.List;
 
-import static sim.gates._dslKt.*;
+import static sim.gates.GatesKt.*;
 
 public final class LogicALU {
 	public static void  thirtyTwoBitOr(List<Value> A,List<Value> B,List<MutableValue> outPut)
@@ -36,7 +36,7 @@ public final class LogicALU {
 	 * carry out when we need to set carry flag
 	 */
 
-	public static void AddSub(List<Value> input1,List<Value> input2,Value select,List<MutableValue> result,List<Variable> carryOut){
+	public static void AddSub(List<Value> input1,List<Value> input2,Value select,List<Variable> result,List<Variable> carryOut){
 		carryOut.get(0).set(select.get());
 		for(int i = 31 ; i >= 0 ; i--) {
 			AdderKt.fullAdder(input1.get(i),(xor(input2.get(i),select)),carryOut.get(i),result.get(i),carryOut.get(i+1));
@@ -44,23 +44,6 @@ public final class LogicALU {
 	}
 	public static void setLess(List<Value> input1 , List<Value> input2 ,List<MutableValue> result){
 
-		Com2bit compare = new Com2bit();
-		for (int i = 0 ; i <= 31 ; i++){
-			   compare.setFirSec(input1.get(i),input2.get(i));
-				 if(compare.isLess()){
-				 		for (int j = 0 ; j <= 30 ;j++ )
-				 			result.get(i).set(new Variable(false,""));
-				 		result.get(31).set(new Variable(true,""));  //result equal 1
-				 		break;
-				 }
-				 else if(compare.isBigger()){
-					 for (int j = 0 ; j <= 31 ;j++ )
-						 result.get(i).set(new Variable(false,"")); // result equal zero
-					 break;
-				 }
-				 else
-				 			result.get(i).set(new Variable(false,"")); // if two bit is equal result bit be zero
-		}
 
 		//Todo check it friends
 	}
