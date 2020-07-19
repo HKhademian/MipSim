@@ -23,9 +23,11 @@ class MemBit : Element, MutableValue {
 	override fun get() =
 		curr.get()
 
-	override fun eval() =
+	override fun eval() {
+		next.eval()
 		// at moment of clock pos-edge, we calculate next value and store it to cache
-		next.const().also { curr.set(it) }
+		next.const().let { curr.set(it) }
+	}
 }
 
 /**
@@ -33,16 +35,19 @@ class MemBit : Element, MutableValue {
  *  InstructionMemory and DataMemory is not a simple memory,
  *  but they use memory to stores data
  */
-class Memory private constructor(private val bits: List<MemBit>) : List<MemBit> by bits {
+class Memory private constructor(private val bits: List<MemBit>) : Eval, List<MemBit> by bits {
 	internal constructor(bitCount: Int) : this((0 until bitCount).map { MemBit() })
+
+	override fun eval() =
+		bits.eval()
 }
 
 inline val List<Value>.bitCount: Int get() = this.size
 inline val List<Value>.byteCount: Int get() = this.bitCount / BYTE_SIZE
 inline val List<Value>.wordCount: Int get() = this.bitCount / WORD_SIZE
 
-fun List<Value>.getByte(i: Int): List<Value> = this.subList(BYTE_SIZE * i, BYTE_SIZE * i + BYTE_SIZE)
-fun List<Value>.getWord(i: Int): List<Value> = this.subList(WORD_SIZE * i, WORD_SIZE * i + WORD_SIZE)
+fun List<MemBit>.getByte(i: Int): List<MemBit> = this.subList(BYTE_SIZE * i, BYTE_SIZE * i + BYTE_SIZE)
+fun List<MemBit>.getWord(i: Int): List<MemBit> = this.subList(WORD_SIZE * i, WORD_SIZE * i + WORD_SIZE)
 
 fun createMemory(n: Int = 1) = Memory(n)
 fun createBytes(n: Int = 1) = createMemory(n * BYTE_SIZE)
