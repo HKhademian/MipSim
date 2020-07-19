@@ -1,4 +1,4 @@
-package mipsim.control;
+package mipsim.units;
 
 import sim.base.MutableValue;
 import sim.base.Value;
