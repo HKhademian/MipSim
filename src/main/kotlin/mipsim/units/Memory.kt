@@ -47,3 +47,9 @@ fun List<Value>.getWord(i: Int): List<Value> = this.subList(WORD_SIZE * i, WORD_
 fun createMemory(n: Int = 1) = Memory(n)
 fun createBytes(n: Int = 1) = createMemory(n * BYTE_SIZE)
 fun createWords(n: Int = 1) = createMemory(n * WORD_SIZE)
+
+
+fun Int.Bytes() = this
+fun Int.KBytes() = this.Bytes() shl 10
+fun Int.MBytes() = this.KBytes() shl 10
+fun Int.GBytes() = this.MBytes() shl 10
