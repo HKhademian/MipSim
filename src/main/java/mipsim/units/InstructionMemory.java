@@ -1,12 +1,13 @@
 package mipsim.units;
 
 import sim.base.BusKt;
+import sim.base.Eval;
 import sim.base.MutableValue;
 import sim.base.Value;
 
 import java.util.List;
 
-public final class InstructionMemory {
+public final class InstructionMemory implements Eval {
 	private final Memory memory;
 	private final List<MutableValue> instructionBus = BusKt.bus(32);
 	public final List<Value> instruction = (List) instructionBus;
@@ -22,6 +23,7 @@ public final class InstructionMemory {
 	 * by multiplexer, but it's too complicated (but possible with mux)
 	 */
 	public void eval() {
+		var pc = BusKt.constant(this.pc); // cache PC value, can ignore (comment) this section
 		var wordIndex = BusKt.toInt(pc);
 		var newInst = MemoryKt.getWord(memory, wordIndex);
 		BusKt.set(instructionBus, newInst);

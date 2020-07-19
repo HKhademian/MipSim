@@ -37,6 +37,7 @@ public class RegisterFile implements Eval {
 		EvalKt.eval(writeData);
 		EvalKt.eval(regWrite);
 
+		// cache values, can ignore (comment) this section
 		var readReg1 = BusKt.constant(this.readReg1);
 		var readReg2 = BusKt.constant(this.readReg2);
 		var writeReg = BusKt.constant(this.writeReg);
