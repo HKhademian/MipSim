@@ -25,8 +25,6 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 	// note --> we used aluOp  in stage execution
 
 	public EXMEM_PipelineRegister() {
-		super(
-			MemoryKt.WORD_SIZE // instruction
-		);
+		super(73);
 	}
 }
