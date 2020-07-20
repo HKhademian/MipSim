@@ -1,10 +1,8 @@
 package mipsim.module;
 
 import mipsim.module.Compare;
-import sim.base.BusKt;
-import sim.base.MutableValue;
-import sim.base.Value;
-import sim.base.ValueKt;
+import mipsim.units.AluControlUnit;
+import sim.base.*;
 import sim.complex.MuxKt;
 import sim.real.AdderKt;
 
@@ -36,7 +34,7 @@ public final class LogicALU {
 	 * carry out when we need to set carry flag
 	 */
 
-	public static void AddSub(List<Value> input1, List<Value> input2, Value select, List<MutableValue> result, List<MutableValue> carryOut) {
+	public static void AddSub(List<Value> input1, List<Value> input2, Value select, List<Variable> result, List<Variable> carryOut) {
 		carryOut.get(0).set(select.get());
 		for (int i = 31; i >= 0; i--) {
 			AdderKt.fullAdder(input1.get(i), (xor(input2.get(i), select)), carryOut.get(i), result.get(i), carryOut.get(i + 1));
@@ -53,38 +51,35 @@ public final class LogicALU {
 	}
 
 
-//	public static void AluInStage(List<Value> input1,List<Value> input2,List<Value> function,List<Value> AluControlUnit,List<MutableValue> result,Variable zero){
-//
-//			var select = BusKt.bus(4);
-//			Decod(function,AluControlUnit,select);
-//
-//			var resAdd = BusKt.bus(32);
-//			AddSub(input1,input2,new Variable(false),resAdd,new Variable(false));
-//			var resSub = BusKt.bus(32);
-//			AddSub(input1,input2,new Variable(true),resSub,new Variable(false));
-//			var resOr = BusKt.bus(32);
-//			thirtyTwoBitOr(input1,input2,resOr);
-//			var resAnd = BusKt.bus(32);
-//			thirtyTwoBitAnd(input1,input2,resAnd);
-//			var resNor = BusKt.bus(32);
-//			thirtyTwoBitNor(input1,input2,resNor);
-//			var resShift_R = BusKt.bus(32);
-//			ShiftLogical.thirtyTwoBitShifterRight(input1,input2,resShift_R);
-//			var resShift_L = BusKt.bus(32);
-//			ShiftLogical.thirtyTwoBitShifterLeft(input1,input2,resShift_L);
-//			var resSetLes = BusKt.bus(32);
-//			setLess(input1,input2,resSetLes);
-//			var resXor = BusKt.bus(32);
-//
-//
-//			for (int i = 0 ; i <= 31 ; i++){
-//				result.get(i).set(MuxKt.mux(select,resAdd.get(i),resSub.get(i),resOr.get(i),resAnd.get(i),resXor.get(i),resNor.get(i),resShift_L.get(i),resShift_R.get(i)));
-//			}
-//	}
+	public static void AluInStage(List<Value> input1,List<Value> input2,List<Value> function,List<Value> aluControlUnit,List<MutableValue> result,Variable zero){
 
-	private static void Decod(List<Value> function, List<Value> aluControlUnit, List<MutableValue> select) {
-		//Todo we must to make new Decoder to make from 6 function and 2 alucontroul 4 bit for multiplexer
+
+			var select = BusKt.bus(4);
+			AluControlUnit.aluControlUnit(function,aluControlUnit,select);
+			var resAdd = BusKt.bus(32);
+			//AddSub(input1,input2,new Variable(false,""),resAdd,BusKt.toBus(0,32));
+			var resSub = BusKt.bus(32);
+			//AddSub(input1,input2,new Variable(true,""),resSub,BusKt.toBus(0,32));
+			var resOr = BusKt.bus(32);
+			thirtyTwoBitOr(input1,input2,resOr);
+			var resAnd = BusKt.bus(32);
+			thirtyTwoBitAnd(input1,input2,resAnd);
+			var resNor = BusKt.bus(32);
+			thirtyTwoBitNor(input1,input2,resNor);
+			var resShift_R = BusKt.bus(32);
+			//ShiftLogical.thirtyTwoBitShifterRight(input1,input2,resShift_R);
+			var resShift_L = BusKt.bus(32);
+			//ShiftLogical.thirtyTwoBitShifterLeft(input1,input2,resShift_L);
+			var resSetLes = BusKt.bus(32);
+			setLess(input1,input2,resSetLes);
+			var resXor = BusKt.bus(32);
+
+
+			for (int i = 0 ; i <= 31 ; i++){
+				result.get(i).set(MuxKt.mux(select,resAdd.get(i),resSub.get(i),resOr.get(i),resAnd.get(i),resXor.get(i),resNor.get(i),resShift_L.get(i),resShift_R.get(i)));
+			}
 	}
+
 
 }
 

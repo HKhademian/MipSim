@@ -4,10 +4,14 @@ import mipsim.units.MemBit;
 import mipsim.units.MemoryKt;
 import sim.base.BusKt;
 
+import java.rmi.registry.Registry;
 import java.util.List;
 
 public final class IFID_PipelineRegister extends PipelineRegister {
 	public final List<MemBit> instruction = BusKt.slice(memory, 0, 32);
+
+	public List<MemBit> pc;//this will be 32 bit for the branch and jump
+
 
 	public IFID_PipelineRegister() {
 		super(

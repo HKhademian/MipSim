@@ -1,9 +1,13 @@
 package mipsim.units;
 
+import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.Value;
+import sim.complex.MuxKt;
 
 import java.util.List;
+
+import static sim.base.BusKt.ZERO_BUS;
 
 public class Multiplexer {
 
@@ -20,21 +24,26 @@ public class Multiplexer {
 															List<Value> EXE_MEM, List<Value> MEM_WB, List<MutableValue> result)
 	{
 
+
 		/**
 		 * we need use to of this before of alu to avoid from data hazard
+		 * note -->reg source select between immediate and reg Value-->this mux should happen after "readDataFor2Selector"
 		 * forward has 2 bit and other have 32 bit
 		 * forwarding == 00 -> result = regSource
 		 * forwarding == 10 -> result = EXE_MEM
 		 * forwarding == 01 -> result = MEM_WB
 		 */
+		BusKt.set(result, MuxKt.mux(forwarding,regSource,MEM_WB,EXE_MEM,ZERO_BUS));
+
 
 	}
 
 
 
 
-	public static void dtRegister(Value regDst,List<Value> rt ,List<Value> rd,List<Value> result)
+	public static void dtRegister(Value regDst,List<Value> rt ,List<Value> rd,List<MutableValue> result)
 	{
+
 		/**
 		 * we use it two time
 		 * this mux will implement before regFile and one after ID/EX to chose the register that will be writeBackRegister
@@ -42,20 +51,25 @@ public class Multiplexer {
 		 * regDst == 0 --> result = rd
 		 * regDst == 1 --> result = rt
 		 */
+		BusKt.set(result,MuxKt.mux2(regDst,rd,rt));
+
 	}
 
 
 
 
-	public static void readDataFor2Selector(Value aluSrc,List<Value> register ,List<Value> immediate,List<Value> result)
+	public static void readDataFor2Selector(Value aluSrc,List<Value> register ,List<Value> immediate,List<MutableValue> result)
 	{
+
 		/**
-		 * we use this mux after regFile and before the pipeline stage
+		 * we use this mux after pipeline ID/EX
 		 * important --> before adding data hazard it happen in next stage but now it happen before of it
 		 * aluSrc is only one bit but other have 32 bit
 		 * aluSrc 0 --> result = register
 		 * aluSrc 1 --> result = immediate
 		 */
+		BusKt.set(result,MuxKt.mux2(aluSrc,register,immediate));
+
 	}
 
 
@@ -70,6 +84,9 @@ public class Multiplexer {
 		 * hazardDetection = 0 --> regWriteResult = regWrite,regWriteResult = regWrite
 		 * hazardDetection = 1 --> regWriteResult = 0 ,regWriteResult = 0
 		 */
+		regWriteResult.set(MuxKt.mux2(hazardDetection,regWrite,Value.Companion.getZERO()));
+		regWriteResult.set(MuxKt.mux2(memWriteResult,memWrite,Value.Companion.getZERO()));
+
 	}
 
 
@@ -81,6 +98,7 @@ public class Multiplexer {
 	public static void pcChoice(Value jumpFlag,Value branchFlag,List<Value> PC,
 															List<Value> jump,List<Value> branch,List<MutableValue> PCSelect)
 	{
+
 		/**
 		 * this will be before PC
 		 * all except branchFlag and jumpFlag are 32 bit
@@ -90,13 +108,19 @@ public class Multiplexer {
 		 * (branchFlag jumpFlag) 10 --> PCSelect = branch
 		 * (branchFlag jumpFlag) 11 --> because branch and jump will both happen in ID stage this is an absolute bug
 		 */
+		var select = BusKt.toBus(0,2);
+		select.set(0,jumpFlag);
+		select.set(1,branchFlag);
+		BusKt.set(PCSelect,MuxKt.mux(select,PC,jump,branch,PC));//I put pc for 11 of select
 	}
 
 
 
 
-	public static void writeBackValue(Value memToReg,List<Value> memoryResult,List<Value> aluResult,List<Value> register)
+	public static void writeBackValue(Value memToReg,List<Value> memoryResult,List<Value> aluResult,List<MutableValue> register)
 	{
+
+
 		/**
 		 * this mux will be WB exactly after EX/WB
 		 * this will select between result that get from ALU or result of memory
@@ -104,6 +128,7 @@ public class Multiplexer {
 		 * memToReg = 0 --> register = aluResult
 		 * memToReg = 1 --> register = memoryResult
 		 */
+		BusKt.set(register,MuxKt.mux2(memToReg,aluResult,memoryResult));
 	}
 
 
@@ -112,8 +137,10 @@ public class Multiplexer {
 	public static void aluResult(List<Value> aluControlInput,List<Value> add
 															,List<Value> sub,List<Value> and, List<Value> or
 															,List<Value> setOnLessThan,List<Value> shiftLogicalLeft
-															,List<Value> shiftLogicalRight,List<Value> result)
+															,List<Value> shiftLogicalRight,List<MutableValue> result)
 	{
+
+
 		/**
 		 * this is mux inside of alu for chose the final result
 		 * aluControlInput is 4 bit but other are 32 bit
@@ -128,6 +155,9 @@ public class Multiplexer {
 		 * aluControlInput = 0111 --> result = set on less than
 		 * there  is not any aluControlInput which it's most significant is 1
 		 */
+		BusKt.set(result,MuxKt.mux(aluControlInput,and,or,add,ZERO_BUS,shiftLogicalLeft,shiftLogicalRight,sub,setOnLessThan
+			,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS));
+
 	}
 
 
