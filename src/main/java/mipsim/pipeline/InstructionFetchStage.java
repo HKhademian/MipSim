@@ -30,6 +30,7 @@ public class InstructionFetchStage extends Stage {
 		// set next pc
 		Multiplexer.pcChoice(jump, branch, pc4, branchTarget, jumpTarget, pc);
 
+		// todo: watch stall
 
 		BusKt.set(ifid.pc, pc4);
 		BusKt.set(ifid.instruction, pc);
