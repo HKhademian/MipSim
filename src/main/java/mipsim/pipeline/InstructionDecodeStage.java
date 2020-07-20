@@ -8,6 +8,11 @@ public class InstructionDecodeStage extends Stage {
 	}
 
 	@Override
+	public void init() {
+		// wiring here ...
+	}
+
+	@Override
 	public void eval() {
 
 	}

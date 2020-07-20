@@ -8,6 +8,10 @@ public class MemoryStage extends Stage {
 	}
 
 	@Override
+	public void init() {
+	}
+
+	@Override
 	public void eval() {
 
 	}

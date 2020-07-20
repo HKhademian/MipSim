@@ -14,8 +14,8 @@ const val WORD_SIZE = 4 * BYTE_SIZE
  *  and use `MemBit`.`get` to read from it.
  */
 class MemBit : Element, MutableValue {
-	private val curr = Variable(false)
-	private val next = Variable(false)
+	private val curr = mut(false)
+	private val next = mut(false)
 
 	override fun set(value: Value) =
 		next.set(value)

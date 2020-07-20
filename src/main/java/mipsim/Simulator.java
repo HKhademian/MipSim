@@ -2,29 +2,30 @@ package mipsim;
 
 import mipsim.pipeline.*;
 import mipsim.units.*;
-import sim.base.BusKt;
-import sim.base.Eval;
+import sim.base.*;
 
 public class Simulator implements Eval {
-	final Memory pc;
-	final InstructionMemory instructionMemory;
-	final DataMemory dataMemory;
-	final RegisterFile registerFile;
+	public final Value clock;
+	public final Memory pc;
+	public final InstructionMemory instructionMemory;
+	public final DataMemory dataMemory;
+	public final RegisterFile registerFile;
 
 	// stages
-	final InstructionFetchStage ifStage;
-	final InstructionDecodeStage idStage;
-	final ExecutionStage exStage;
-	final MemoryStage memStage;
-	final WriteBackStage wbStage;
+	public final InstructionFetchStage ifStage;
+	public final InstructionDecodeStage idStage;
+	public final ExecutionStage exStage;
+	public final MemoryStage memStage;
+	public final WriteBackStage wbStage;
 
 	//register pipelines
-	final IFID_PipelineRegister ifid;
-	final IDEX_PipelineRegister idex;
-	final EXMEM_PipelineRegister exmem;
-	final MEMWB_PipelineRegister memwb;
+	public final IFID_PipelineRegister ifid;
+	public final IDEX_PipelineRegister idex;
+	public final EXMEM_PipelineRegister exmem;
+	public final MEMWB_PipelineRegister memwb;
 
 	public Simulator() {
+		clock = ValueKt.mut(false);
 		pc = MemoryKt.createWords(1);
 		instructionMemory = new InstructionMemory(100);
 		dataMemory = new DataMemory(100);
@@ -52,14 +53,28 @@ public class Simulator implements Eval {
 
 	}
 
+	public void init() {
+		// pc.init()
+		ifStage.init();
+		idStage.init();
+		exStage.init();
+		memStage.init();
+		wbStage.init();
+
+		// wiring here ...
+	}
+
 	@Override
 	public void eval() {
+		// we have two `eval`s per clock cycle
+		((MutableValue) clock).toggle();
+
 		// i have some eval follow:
 		// 1. all components start to end
 		// 2. all components end to start
 		// 3,4,5,6. first pipeline-regs then stages (each like 1 or 2)
 		// 7,8,9,10. first stages then pipeline-regs (each like 1 or 2)
-		// TODO: we must investigate to relize  which one is correct
+		// TODO: we must investigate to realize  which one is correct
 		// plz do not remove this comment, to keep eye one the results
 
 		pc.eval();

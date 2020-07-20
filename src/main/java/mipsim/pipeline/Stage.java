@@ -4,9 +4,14 @@ import mipsim.Simulator;
 import sim.base.Eval;
 
 public abstract class Stage implements Eval {
-	private final Simulator simulator;
+	protected final Simulator simulator;
 
 	protected Stage(final Simulator simulator) {
 		this.simulator = simulator;
 	}
+
+	/**
+	 * wiring here
+	 */
+	public abstract void init();
 }
