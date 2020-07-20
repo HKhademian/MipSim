@@ -13,16 +13,15 @@ public class Multiplexer {
 
 
 	/**
-	 *  we use aluInput and dtValue two time but we use all other of them only one time
-	 *
+	 * we use aluInput and dtValue two time but we use all other of them only one time
 	 */
-
-
-
-
-	public static void aluInput(List<Value> forwarding, List<Value> regSource,
-															List<Value> EXE_MEM, List<Value> MEM_WB, List<MutableValue> result)
-	{
+	public static void aluInput(
+		List<? extends Value> forwarding,
+		List<? extends Value> regSource,
+		List<? extends Value> EXE_MEM,
+		List<? extends Value> MEM_WB,
+		List<? extends MutableValue> result
+	) {
 
 
 		/**
@@ -33,16 +32,13 @@ public class Multiplexer {
 		 * forwarding == 10 -> result = EXE_MEM
 		 * forwarding == 01 -> result = MEM_WB
 		 */
-		BusKt.set(result, MuxKt.mux(forwarding,regSource,MEM_WB,EXE_MEM,ZERO_BUS));
+		BusKt.set(result, MuxKt.mux(forwarding, regSource, MEM_WB, EXE_MEM, ZERO_BUS));
 
 
 	}
 
 
-
-
-	public static void dtRegister(Value regDst,List<Value> rt ,List<Value> rd,List<MutableValue> result)
-	{
+	public static void dtRegister(Value regDst, List<? extends Value> rt, List<? extends Value> rd, List<? extends MutableValue> result) {
 
 		/**
 		 * we use it two time
@@ -51,15 +47,12 @@ public class Multiplexer {
 		 * regDst == 0 --> result = rd
 		 * regDst == 1 --> result = rt
 		 */
-		BusKt.set(result,MuxKt.mux2(regDst,rd,rt));
+		BusKt.set(result, MuxKt.mux2(regDst, rd, rt));
 
 	}
 
 
-
-
-	public static void readDataFor2Selector(Value aluSrc,List<Value> register ,List<Value> immediate,List<MutableValue> result)
-	{
+	public static void readDataFor2Selector(Value aluSrc, List<? extends Value> register, List<? extends Value> immediate, List<? extends MutableValue> result) {
 
 		/**
 		 * we use this mux after pipeline ID/EX
@@ -68,15 +61,12 @@ public class Multiplexer {
 		 * aluSrc 0 --> result = register
 		 * aluSrc 1 --> result = immediate
 		 */
-		BusKt.set(result,MuxKt.mux2(aluSrc,register,immediate));
+		BusKt.set(result, MuxKt.mux2(aluSrc, register, immediate));
 
 	}
 
 
-
-
-	public static void hazardDetection(Value hazardDetection,Value regWrite,Value memWrite,MutableValue regWriteResult,MutableValue  memWriteResult)
-	{
+	public static void hazardDetection(Value hazardDetection, Value regWrite, Value memWrite, MutableValue regWriteResult, MutableValue memWriteResult) {
 		/**
 		 * hazardDetection implement before pipeline ID/EX if one of source need use memory but it is in stage EX we stall one operation to reach that ppoint
 		 * naturally we convert all control flag to 0 to stop it but now we can only use the register that change our states and with knowledge that branch happen in stage ID
@@ -84,20 +74,17 @@ public class Multiplexer {
 		 * hazardDetection = 0 --> regWriteResult = regWrite,regWriteResult = regWrite
 		 * hazardDetection = 1 --> regWriteResult = 0 ,regWriteResult = 0
 		 */
-		regWriteResult.set(MuxKt.mux2(hazardDetection,regWrite,Value.Companion.getZERO()));
-		regWriteResult.set(MuxKt.mux2(memWriteResult,memWrite,Value.Companion.getZERO()));
+		regWriteResult.set(MuxKt.mux2(hazardDetection, regWrite, Value.Companion.getZERO()));
+		regWriteResult.set(MuxKt.mux2(memWriteResult, memWrite, Value.Companion.getZERO()));
 
 	}
 
 
-
 	/**
-	 *
-	 *this is concat of two multiplexer of jump and branch
+	 * this is concat of two multiplexer of jump and branch
 	 */
-	public static void pcChoice(Value jumpFlag,Value branchFlag,List<Value> PC,
-															List<Value> jump,List<Value> branch,List<MutableValue> PCSelect)
-	{
+	public static void pcChoice(Value jumpFlag, Value branchFlag, List<Value> PC,
+															List<Value> jump, List<Value> branch, List<MutableValue> PCSelect) {
 
 		/**
 		 * this will be before PC
@@ -108,17 +95,14 @@ public class Multiplexer {
 		 * (branchFlag jumpFlag) 10 --> PCSelect = branch
 		 * (branchFlag jumpFlag) 11 --> because branch and jump will both happen in ID stage this is an absolute bug
 		 */
-		var select = BusKt.toBus(0,2);
-		select.set(0,jumpFlag);
-		select.set(1,branchFlag);
-		BusKt.set(PCSelect,MuxKt.mux(select,PC,jump,branch,PC));//I put pc for 11 of select
+		var select = BusKt.toBus(0, 2);
+		select.set(0, jumpFlag);
+		select.set(1, branchFlag);
+		BusKt.set(PCSelect, MuxKt.mux(select, PC, jump, branch, PC));//I put pc for 11 of select
 	}
 
 
-
-
-	public static void writeBackValue(Value memToReg,List<Value> memoryResult,List<Value> aluResult,List<MutableValue> register)
-	{
+	public static void writeBackValue(Value memToReg, List<Value> memoryResult, List<Value> aluResult, List<MutableValue> register) {
 
 
 		/**
@@ -128,17 +112,14 @@ public class Multiplexer {
 		 * memToReg = 0 --> register = aluResult
 		 * memToReg = 1 --> register = memoryResult
 		 */
-		BusKt.set(register,MuxKt.mux2(memToReg,aluResult,memoryResult));
+		BusKt.set(register, MuxKt.mux2(memToReg, aluResult, memoryResult));
 	}
 
 
-
-
-	public static void aluResult(List<Value> aluControlInput,List<Value> add
-															,List<Value> sub,List<Value> and, List<Value> or
-															,List<Value> setOnLessThan,List<Value> shiftLogicalLeft
-															,List<Value> shiftLogicalRight,List<MutableValue> result)
-	{
+	public static void aluResult(List<Value> aluControlInput, List<Value> add
+		, List<Value> sub, List<Value> and, List<Value> or
+		, List<Value> setOnLessThan, List<Value> shiftLogicalLeft
+		, List<Value> shiftLogicalRight, List<MutableValue> result) {
 
 
 		/**
@@ -155,11 +136,10 @@ public class Multiplexer {
 		 * aluControlInput = 0111 --> result = set on less than
 		 * there  is not any aluControlInput which it's most significant is 1
 		 */
-		BusKt.set(result,MuxKt.mux(aluControlInput,and,or,add,ZERO_BUS,shiftLogicalLeft,shiftLogicalRight,sub,setOnLessThan
-			,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS,ZERO_BUS));
+		BusKt.set(result, MuxKt.mux(aluControlInput, and, or, add, ZERO_BUS, shiftLogicalLeft, shiftLogicalRight, sub, setOnLessThan
+			, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS));
 
 	}
-
 
 
 }
