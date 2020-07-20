@@ -1,6 +1,7 @@
 package mipsim.module;
 
 import mipsim.units.AluControlUnit;
+import org.jetbrains.annotations.NotNull;
 import sim.base.*;
 import sim.complex.MuxKt;
 import sim.real.AdderKt;
@@ -32,13 +33,13 @@ public final class LogicALU {
 	 * else we do add
 	 * carry out when we need to set carry flag
 	 */
-
 	public static void AddSub(List<Value> input1, List<Value> input2, Value select, List<MutableValue> result, List<MutableValue> carryOut) {
 		carryOut.get(0).set(select.get());
 		for (int i = 31; i >= 0; i--) {
 			AdderKt.fullAdder(input1.get(i), (xor(input2.get(i), select)), carryOut.get(i), result.get(i), carryOut.get(i + 1));
 		}
 	}
+
 
 	public static void setLess(List<Value> input1, List<Value> input2, List<MutableValue> result) {
 		var E = ValueKt.mut(false);
@@ -80,6 +81,37 @@ public final class LogicALU {
 	}
 
 
+	/**
+	 * todo: merge with previous adder/sub unit
+	 */
+	public static void adder(@NotNull List<? extends Value> input1, @NotNull List<? extends Value> input2, @NotNull List<? extends MutableValue> result) {
+		Value currentCarry = ValueKt.constant(false);
+		MutableValue nextCarry = ValueKt.mut(false);
+		for (int i = 0; i < input1.size(); i++) {
+			AdderKt.fullAdder(input1.get(i), input2.get(i), currentCarry, result.get(i), nextCarry);
+			currentCarry = nextCarry;
+			nextCarry = ValueKt.mut(false);
+		}
+	}
+
+	/**
+	 * this module, creates an adder with a constant value.
+	 * it's completely gate-level adder,
+	 * inputVal2 converts to a equivalent value bus in compile/bake/first time
+	 */
+	public static void adder(@NotNull List<? extends Value> input1, int inputVal2, @NotNull List<? extends MutableValue> result) {
+		var input2 = BusKt.toBus(inputVal2, input1.size());
+		adder(input1, input2, result);
+	}
+
+	/**
+	 * like quick-adder but returns result
+	 */
+	public static List<MutableValue> adder(@NotNull List<? extends Value> input1, int inputVal2) {
+		var result = BusKt.bus(input1.size());
+		adder(input1, inputVal2, result);
+		return result;
+	}
 }
 
 
