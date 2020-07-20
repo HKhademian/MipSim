@@ -1,31 +1,23 @@
 package mipsim.pipeline;
 
 import mipsim.units.MemBit;
-import mipsim.units.MemoryKt;
 import sim.base.BusKt;
 
 import java.util.List;
 
 public final class MEMWB_PipelineRegister extends PipelineRegister {
-	public final List<MemBit> instruction = BusKt.slice(memory, 0, 32);
-
 	//this would be alu and memory read result,32bit
-	public List<MemBit> aluData;
-	public List<MemBit> memoryValue;
-
+	public final List<MemBit> aluData = BusKt.slice(memory, 0, 32);
+	public final List<MemBit> memoryValue = BusKt.slice(memory, 32, 64);
 
 	//this would be register code that will be write on it,5 bit
-	public List<MemBit> rdRegister;
-
+	public final List<MemBit> rdRegister = BusKt.slice(memory, 64, 69);
 
 	//all control flag will be passed to pipeline except memRead and memWrite
-	public MemBit memToReg;
-	public MemBit regWrite;
-
+	public final MemBit memToReg = memory.get(70);
+	public final MemBit regWrite = memory.get(71);
 
 	public MEMWB_PipelineRegister() {
-		super(
-			MemoryKt.WORD_SIZE // instruction
-		);
+		super(71);
 	}
 }
