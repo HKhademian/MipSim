@@ -1,35 +1,42 @@
 package mipsim.pipeline;
 
 import mipsim.Simulator;
+import mipsim.module.LogicALU;
+import mipsim.units.Multiplexer;
+import sim.base.BusKt;
 import sim.base.MutableValue;
-import sim.base.Value;
+import sim.base.ValueKt;
 
 import java.util.List;
 
 public class InstructionFetchStage extends Stage {
+	public final List<MutableValue> branchTarget = BusKt.bus(32);
+	public final List<MutableValue> jumpTarget = BusKt.bus(32);
+	public final MutableValue stall = ValueKt.mut();
+	public final MutableValue branch = ValueKt.mut();
+	public final MutableValue jump = ValueKt.mut();
+
 	public InstructionFetchStage(final Simulator simulator) {
 		super(simulator);
 	}
 
 	@Override
 	public void init() {
-		// wiring here ...
+		var pc = simulator.pc;
+		var ifid = simulator.ifid;
+
+		var pc4 = LogicALU.adder(pc, 4);
+
+		// set next pc
+		Multiplexer.pcChoice(jump, branch, pc4, branchTarget, jumpTarget, pc);
+
+
+		BusKt.set(ifid.pc, pc4);
+		BusKt.set(ifid.instruction, pc);
 	}
 
 	@Override
 	public void eval() {
-
-	}
-
-	public void readInstruction(List<MutableValue> PC, List<Value> jump, List<Value> branch, List<Value> muxSelector, List<MutableValue> result) {
-		//here we need use multiplexer for all bits
-		// sim.instructionMemory read (PC, result);
-		addFourPC(PC);
-	}
-
-
-	//todo
-	public void addFourPC(List<MutableValue> PC) {
 
 	}
 }
