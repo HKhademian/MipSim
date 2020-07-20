@@ -111,6 +111,11 @@ public class InstructionDecodeStage extends Stage {
 		simulator.idex.aluSrc.set(ALUsrc);
 		BusKt.set(simulator.idex.aluOp, aluOp);
 
+
+
+		//set func
+		BusKt.set(simulator.idex.function , func);
+
 		//set shift
 		BusKt.set(simulator.idex.shiftMa, shiftMa);
 
