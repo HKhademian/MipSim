@@ -16,7 +16,7 @@ public class Compare {
 		AltB.set(nor(AeqB, AgtB));
 	}
 
-	public static void com32Bit(List<Value> input1, List<Value> input2, MutableValue AEB, MutableValue ALB, MutableValue AGB) {
+	public static void com32Bit(List<? extends Value> input1, List<? extends Value> input2, MutableValue AEB, MutableValue ALB, MutableValue AGB) {
 		var AeqB = BusKt.bus(8);
 		var AgtB = BusKt.bus(8);
 		var AltB = BusKt.bus(8);

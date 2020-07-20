@@ -11,19 +11,19 @@ import java.util.List;
 import static sim.gates.GatesKt.*;
 
 public final class LogicALU {
-	public static void thirtyTwoBitOr(List<Value> A, List<Value> B, List<MutableValue> outPut) {
+	public static void thirtyTwoBitOr(List<? extends Value> A, List<? extends Value> B, List<? extends MutableValue> outPut) {
 		BusKt.set(outPut, or(A, B));
 	}
 
-	public static void thirtyTwoBitNor(List<Value> A, List<Value> B, List<MutableValue> outPut) {
+	public static void thirtyTwoBitNor(List<? extends Value> A, List<? extends Value> B, List<? extends MutableValue> outPut) {
 		BusKt.set(outPut, nor(A, B));
 	}
 
-	public static void thirtyTwoBitAnd(List<Value> A, List<Value> B, List<MutableValue> outPut) {
+	public static void thirtyTwoBitAnd(List<? extends Value> A, List<? extends Value> B, List<? extends MutableValue> outPut) {
 		BusKt.set(outPut, and(A, B));
 	}
 
-	public static void thirtyTwoBitXor(List<Value> A, List<Value> B, List<MutableValue> outPut) {
+	public static void thirtyTwoBitXor(List<? extends Value> A, List<? extends Value> B, List<? extends MutableValue> outPut) {
 		BusKt.set(outPut, xor(A, B));
 	}
 
@@ -33,7 +33,7 @@ public final class LogicALU {
 	 * else we do add
 	 * carry out when we need to set carry flag
 	 */
-	public static void AddSub(List<Value> input1, List<Value> input2, Value select, List<MutableValue> result, List<MutableValue> carryOut) {
+	public static void AddSub(List<? extends Value> input1, List<? extends Value> input2, Value select, List<? extends MutableValue> result, List<? extends MutableValue> carryOut) {
 		carryOut.get(0).set(select.get());
 		for (int i = 31; i >= 0; i--) {
 			AdderKt.fullAdder(input1.get(i), (xor(input2.get(i), select)), carryOut.get(i), result.get(i), carryOut.get(i + 1));
@@ -41,7 +41,7 @@ public final class LogicALU {
 	}
 
 
-	public static void setLess(List<Value> input1, List<Value> input2, List<MutableValue> result) {
+	public static void setLess(List<? extends Value> input1, List<? extends Value> input2, List<? extends MutableValue> result) {
 		var E = ValueKt.mut(false);
 		var L = ValueKt.mut(false);
 		var G = ValueKt.mut(false);
@@ -51,7 +51,7 @@ public final class LogicALU {
 	}
 
 
-	public static void AluInStage(List<Value> input1, List<Value> input2, List<Value> function, List<Value> aluControlUnit, List<MutableValue> result, Variable zero) {
+	public static void AluInStage(List<? extends Value> input1, List<? extends Value> input2, List<? extends Value> function, List<? extends Value> aluControlUnit, List<? extends MutableValue> result, Variable zero) {
 
 
 		var select = BusKt.bus(4);
