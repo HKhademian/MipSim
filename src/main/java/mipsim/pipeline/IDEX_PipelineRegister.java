@@ -29,9 +29,9 @@ public final class IDEX_PipelineRegister extends PipelineRegister {
 	public final List<MemBit> shiftMa = BusKt.slice(memory, 113, 118);
 
 	// note --> we used branch jump  regDst in stage decode
-
+	public final List<MemBit> rsRegister = BusKt.slice(memory, 113, 118);
 
 	public IDEX_PipelineRegister() {
-		super(118);
+		super(123);
 	}
 }

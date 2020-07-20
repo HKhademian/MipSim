@@ -112,7 +112,7 @@ public class InstructionDecodeStage extends Stage {
 		//set register number
 		BusKt.set(simulator.idex.rtRegister,rt);
 		BusKt.set(simulator.idex.rdRegister,rd);
-
+		BusKt.set(simulator.idex.rsRegister,rs);
 		//setFlag
 		simulator.idex.memToReg.set(memToReg);
 		simulator.idex.regWrite.set(regWriteFinal);
