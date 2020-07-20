@@ -31,9 +31,10 @@ public class InstructionFetchStage extends Stage {
 		Multiplexer.pcChoice(jump, branch, pc4, branchTarget, jumpTarget, pc);
 
 		// todo: watch stall
+		BusKt.set(simulator.instructionMemory.pc, pc);
 
 		BusKt.set(ifid.pc, pc4);
-		BusKt.set(ifid.instruction, pc);
+		BusKt.set(ifid.instruction, simulator.instructionMemory.instruction);
 	}
 
 	@Override
