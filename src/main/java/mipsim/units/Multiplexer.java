@@ -140,7 +140,10 @@ public class Multiplexer {
 			, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS));
 
 	}
+	public static void 	aluSrc(Value rgDst,List<Value> rtReg,List<Value>imm ,List<MutableValue> res){
+		BusKt.set(res,MuxKt.mux2(rgDst,rtReg,imm));
 
+	}
 
 
 }

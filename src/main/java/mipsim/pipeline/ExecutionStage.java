@@ -24,6 +24,9 @@ public class ExecutionStage extends Stage {
 		 *
 		 */
 
+		BusKt.set(simulator.exmem.writeMe,simulator.idex.rtRegister);//I don't know what is this I think it's a rt reg to read or save it's value of memory or save value of memory
+		//todo Ask friends
+
 		var resultOneOfAlu = BusKt.bus(32);
 		var forwarding1 = BusKt.bus(2);
 		ForwardingUnit.forwardingUnitEXHazard(simulator.exmem.regWrite,simulator.exmem.rdRegister,simulator.idex.rsRegister,forwarding1);
@@ -32,22 +35,21 @@ public class ExecutionStage extends Stage {
 		var resultTowOfAlu = BusKt.bus(32);
 		var forwarding2 = BusKt.toBus(2);
 
+		var resAluSrc = BusKt.bus(32);
+		Multiplexer.aluSrc(simulator.idex.aluSrc,simulator.idex.rtData,simulator.idex.immediate,resAluSrc);
 		ForwardingUnit.forwardingUnitEXHazard(simulator.exmem.regWrite,simulator.exmem.rdRegister,simulator.idex.rtRegister,forwarding2);
-		Multiplexer.aluInput(forwarding2,simulator.idex.rsData,simulator.exmem.rdRegister,simulator.memwb.rdRegister,resultOneOfAlu);
+		Multiplexer.aluInput(forwarding2,resAluSrc,simulator.exmem.aluData,simulator.memwb.aluData,resultOneOfAlu);
 		LogicALU.AluInStage(resultOneOfAlu,resultTowOfAlu,simulator.idex.function,simulator.idex.aluOp,simulator.exmem.aluData);
 
 		/**
-		 * in this code we 
+		 * in this code we save or signal that don't need them in this state
 		 */
 
 		Multiplexer.dtRegister(simulator.idex.regDst,simulator.idex.rtRegister,simulator.idex.rdRegister,simulator.exmem.rdRegister);
 		simulator.exmem.memToReg.set(simulator.idex.memToReg);
 		simulator.exmem.memRead.set(simulator.idex.memRead);
 		simulator.exmem.memWrite.set(simulator.idex.memWrite);
-
-
-		LogicALU.AluInStage(Multiplexer.aluInput(),Multiplexer.aluInput());
-
+		simulator.exmem.regWrite.set(simulator.idex.regWrite);
 
 		// wiring here ...
 	}
