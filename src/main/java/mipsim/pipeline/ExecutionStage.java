@@ -19,7 +19,8 @@ public class ExecutionStage extends Stage {
 		 *
 		 */
 
-		BusKt.set(simulator.exmem.writeMe, simulator.idex.rtRegister);//I don't know what is this I think it's a rt reg to read or save it's value of memory or save value of memory
+		// todo: wrong
+		BusKt.set(simulator.exmem.writeMem, simulator.idex.rtRegister);//I don't know what is this I think it's a rt reg to read or save it's value of memory or save value of memory
 		//todo Ask friends
 
 		var resultOneOfAlu = BusKt.bus(32);

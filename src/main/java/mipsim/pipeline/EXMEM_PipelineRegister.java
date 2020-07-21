@@ -27,7 +27,7 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 
 	//this would be alu result and value that would be write on memory,32bit
 	public final List<MutableValue> aluData = BusKt.slice(memory, 4, 36);
-	public final List<MutableValue> writeMe = BusKt.slice(memory, 36, 68);
+	public final List<MutableValue> writeMem = BusKt.slice(memory, 36, 68);
 
 	//this would be register code that will be write on it,5 bit
 	public final List<MutableValue> rdRegister = BusKt.slice(memory, 68, 73);

@@ -19,7 +19,7 @@ public final class MEMWB_PipelineRegister extends PipelineRegister {
 
 	//this would be alu and memory read result,32bit
 	public final List<MutableValue> aluData = BusKt.slice(memory, 2, 34);
-	public final List<MutableValue> memoryValue = BusKt.slice(memory, 34, 66);
+	public final List<MutableValue> memoryData = BusKt.slice(memory, 34, 66);
 
 	//this would be register code that will be write on it,5 bit
 	public final List<MutableValue> rdRegister = BusKt.slice(memory, 66, 71);
