@@ -36,9 +36,9 @@ private val commands = listOf(
 	Command("AND", Format.R, "0", "24"),
 	Command("OR", Format.R, "8", "25"),
 	Command("ADDI", Format.I, "F"),
-	Command("LUI", Format.I, "23"),
-	Command("LW,", Format.I, "2B"),
-	Command("SW,", Format.I, "4"),
+//	Command("LUI", Format.I, "23"),
+	Command("LW", Format.I, "2B"),
+	Command("SW", Format.I, "4"),
 	Command("BEQ", Format.I, "5"),
 	Command("J", Format.J, "2")
 )

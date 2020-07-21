@@ -31,9 +31,9 @@ public class Simulator implements Eval {
 	public Simulator() {
 		clock = ValueKt.mut(false);
 		pc = MemoryKt.createWords(1);
-		instructionMemory = new InstructionMemory(100);
-		dataMemory = new DataMemory(100);
-		registerFile = new RegisterFile();
+		instructionMemory = new InstructionMemory(this, 100);
+		dataMemory = new DataMemory(this, 100);
+		registerFile = new RegisterFile(this);
 
 		ifStage = new InstructionFetchStage(this);
 		idStage = new InstructionDecodeStage(this);
