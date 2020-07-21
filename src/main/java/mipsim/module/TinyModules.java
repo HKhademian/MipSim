@@ -9,6 +9,8 @@ import sim.real.AdderKt;
 
 import java.util.List;
 
+import static sim.gates.GatesKt.*;
+
 public final class TinyModules {
 
 	/**
@@ -53,6 +55,23 @@ public final class TinyModules {
 		var result = BusKt.bus(input1.size());
 		easyAdder(input1, inputVal2, result);
 		return (List) result;
+	}
+
+	@NotNull
+	public static Value isEqual(
+		@NotNull List<? extends Value> lhs,
+		@NotNull List<? extends Value> rhs
+	) {
+		return nand(xor(lhs, rhs));
+	}
+
+
+	@NotNull
+	public static Value isNotEqual(
+		@NotNull List<? extends Value> lhs,
+		@NotNull List<? extends Value> rhs
+	) {
+		return or(xor(lhs, rhs));
 	}
 
 }
