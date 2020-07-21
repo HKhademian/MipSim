@@ -58,20 +58,20 @@ public final class TinyModules {
 	}
 
 	@NotNull
-	public static Value isEqual(
-		@NotNull List<? extends Value> lhs,
-		@NotNull List<? extends Value> rhs
-	) {
-		return nand(xor(lhs, rhs));
-	}
-
-
-	@NotNull
 	public static Value isNotEqual(
 		@NotNull List<? extends Value> lhs,
 		@NotNull List<? extends Value> rhs
 	) {
 		return or(xor(lhs, rhs));
+	}
+
+
+	@NotNull
+	public static Value isEqual(
+		@NotNull List<? extends Value> lhs,
+		@NotNull List<? extends Value> rhs
+	) {
+		return not(isNotEqual(lhs, rhs));
 	}
 
 }
