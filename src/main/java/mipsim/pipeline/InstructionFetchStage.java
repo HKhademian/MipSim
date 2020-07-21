@@ -1,7 +1,6 @@
 package mipsim.pipeline;
 
 import mipsim.Simulator;
-import mipsim.module.LogicALU;
 import mipsim.module.TinyModules;
 import mipsim.units.Multiplexer;
 import sim.base.BusKt;
