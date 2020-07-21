@@ -32,6 +32,7 @@ public class InstructionDecodeStage extends Stage {
 		final var rt = BusKt.slice(instruction, 11, 16);
 		final var shiftMa = BusKt.slice(instruction, 6, 11);
 		final var func = BusKt.slice(instruction, 0, 6);
+
 		final var jumpAddress = BusKt.slice(instruction, 0, 26);
 		final var immediate = BusKt.slice(instruction, 0, 16);
 
@@ -131,10 +132,31 @@ public class InstructionDecodeStage extends Stage {
 		//set stall
 		IF_STAGE.stall.set(stallFlag);
 
-	}
 
+	}
 	@Override
 	public void eval() {
+
+	}
+
+
+
+	public static void main(String args[]){
+
+		Simulator simulator = new Simulator();
+		int x = 200002;
+		BusKt.set(simulator.ifid.instruction,BusKt.toBus(2004,32));
+		BusKt.set(simulator.ifid.pc,BusKt.toBus(20,32));
+		System.out.println("instruction ="+BusKt.toInt(simulator.ifid.instruction));
+		System.out.println("pc ="+BusKt.toInt(simulator.ifid.pc));
+		simulator.ifid.eval();
+		System.out.println("instruction ="+BusKt.toInt(simulator.ifid.instruction));
+		System.out.println("new pc= "+BusKt.toInt(simulator.ifid.pc));
+		simulator.idex.eval();
+		simulator.idex.eval();
+		System.out.println("func ="+BusKt.toInt(simulator.idex.function));
+		System.out.println("rt ="+BusKt.toInt(simulator.idex.rsRegister));
+		//todo friends there are some problem in update the value idex register they can't be update and all result of this stage is zero
 
 	}
 }
