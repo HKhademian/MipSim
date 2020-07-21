@@ -92,4 +92,9 @@ public class Simulator implements Eval {
 		memwb.eval();
 		wbStage.eval();
 	}
+
+	public static void main(String[] args) {
+		System.out.println("simulator test");
+
+	}
 }

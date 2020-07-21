@@ -1,23 +1,24 @@
 plugins {
 	java
-	kotlin("jvm") // version "1.3.72"
+	kotlin("jvm")
 }
 
 group = "ir.mipsim"
 version = "1.0-SNAPSHOT"
 
 repositories {
+	jcenter()
 	mavenCentral()
 }
 
 dependencies {
 	implementation(kotlin("stdlib-jdk8"))
 	implementation(project(":lib:SimKT", configuration = "default"))
+
+	testImplementation(kotlin("test"))
+	testImplementation(kotlin("test-junit"))
 }
 
-//configure<JavaPluginConvention> {
-//	sourceCompatibility = JavaVersion.VERSION_1_8
-//}
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_14

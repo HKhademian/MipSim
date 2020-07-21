@@ -28,6 +28,10 @@ class MemBit : Element, MutableValue {
 		// at moment of clock pos-edge, we calculate next value and store it to cache
 		next.const().let { curr.set(it) }
 	}
+
+	override fun toString() =
+		//"$curr <- $next"
+		curr.toString()
 }
 
 /**

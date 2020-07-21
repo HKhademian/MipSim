@@ -64,4 +64,8 @@ public final class RegisterFile implements Eval {
 			BusKt.set(readData2Bus, word);
 		}
 	}
+
+	public static void main(final String... args) {
+
+	}
 }
