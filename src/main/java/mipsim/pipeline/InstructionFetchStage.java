@@ -23,8 +23,8 @@ public class InstructionFetchStage extends Stage {
 
 	@Override
 	public void init() {
-		var pc = simulator.pc;
-		var ifid = simulator.ifid;
+		final var pc = simulator.pc;
+		final var ifid = simulator.ifid;
 
 		var pc4 = TinyModules.easyAdder(pc, 4);
 

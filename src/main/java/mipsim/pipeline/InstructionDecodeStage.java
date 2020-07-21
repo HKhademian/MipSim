@@ -7,10 +7,7 @@ import mipsim.units.HazardDetectionUnit;
 import mipsim.units.Multiplexer;
 import sim.HelpersKt;
 import sim.base.BusKt;
-import sim.base.MutableValue;
 import sim.base.ValueKt;
-
-import java.util.List;
 
 public class InstructionDecodeStage extends Stage {
 	public InstructionDecodeStage(final Simulator simulator) {
@@ -19,68 +16,68 @@ public class InstructionDecodeStage extends Stage {
 
 	@Override
 	public void init() {
-	//help for coding
-		var ID_EX = simulator.idex;
-		var IF_ID = simulator.ifid;
-		var REG_FILE =simulator.registerFile;
-		var IF_STAGE = simulator.ifStage;
-// 32 bit instruction,pc 32 bit
-		var instruction = IF_ID.instruction;
-		var PC = IF_ID.pc;
+		//help for coding
+		final var ID_EX = simulator.idex;
+		final var IF_ID = simulator.ifid;
+		final var REG_FILE = simulator.registerFile;
+		final var IF_STAGE = simulator.ifStage;
+		// 32 bit instruction,pc 32 bit
+		final var instruction = IF_ID.instruction;
+		final var PC = IF_ID.pc;
 
 		//split the instruction
-		var opcode = BusKt.slice(instruction, 26, 32);
-		var rs = BusKt.slice(instruction, 21, 26);
-		var rd = BusKt.slice(instruction, 16, 21);
-		var rt = BusKt.slice(instruction, 11, 16);
-		var shiftMa = BusKt.slice(instruction, 6, 11);
-		var func = BusKt.slice(instruction, 0, 6);
-		var jumpAddress = BusKt.slice(instruction, 0, 26);
-		var immediate = BusKt.slice(instruction, 0, 16);
+		final var opcode = BusKt.slice(instruction, 26, 32);
+		final var rs = BusKt.slice(instruction, 21, 26);
+		final var rd = BusKt.slice(instruction, 16, 21);
+		final var rt = BusKt.slice(instruction, 11, 16);
+		final var shiftMa = BusKt.slice(instruction, 6, 11);
+		final var func = BusKt.slice(instruction, 0, 6);
+		final var jumpAddress = BusKt.slice(instruction, 0, 26);
+		final var immediate = BusKt.slice(instruction, 0, 16);
 
 		// all control unit flag would create
-		var regDst = ValueKt.mut(false);
-		var ALUsrc = ValueKt.mut(false);
-		var memToReg = ValueKt.mut(false);
-		var regWrite = ValueKt.mut(false);
-		var memRead = ValueKt.mut(false);
-		var memWrite = ValueKt.mut(false);
-		var branch = ValueKt.mut(false);
-		var jump = ValueKt.mut(false);
+		final var regDst = ValueKt.mut(false);
+		final var ALUsrc = ValueKt.mut(false);
+		final var memToReg = ValueKt.mut(false);
+		final var regWrite = ValueKt.mut(false);
+		final var memRead = ValueKt.mut(false);
+		final var memWrite = ValueKt.mut(false);
+		final var branch = ValueKt.mut(false);
+		final var jump = ValueKt.mut(false);
 
-		var aluOp = BusKt.bus(2);
+		final var aluOp = BusKt.bus(2);
 
 		ControlUnit.control(opcode, regDst, ALUsrc, memToReg, regWrite
 			, memRead, memWrite, branch, jump, aluOp);
 
 		//this will show if hazard would happen and we need stall
-		var ID_EX_memRead = ID_EX.memRead;
-		var ID_EX_registerRt = BusKt.slice(ID_EX.rtRegister, 0, 5);
+		final var ID_EX_memRead = ID_EX.memRead;
+		final var ID_EX_registerRt = BusKt.slice(ID_EX.rtRegister, 0, 5);
 		//rt ==  IF_ID_registerRt;
 		//rs ==  IF_ID_registerRs;
-		var stallFlag = ValueKt.mut();
+		final var stallFlag = ValueKt.mut();
 		HazardDetectionUnit.hazardDetectionUnit(ID_EX_memRead, ID_EX_registerRt, rt, rs, stallFlag);
 
-		var regWriteFinal = ValueKt.mut();
-		var memWriteFinal = ValueKt.mut();
+		final var regWriteFinal = ValueKt.mut();
+		final var memWriteFinal = ValueKt.mut();
 
 
 		Multiplexer.hazardDetection(stallFlag, regWrite, memWrite, regWriteFinal, memWriteFinal);
 
 
 		//register result
-		var rsData = BusKt.bus(32);
-		var rtData = BusKt.bus(32);
-		var immediateValue = HelpersKt.signEx(immediate);
+		final var rsData = BusKt.bus(32);
+		final var rtData = BusKt.bus(32);
+		final var immediateValue = HelpersKt.signEx(immediate);
 
 		//this will calculator address of jump and branch
 
-		var branchAddress = HelpersKt.shift(immediate, 2);
-		var finalBranch = BusKt.bus(32);
+		final var branchAddress = HelpersKt.shift(immediate, 2);
+		final var finalBranch = BusKt.bus(32);
 		TinyModules.easyAdder(PC, branchAddress, finalBranch);
 
 
-		var jumpAddressExtended = BusKt.bus(32);
+		final var jumpAddressExtended = BusKt.bus(32);
 		BusKt.set(jumpAddressExtended.subList(0, 26), jumpAddress);//extend jump
 		BusKt.set(jumpAddressExtended, HelpersKt.shift(jumpAddressExtended, 2));//shifted
 		BusKt.set(jumpAddressExtended.subList(28, 32), PC.subList(28, 32));//set the 4 most significant bit
