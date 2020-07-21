@@ -11,10 +11,10 @@ public class WriteBackStage extends Stage {
 
 	@Override
 	public void init() {
-		var memwb = simulator.memwb;
-		var regFile = simulator.registerFile;
+		final var memwb = simulator.memwb;
+		final var regFile = simulator.registerFile;
 
-		var writeData = MuxKt.mux2(memwb.memToReg, memwb.aluData, memwb.memoryData);
+		final var writeData = MuxKt.mux2(memwb.memToReg, memwb.aluData, memwb.memoryData);
 		regFile.regWrite.set(memwb.regWrite);
 		BusKt.set(regFile.writeReg, memwb.rdRegister);
 		BusKt.set(regFile.writeData, writeData);
