@@ -77,11 +77,11 @@ public final class LogicALU {
 		var resXor = BusKt.bus(32);
 
 		Multiplexer.aluResult(aluControlUnit, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
-
-		/**
-		 * todo: merge with previous adder/sub unit
-		 */
 	}
+
+//		/**
+//		 * todo: merge with previous adder/sub unit
+//		 */
 //	public static void adder(@NotNull List<? extends Value> input1, @NotNull List<? extends Value> input2, @NotNull List<? extends MutableValue> result) {
 //		Value currentCarry = ValueKt.constant(false);
 //		MutableValue nextCarry = ValueKt.mut(false);
@@ -91,20 +91,20 @@ public final class LogicALU {
 //			nextCarry = ValueKt.mut(false);
 //		}
 //	}
-
-	/**
-	 * this module, creates an adder with a constant value.
-	 * it's completely gate-level adder,
-	 * inputVal2 converts to a equivalent value bus in compile/bake/first time
-	 */
+//
+//	/**
+//	 * this module, creates an adder with a constant value.
+//	 * it's completely gate-level adder,
+//	 * inputVal2 converts to a equivalent value bus in compile/bake/first time
+//	 */
 //	public static void adder(@NotNull List<? extends Value> input1, int inputVal2, @NotNull List<? extends MutableValue> result) {
 //		var input2 = BusKt.toBus(inputVal2, input1.size());
 //		adder(input1, input2, result);
 //	}
-
-	/**
-	 * like quick-adder but returns result
-	 */
+//
+//	/**
+//	 * like quick-adder but returns result
+//	 */
 //	public static List<MutableValue> adder(@NotNull List<? extends Value> input1, int inputVal2) {
 //		var result = BusKt.bus(input1.size());
 //		adder(input1, inputVal2, result);
