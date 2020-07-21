@@ -27,7 +27,7 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 	public final List<MutableValue> writeMem = BusKt.slice(memory, 36, 68);
 
 	//this would be register code that will be write on it,5 bit
-	public final List<MutableValue> rdRegister = BusKt.slice(memory, 68, 73);
+	public final List<MutableValue> rtRegister = BusKt.slice(memory, 68, 73);
 
 
 

@@ -25,14 +25,19 @@ public class InstructionFetchStage extends Stage {
 		final var pc = simulator.pc;
 		final var ifid = simulator.ifid;
 
+
+		// new pc that will show next instruction
 		var pc4 = TinyModules.easyAdder(pc, 4);
 
 		// set next pc
 		Multiplexer.pcChoice(jump, branch, pc4, branchTarget, jumpTarget, pc);
 
 		// todo: watch stall
+
+		//set pc to read data
 		BusKt.set(simulator.instructionMemory.pc, pc);
 
+		//set pc and instruction
 		BusKt.set(ifid.pc, pc4);
 		BusKt.set(ifid.instruction, simulator.instructionMemory.instruction);
 	}

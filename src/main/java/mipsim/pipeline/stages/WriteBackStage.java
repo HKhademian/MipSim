@@ -14,6 +14,7 @@ public class WriteBackStage extends Stage {
 		final var memwb = simulator.memwb;
 		final var regFile = simulator.registerFile;
 
+		//choice data memory and alu --> to write data
 		final var writeData = MuxKt.mux2(memwb.memToReg, memwb.aluData, memwb.memoryData);
 		regFile.regWrite.set(memwb.regWrite);
 		BusKt.set(regFile.writeReg, memwb.rdRegister);
