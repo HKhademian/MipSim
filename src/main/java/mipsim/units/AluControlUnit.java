@@ -2,7 +2,6 @@ package mipsim.units;
 
 import sim.base.MutableValue;
 import sim.base.Value;
-import sim.base.ValueKt;
 
 import java.util.List;
 
@@ -10,11 +9,15 @@ import static sim.gates.GatesKt.*;
 
 public final class AluControlUnit {
 	/**
-	 * @param aluOp 2 bit aluOp
-	 * @param func  6 bit func
+	 * @param aluOp           2 bit aluOp
+	 * @param func            6 bit func
 	 * @param aluControlInput will create 4 bit aluControlInput
 	 */
-	public static void aluControlUnit(List<? extends Value> aluOp, List<? extends Value> func, List<? extends MutableValue> aluControlInput) {
+	public static void aluControlUnit(
+		List<? extends Value> aluOp,
+		List<? extends Value> func,
+		List<? extends MutableValue> aluControlInput
+	) {
 		/*
 		aluControlInput[0] = (aluOp[1] == 1 && ( func[0]== 1 || (func[1] == 1 && (func[3] == 1 || func[5] != 1)) ) )
 		aluControlInput[1] = !(aluOp[1] == 1 && (func[5] != 1 || func[2] == 1))
@@ -48,6 +51,6 @@ public final class AluControlUnit {
 			)
 		);
 
-		aluControlInput.get(3).set(ValueKt.mut(false));
+		aluControlInput.get(3).set(false);
 	}
 }
