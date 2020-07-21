@@ -28,7 +28,7 @@ public class ExecutionStage extends Stage {
 		Multiplexer.aluInput(forwarding1, simulator.idex.rsData, simulator.exmem.aluData, simulator.memwb.aluData, resultOneOfAlu);
 		// code above have can not detective load hazard detection
 		var resultTowOfAlu = BusKt.bus(32);
-		var forwarding2 = BusKt.toBus(2); // todo: fix this to mutable
+		var forwarding2 = BusKt.bus(2);
 
 		var resAluSrc = BusKt.bus(32);
 		Multiplexer.aluSrc(simulator.idex.aluSrc, simulator.idex.rtData, simulator.idex.immediate, resAluSrc);

@@ -39,7 +39,7 @@ public class InstructionDecodeStage extends Stage {
 		var regDst = ValueKt.mut(false);
 		var ALUsrc = ValueKt.mut(false);
 		var memToReg = ValueKt.mut(false);
-		var regWrite = ValueKt.mut(false), ;
+		var regWrite = ValueKt.mut(false);
 		var memRead = ValueKt.mut(false);
 		var memWrite = ValueKt.mut(false);
 		var branch = ValueKt.mut(false);
