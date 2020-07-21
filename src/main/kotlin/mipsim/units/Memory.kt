@@ -39,7 +39,7 @@ class Memory private constructor(private val bits: List<MemBit>) : Eval, List<Me
 	internal constructor(bitCount: Int) : this((0 until bitCount).map { MemBit() })
 
 	override fun eval() =
-		bits.eval()
+		(bits as List<Value>).eval()
 }
 
 inline val List<Value>.bitCount: Int get() = this.size
