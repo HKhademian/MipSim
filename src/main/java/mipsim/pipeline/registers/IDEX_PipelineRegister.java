@@ -9,7 +9,7 @@ public final class IDEX_PipelineRegister extends PipelineRegister {
 
 	//all control flag will be passed to pipeline
 
-	//WB
+	// WB
 	public final List<MutableValue> WB = BusKt.slice(memory, 0, 2);
 	public final MutableValue memToReg = WB.get(0);
 	public final MutableValue regWrite = WB.get(1);
