@@ -10,13 +10,31 @@ import java.util.List;
 import static sim.gates.GatesKt.*;
 
 public class Compare {
-	public static void comp4Bit(Value A3, Value A2, Value A1, Value A0, Value B3, Value B2, Value B1, Value B0, MutableValue AeqB, MutableValue AltB, MutableValue AgtB) {
+	public static void comp4Bit(
+		Value A3,
+		Value A2,
+		Value A1,
+		Value A0,
+		Value B3,
+		Value B2,
+		Value B1,
+		Value B0,
+		MutableValue AeqB,
+		MutableValue AltB,
+		MutableValue AgtB
+	) {
 		AeqB.set(and(and(xnor(A3, B3), xnor(A2, B2)), and(xnor(A1, B1), xnor(A0, B0))));
 		AgtB.set(or(or(and(A3, not(B3)), and(and(A2, not(B2)), xnor(A3, B3))), or(and(and(A1, not(B1)), and(xnor(A3, B3), xnor(A2, B2))), and(and(and(A0, not(B0)), xnor(A1, B1)), and(xnor(A3, B3), xnor(A2, B2))))));
 		AltB.set(nor(AeqB, AgtB));
 	}
 
-	public static void com32Bit(List<? extends Value> input1, List<? extends Value> input2, MutableValue AEB, MutableValue ALB, MutableValue AGB) {
+	public static void com32Bit(
+		List<? extends Value> input1,
+		List<? extends Value> input2,
+		MutableValue AEB,
+		MutableValue ALB,
+		MutableValue AGB
+	) {
 		var AeqB = BusKt.bus(8);
 		var AgtB = BusKt.bus(8);
 		var AltB = BusKt.bus(8);
