@@ -13,6 +13,12 @@ public class ExecutionStage extends Stage {
 
 	@Override
 	public void init() {
+		final var idex = simulator.idex;
+		final var exmem = simulator.exmem;
+		final var memwb = simulator.memwb;
+
+		BusKt.set(exmem.WB, idex.WB);
+		BusKt.set(exmem.MEM, idex.MEM);
 
 		/*
 		 * in this 2 type code we make enter of alu with forwarding data  and rd and rs data to give them to alu
@@ -20,34 +26,29 @@ public class ExecutionStage extends Stage {
 		 */
 
 		// todo: wrong
-		BusKt.set(simulator.exmem.writeMem, simulator.idex.rtRegister);//I don't know what is this I think it's a rt reg to read or save it's value of memory or save value of memory
+		BusKt.set(exmem.writeMem, idex.rtRegister);//I don't know what is this I think it's a rt reg to read or save it's value of memory or save value of memory
 		//todo Ask friends
 
 		var resultOneOfAlu = BusKt.bus(32);
 		var forwarding1 = BusKt.bus(2);
-		ForwardingUnit.forwardingUnitEXHazard(simulator.exmem.regWrite, simulator.exmem.rdRegister, simulator.idex.rsRegister, forwarding1);
-		Multiplexer.aluInput(forwarding1, simulator.idex.rsData, simulator.exmem.aluData, simulator.memwb.aluData, resultOneOfAlu);
+		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rdRegister, idex.rsRegister, forwarding1);
+		Multiplexer.aluInput(forwarding1, idex.rsData, exmem.aluData, memwb.aluData, resultOneOfAlu);
 		// code above have can not detective load hazard detection
 		var resultTowOfAlu = BusKt.bus(32);
 		var forwarding2 = BusKt.bus(2);
 
 		var resAluSrc = BusKt.bus(32);
-		Multiplexer.aluSrc(simulator.idex.aluSrc, simulator.idex.rtData, simulator.idex.immediate, resAluSrc);
-		ForwardingUnit.forwardingUnitEXHazard(simulator.exmem.regWrite, simulator.exmem.rdRegister, simulator.idex.rtRegister, forwarding2);
-		Multiplexer.aluInput(forwarding2, resAluSrc, simulator.exmem.aluData, simulator.memwb.aluData, resultOneOfAlu);
-		LogicALU.AluInStage(resultOneOfAlu, resultTowOfAlu, simulator.idex.function, simulator.idex.aluOp, simulator.exmem.aluData);
+		Multiplexer.aluSrc(idex.aluSrc, idex.rtData, idex.immediate, resAluSrc);
+		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rdRegister, idex.rtRegister, forwarding2);
+		Multiplexer.aluInput(forwarding2, resAluSrc, exmem.aluData, memwb.aluData, resultOneOfAlu);
+		LogicALU.AluInStage(resultOneOfAlu, resultTowOfAlu, idex.function, idex.aluOp, exmem.aluData);
 
 		/* note:
 		 * in this code we save or signal that don't need them in this state
 		 */
 
-		Multiplexer.dtRegister(simulator.idex.regDst, simulator.idex.rtRegister, simulator.idex.rdRegister, simulator.exmem.rdRegister);
-		simulator.exmem.memToReg.set(simulator.idex.memToReg);
-		simulator.exmem.memRead.set(simulator.idex.memRead);
-		simulator.exmem.memWrite.set(simulator.idex.memWrite);
-		simulator.exmem.regWrite.set(simulator.idex.regWrite);
+		Multiplexer.dtRegister(idex.regDst, idex.rtRegister, idex.rdRegister, exmem.rdRegister);
 
-		// wiring here ...
 	}
 
 	@Override
