@@ -2,6 +2,7 @@ package mipsim.pipeline;
 
 import mipsim.Simulator;
 import mipsim.module.LogicALU;
+import mipsim.module.TinyModules;
 import mipsim.units.Multiplexer;
 import sim.base.BusKt;
 import sim.base.MutableValue;
@@ -25,7 +26,7 @@ public class InstructionFetchStage extends Stage {
 		var pc = simulator.pc;
 		var ifid = simulator.ifid;
 
-		var pc4 = LogicALU.adder(pc, 4);
+		var pc4 = TinyModules.easyAdder(pc, 4);
 
 		// set next pc
 		Multiplexer.pcChoice(jump, branch, pc4, branchTarget, jumpTarget, pc);
