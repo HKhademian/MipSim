@@ -8,7 +8,7 @@ import sim.base.Value;
 import java.util.List;
 
 public final class InstructionMemory implements Eval {
-	private final Memory memory;
+	public final Memory memory;
 	private final List<MutableValue> instructionBus = BusKt.bus(32);
 	public final List<Value> instruction = (List) instructionBus;
 	public final List<MutableValue> pc = BusKt.bus(32);

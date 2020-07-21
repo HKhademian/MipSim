@@ -46,15 +46,33 @@ inline val List<Value>.bitCount: Int get() = this.size
 inline val List<Value>.byteCount: Int get() = this.bitCount / BYTE_SIZE
 inline val List<Value>.wordCount: Int get() = this.bitCount / WORD_SIZE
 
-fun List<MemBit>.getByte(i: Int): List<MemBit> = this.subList(BYTE_SIZE * i, BYTE_SIZE * i + BYTE_SIZE)
-fun List<MemBit>.getWord(i: Int): List<MemBit> = this.subList(WORD_SIZE * i, WORD_SIZE * i + WORD_SIZE)
+fun List<MutableValue>.getByte(i: Int): List<MutableValue> = this.subList(BYTE_SIZE * i, BYTE_SIZE * i + BYTE_SIZE)
+fun List<MutableValue>.getWord(i: Int): List<MutableValue> = this.subList(WORD_SIZE * i, WORD_SIZE * i + WORD_SIZE)
 
 fun createMemory(n: Int = 1) = Memory(n)
 fun createBytes(n: Int = 1) = createMemory(n * BYTE_SIZE)
 fun createWords(n: Int = 1) = createMemory(n * WORD_SIZE)
 
 
+/** convert a int to byte eq bytes */
 fun Int.Bytes() = this
+
+/** convert a int to kilo-byte eq bytes */
 fun Int.KBytes() = this.Bytes() shl 10
+
+/** convert a int to mega-byte eq bytes */
 fun Int.MBytes() = this.KBytes() shl 10
+
+/** convert a int to giga-byte eq bytes */
 fun Int.GBytes() = this.MBytes() shl 10
+
+
+/** reset all values in bus */
+fun List<MutableValue>.reset() =
+	forEach { it.reset() }
+
+/** write some words to bus */
+fun List<MutableValue>.writeWords(words: List<Int>) =
+	words.asSequence()
+		.map { it.toBus(32) }
+		.forEachIndexed { i, word -> getWord(i).set(word) }
