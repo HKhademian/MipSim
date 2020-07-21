@@ -46,4 +46,20 @@ public class InstructionFetchStage extends Stage {
 	public void eval() {
 
 	}
+	public static void main(String args[]){
+		var simulator = new Simulator();
+		var x = 20004;
+		BusKt.set(simulator.ifid.instruction,BusKt.toBus(x,32));
+
+		BusKt.set(simulator.pc,BusKt.toBus(8,32));
+
+		simulator.pc.eval();
+		System.out.println(BusKt.toInt(simulator.pc));
+		simulator.ifid.eval();
+		System.out.println(BusKt.toInt(simulator.ifid.pc));
+		//Todo oh freinds the ifid.pc don't update
+		System.out.println(BusKt.toInt(simulator.ifid.instruction));
+		//Todo I find the bug it's because of class of public void init this class don't run I think see
+	}
+
 }
