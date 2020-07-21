@@ -8,11 +8,19 @@ import java.util.List;
 import static sim.gates.GatesKt.*;
 
 public final class ControlUnit {
-	public static void control(List<Value> opcode, MutableValue regDst, MutableValue ALUsrc, MutableValue memToReg
-		, MutableValue regWrite, MutableValue memRead, MutableValue memWrite, MutableValue branch,
-														 MutableValue jump, List<MutableValue> aluOp)//alu op is two bit
-	{
-		//todo use this link create control http://fourier.eng.hmc.edu/e85_old/lectures/processor/node5.html
+	public static void control(
+		List<? extends Value> opcode,
+		MutableValue regDst,
+		MutableValue ALUsrc,
+		MutableValue memToReg,
+		MutableValue regWrite,
+		MutableValue memRead,
+		MutableValue memWrite,
+		MutableValue branch,
+		MutableValue jump,
+		List<? extends MutableValue> aluOp//alu op is two bit
+	) {
+		//todo: use this link create control http://fourier.eng.hmc.edu/e85_old/lectures/processor/node5.html
 
 		/*
 		opcode is 6 bit and opCode.get(5) is most significant

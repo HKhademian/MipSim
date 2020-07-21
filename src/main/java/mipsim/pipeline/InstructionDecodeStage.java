@@ -1,14 +1,13 @@
 package mipsim.pipeline;
 
 import mipsim.Simulator;
-import mipsim.module.LogicALU;
+import mipsim.module.TinyModules;
 import mipsim.units.ControlUnit;
 import mipsim.units.HazardDetectionUnit;
 import mipsim.units.Multiplexer;
 import sim.HelpersKt;
 import sim.base.BusKt;
 import sim.base.MutableValue;
-import sim.base.Value;
 import sim.base.ValueKt;
 
 import java.util.List;
@@ -24,38 +23,40 @@ public class InstructionDecodeStage extends Stage {
 
 // 32 bit instruction,pc 32 bit
 		var instruction = simulator.ifid.instruction;
-		List<Value> PC = BusKt.slice(simulator.ifid.pc, 0, 32);
-
+		var PC = simulator.ifid.pc;
 
 		//split the instruction
-		List<Value> opcode = BusKt.slice(instruction, 26, 32);
-		List<Value> rs = BusKt.slice(instruction, 21, 26);
-		List<Value> rd = BusKt.slice(instruction, 16, 21);
-		List<Value> rt = BusKt.slice(instruction, 11, 16);
-		List<Value> shiftMa = BusKt.slice(instruction, 6, 11);
-		List<Value> func = BusKt.slice(instruction, 0, 6);
-		List<Value> jumpAddress = BusKt.slice(instruction, 0, 26);
-		List<Value> immediate = BusKt.slice(instruction, 0, 16);
+		var opcode = BusKt.slice(instruction, 26, 32);
+		var rs = BusKt.slice(instruction, 21, 26);
+		var rd = BusKt.slice(instruction, 16, 21);
+		var rt = BusKt.slice(instruction, 11, 16);
+		var shiftMa = BusKt.slice(instruction, 6, 11);
+		var func = BusKt.slice(instruction, 0, 6);
+		var jumpAddress = BusKt.slice(instruction, 0, 26);
+		var immediate = BusKt.slice(instruction, 0, 16);
 
 		// all control unit flag would create
-		MutableValue regDst = ValueKt.mut(false), ALUsrc = ValueKt.mut(false),
-			memToReg = ValueKt.mut(false), regWrite = ValueKt.mut(false), memRead = ValueKt.mut(false), memWrite = ValueKt.mut(false),
-			branch = ValueKt.mut(false), jump = ValueKt.mut(false);
+		var regDst = ValueKt.mut(false);
+		var ALUsrc = ValueKt.mut(false);
+		var memToReg = ValueKt.mut(false);
+		var regWrite = ValueKt.mut(false), ;
+		var memRead = ValueKt.mut(false);
+		var memWrite = ValueKt.mut(false);
+		var branch = ValueKt.mut(false);
+		var jump = ValueKt.mut(false);
 
-		List<MutableValue> aluOp = BusKt.bus(2);
-
+		var aluOp = BusKt.bus(2);
 
 		ControlUnit.control(opcode, regDst, ALUsrc, memToReg, regWrite
 			, memRead, memWrite, branch, jump, aluOp);
 
-
 		//this will show if hazard would happen and we need stall
 		var hazardDetection = ValueKt.mut();
-		Value ID_EX_memRead = simulator.idex.memRead;
-		List<Value> ID_EX_registerRt = BusKt.slice(simulator.idex.rtRegister, 0, 5);
+		var ID_EX_memRead = simulator.idex.memRead;
+		var ID_EX_registerRt = BusKt.slice(simulator.idex.rtRegister, 0, 5);
 		//rt ==  IF_ID_registerRt;
 		//rs ==  IF_ID_registerRs;
-		MutableValue stallFlag = ValueKt.mut();
+		var stallFlag = ValueKt.mut();
 		HazardDetectionUnit.hazardDetectionUnit(memRead, ID_EX_registerRt, rt, rs, stallFlag);
 
 		var regWriteFinal = ValueKt.mut();
@@ -74,7 +75,7 @@ public class InstructionDecodeStage extends Stage {
 
 		var branchAddress = HelpersKt.shift(immediate, 2);
 		var finalBranch = BusKt.bus(32);
-		LogicALU.adder(PC, branchAddress, finalBranch);
+		TinyModules.easyAdder(PC, branchAddress, finalBranch);
 
 
 		var jumpAddressExtended = BusKt.bus(32);
@@ -113,9 +114,8 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set(simulator.idex.aluOp, aluOp);
 
 
-
 		//set func
-		BusKt.set(simulator.idex.function , func);
+		BusKt.set(simulator.idex.function, func);
 
 		//set shift
 		BusKt.set(simulator.idex.shiftMa, shiftMa);

@@ -11,10 +11,11 @@ import static sim.gates.GatesKt.xor;
 public final class HazardDetectionUnit {
 	public static void hazardDetectionUnit(
 		Value ID_EX_memRead,
-		List<Value> ID_EX_registerRt,
-		List<Value> IF_ID_registerRt,
-		List<Value> IF_ID_registerRs,
-		MutableValue stallFlag) {
+		List<? extends Value> ID_EX_registerRt,
+		List<? extends Value> IF_ID_registerRt,
+		List<? extends Value> IF_ID_registerRs,
+		MutableValue stallFlag
+	) {
 		/*
 		if(ID_EX_memRead && ( (IF_ID_registerRt == ID_EX_memRead) || (IF_ID_registerRs == ID_EX_memRead) )
 		{

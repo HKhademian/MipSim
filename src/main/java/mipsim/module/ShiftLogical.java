@@ -34,14 +34,22 @@ final class ShiftHelper {
 	/**
 	 * @param shiftma -> a number show number of bit will shift
 	 */
-	public static void thirtyTwoBitShifterLeft(List<Value> input, List<Value> shiftma, List<MutableValue> output) {
+	public static void thirtyTwoBitShifterLeft(
+		List<? extends Value> input,
+		List<? extends Value> shiftma,
+		List<? extends MutableValue> output
+	) {
 		BusKt.set(output, HelpersKt.shift(input, BusKt.toInt(shiftma)));
 	}
 
 	/**
 	 * @param shiftma -> a number show number of bit will shift
 	 */
-	public static void thirtyTwoBitShifterRight(List<Value> input, List<Value> shiftma, List<MutableValue> output) {
+	public static void thirtyTwoBitShifterRight(
+		List<? extends Value> input,
+		List<? extends Value> shiftma,
+		List<? extends MutableValue> output
+	) {
 		BusKt.set(output, HelpersKt.shift(input, -BusKt.toInt(shiftma)));
 	}
 }
