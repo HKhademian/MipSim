@@ -87,8 +87,8 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set(REG_FILE.readReg1, rs);
 		BusKt.set(rsData, REG_FILE.readData1);
 
-		BusKt.set(REG_FILE.readReg1, rt);
-		BusKt.set(rtData, REG_FILE.readData1);
+		BusKt.set(REG_FILE.readReg2, rt);
+		BusKt.set(rtData, REG_FILE.readData2);
 
 
 		//here we set the pipeline
