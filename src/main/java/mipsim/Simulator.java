@@ -1,6 +1,10 @@
 package mipsim;
 
-import mipsim.pipeline.*;
+import mipsim.pipeline.registers.EXMEM_PipelineRegister;
+import mipsim.pipeline.registers.IDEX_PipelineRegister;
+import mipsim.pipeline.registers.IFID_PipelineRegister;
+import mipsim.pipeline.registers.MEMWB_PipelineRegister;
+import mipsim.pipeline.stages.*;
 import mipsim.units.*;
 import sim.base.*;
 

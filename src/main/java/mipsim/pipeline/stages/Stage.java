@@ -1,4 +1,4 @@
-package mipsim.pipeline;
+package mipsim.pipeline.stages;
 
 import mipsim.Simulator;
 import sim.base.Eval;

@@ -1,6 +1,5 @@
-package mipsim.pipeline;
+package mipsim.pipeline.registers;
 
-import mipsim.units.MemBit;
 import mipsim.units.MemoryKt;
 import sim.base.BusKt;
 import sim.base.MutableValue;

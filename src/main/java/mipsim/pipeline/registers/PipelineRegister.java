@@ -1,4 +1,4 @@
-package mipsim.pipeline;
+package mipsim.pipeline.registers;
 
 import mipsim.units.Memory;
 import mipsim.units.MemoryKt;
