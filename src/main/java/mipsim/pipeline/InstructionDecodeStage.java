@@ -19,11 +19,14 @@ public class InstructionDecodeStage extends Stage {
 
 	@Override
 	public void init() {
-
-
+	//help for coding
+		var ID_EX = simulator.idex;
+		var IF_ID = simulator.ifid;
+		var REG_FILE =simulator.registerFile;
+		var IF_STAGE = simulator.ifStage;
 // 32 bit instruction,pc 32 bit
-		var instruction = simulator.ifid.instruction;
-		var PC = simulator.ifid.pc;
+		var instruction = IF_ID.instruction;
+		var PC = IF_ID.pc;
 
 		//split the instruction
 		var opcode = BusKt.slice(instruction, 26, 32);
@@ -51,13 +54,12 @@ public class InstructionDecodeStage extends Stage {
 			, memRead, memWrite, branch, jump, aluOp);
 
 		//this will show if hazard would happen and we need stall
-		var hazardDetection = ValueKt.mut();
-		var ID_EX_memRead = simulator.idex.memRead;
-		var ID_EX_registerRt = BusKt.slice(simulator.idex.rtRegister, 0, 5);
+		var ID_EX_memRead = ID_EX.memRead;
+		var ID_EX_registerRt = BusKt.slice(ID_EX.rtRegister, 0, 5);
 		//rt ==  IF_ID_registerRt;
 		//rs ==  IF_ID_registerRs;
 		var stallFlag = ValueKt.mut();
-		HazardDetectionUnit.hazardDetectionUnit(memRead, ID_EX_registerRt, rt, rs, stallFlag);
+		HazardDetectionUnit.hazardDetectionUnit(ID_EX_memRead, ID_EX_registerRt, rt, rs, stallFlag);
 
 		var regWriteFinal = ValueKt.mut();
 		var memWriteFinal = ValueKt.mut();
@@ -85,52 +87,52 @@ public class InstructionDecodeStage extends Stage {
 
 
 		//we will read data from register
-		BusKt.set(simulator.registerFile.readReg1, rs);
-		BusKt.set(rsData, simulator.registerFile.readData1);
+		BusKt.set(REG_FILE.readReg1, rs);
+		BusKt.set(rsData, REG_FILE.readData1);
 
-		BusKt.set(simulator.registerFile.readReg1, rt);
-		BusKt.set(rtData, simulator.registerFile.readData1);
+		BusKt.set(REG_FILE.readReg1, rt);
+		BusKt.set(rtData, REG_FILE.readData1);
 
 
 		//here we set the pipeline
 
 
 		//set register value
-		BusKt.set(simulator.idex.rsData, rsData);
-		BusKt.set(simulator.idex.rtData, rtData);
-		BusKt.set(simulator.idex.immediate, immediate);
+		BusKt.set(ID_EX.rsData, rsData);
+		BusKt.set(ID_EX.rtData, rtData);
+		BusKt.set(ID_EX.immediate, immediate);
 
 		//set register number
-		BusKt.set(simulator.idex.rtRegister, rt);
-		BusKt.set(simulator.idex.rdRegister, rd);
-		BusKt.set(simulator.idex.rsRegister, rs);
+		BusKt.set(ID_EX.rtRegister, rt);
+		BusKt.set(ID_EX.rdRegister, rd);
+		BusKt.set(ID_EX.rsRegister, rs);
 		//setFlag
-		simulator.idex.memToReg.set(regDst);
-		simulator.idex.memToReg.set(memToReg);
-		simulator.idex.regWrite.set(regWriteFinal);
-		simulator.idex.memRead.set(memRead);
-		simulator.idex.memWrite.set(memWriteFinal);
-		simulator.idex.aluSrc.set(ALUsrc);
-		BusKt.set(simulator.idex.aluOp, aluOp);
+		ID_EX.memToReg.set(regDst);
+		ID_EX.memToReg.set(memToReg);
+		ID_EX.regWrite.set(regWriteFinal);
+		ID_EX.memRead.set(memRead);
+		ID_EX.memWrite.set(memWriteFinal);
+		ID_EX.aluSrc.set(ALUsrc);
+		BusKt.set(ID_EX.aluOp, aluOp);
 
 
 		//set func
-		BusKt.set(simulator.idex.function, func);
+		BusKt.set(ID_EX.function, func);
 
 		//set shift
-		BusKt.set(simulator.idex.shiftMa, shiftMa);
+		BusKt.set(ID_EX.shiftMa, shiftMa);
 
 		//set branch and jump
-		BusKt.set(simulator.ifStage.branchTarget.subList(0, 26), finalBranch);
-		BusKt.set(simulator.ifStage.jumpTarget, jumpAddressExtended);
+		BusKt.set(IF_STAGE.branchTarget.subList(0, 26), finalBranch);
+		BusKt.set(IF_STAGE.jumpTarget, jumpAddressExtended);
 
 
-		simulator.ifStage.jump.set(jump);
-		simulator.ifStage.branch.set(branch);
+		IF_STAGE.jump.set(jump);
+		IF_STAGE.branch.set(branch);
 
 
 		//set stall
-		simulator.ifStage.stall.set(stallFlag);
+		IF_STAGE.stall.set(stallFlag);
 
 	}
 
