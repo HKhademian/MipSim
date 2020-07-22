@@ -147,17 +147,19 @@ public final class Multiplexer {
 	 */
 	public static void aluResult(
 		List<? extends Value> aluControlInput,
-		List<? extends MutableValue> add,
-		List<? extends MutableValue> sub,
-		List<? extends MutableValue> and,
-		List<? extends MutableValue> or,
-		List<? extends MutableValue> setOnLessThan,
-		List<? extends MutableValue> shiftLogicalLeft,
-		List<? extends MutableValue> shiftLogicalRight,
+		List<? extends Value> add,
+		List<? extends Value> sub,
+		List<? extends Value> and,
+		List<? extends Value> or,
+		List<? extends Value> setOnLessThan,
+		List<? extends Value> shiftLogicalLeft,
+		List<? extends Value> shiftLogicalRight,
 		List<? extends MutableValue> result
 	) {
-		BusKt.set(result, mux(aluControlInput, and, or, add, ZERO_BUS, shiftLogicalLeft, shiftLogicalRight, sub, setOnLessThan
-			, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS));
+		var muxResult = mux(aluControlInput, and, or, add, ZERO_BUS, shiftLogicalLeft, shiftLogicalRight, sub, setOnLessThan,
+			ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS);
+
+		BusKt.set(result, muxResult);
 	}
 
 	public static void aluSrc(
