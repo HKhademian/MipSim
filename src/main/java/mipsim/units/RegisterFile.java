@@ -19,7 +19,9 @@ public final class RegisterFile implements Eval, DebugWriter {
 	public final List<MutableValue> writeReg = BusKt.bus(5);
 	public final List<MutableValue> writeData = BusKt.bus(32);
 	public final MutableValue regWrite = ValueKt.mut(false);
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public final List<Value> readData1 = (List) readData1Bus;
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public final List<Value> readData2 = (List) readData2Bus;
 
 	public RegisterFile(Processor processor) {
@@ -32,10 +34,9 @@ public final class RegisterFile implements Eval, DebugWriter {
 		BusKt.set(writeData, ZERO_BUS);
 
 		// set $0 non-writable
-		var regZero = MemoryKt.getWord(_memory, 0);
-		for (var i = 0; i < 32; i++) {
-			((MemBit) regZero.get(i)).getMemWrite().set(false);
-		}
+		// noinspection unchecked,rawtypes
+		var regZero = (List<MemBit>) (List) MemoryKt.getWord(_memory, 0);
+		MemoryKt.setMemWrite(regZero, false);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ const val WORD_SIZE = 4 * BYTE_SIZE
 class MemBit : Element, MutableValue {
 	/** whether to write input to output or nuo */
 	val memWrite = mut(true)
-	
+
 	private val curr = mut(false)
 	private val next = mut(false)
 
@@ -101,3 +101,11 @@ fun List<MutableValue>.writeWords(words: List<Int>) =
 	words.asSequence()
 		.map { it.toBus(32) }
 		.forEachIndexed { i, word -> getWord(i).set(word) }
+
+/** set all `memBit`s memWrite flags to given value */
+fun List<MemBit>.setMemWrite(memWrite: Value) =
+	this.forEach { it.memWrite.set(memWrite) }
+
+/** set all `memBit`s memWrite flags to given value */
+fun List<MemBit>.setMemWrite(memWrite: Boolean) =
+	this.setMemWrite(memWrite.toValue())
