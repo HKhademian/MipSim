@@ -1,9 +1,12 @@
 package mipsim.pipeline.registers;
 
+import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 
 import java.util.List;
+
+import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
 
 public final class MEMWB_PipelineRegister extends PipelineRegister {
 
@@ -27,4 +30,26 @@ public final class MEMWB_PipelineRegister extends PipelineRegister {
 	public MEMWB_PipelineRegister() {
 		super(71);
 	}
+
+	public void writeDebug(@NotNull StringBuffer buffer) {
+		var memToReg = this.memToReg;
+		var regWrite = this.regWrite;
+
+		var aluDataBin = BusKt.toInt(this.aluData);
+		var aluDataBinStr = parseBinToInstruction(aluDataBin);
+
+		var memoryDataBin = BusKt.toInt(this.memoryData);
+		var memoryDataStr = parseBinToInstruction(memoryDataBin);
+
+		var rdRegisterBin = BusKt.toInt(this.rdRegister);
+		var rdRegisterStr = parseBinToInstruction(rdRegisterBin);
+
+		buffer
+			.append(String.format("memToReg: ", memToReg))
+			.append(String.format("regWrite: ", regWrite))
+			.append(String.format("aluData: %08xH = ' %s '\t", aluDataBin, aluDataBinStr))
+			.append(String.format("memoryData: %08xH = ' %s '\t", memoryDataBin, memoryDataStr))
+			.append(String.format("rdRegister: %08xH = ' %s '\t", rdRegisterBin, rdRegisterStr));
+	}
+
 }

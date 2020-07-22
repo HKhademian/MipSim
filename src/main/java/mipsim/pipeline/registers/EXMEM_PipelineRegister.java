@@ -6,7 +6,7 @@ import sim.base.MutableValue;
 
 import java.util.List;
 
-import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
+	import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
 
 public final class EXMEM_PipelineRegister extends PipelineRegister {
 
