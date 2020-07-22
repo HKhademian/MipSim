@@ -2,8 +2,8 @@ package mipsim.pipeline.stages;
 
 import mipsim.Processor;
 import mipsim.module.LogicALU;
+
 import mipsim.units.AluControlUnit;
-import mipsim.units.ControlUnit;
 import mipsim.units.ForwardingUnit;
 import mipsim.module.Multiplexer;
 import sim.base.BusKt;
@@ -20,6 +20,12 @@ public class ExecutionStage extends Stage {
 		final var idex = processor.idex;
 		final var exmem = processor.exmem;
 		final var memwb = processor.memwb;
+
+
+
+
+
+
 
 
 
@@ -78,8 +84,141 @@ public class ExecutionStage extends Stage {
 	}
 
 	public static void main(String[] args) {
+
 		Processor processor = new Processor();
-		processor.exStage.init();
+		var idex = processor.idex;
+		var exmem = processor.exmem;
+		var memwb = processor.memwb;
+		processor.idStage.init();
+
+		String test;
+
+
+
+
+		TestKt.test("and", () -> {
+			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
+			BusKt.set(idex.function , BusKt.toBus(36,6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
+			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
+			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
+			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
+
+			BusKt.set(idex.rsData,BusKt.toBus(10,32));
+			BusKt.set(idex.rtData,BusKt.toBus(14,32));
+			idex.eval();
+				return exmem;
+		});
+
+		TestKt.test("add", () -> {
+			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
+			BusKt.set(idex.function , BusKt.toBus(32,6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
+			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
+			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
+			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
+
+			BusKt.set(idex.rsData,BusKt.toBus(7,32));
+			BusKt.set(idex.rtData,BusKt.toBus(14,32));
+			idex.eval();
+			return exmem;
+		});
+
+		TestKt.test("sub", () -> {
+			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
+			BusKt.set(idex.function , BusKt.toBus(34,6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
+			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
+			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
+			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
+
+			BusKt.set(idex.rsData,BusKt.toBus(20,32));
+			BusKt.set(idex.rtData,BusKt.toBus(14,32));
+			idex.eval();
+			return exmem;
+		});
+
+		TestKt.test("or", () -> {
+			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
+			BusKt.set(idex.function , BusKt.toBus(37,6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
+			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
+			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
+			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
+
+			BusKt.set(idex.rsData,BusKt.toBus(16,32));
+			BusKt.set(idex.rtData,BusKt.toBus(14,32));
+			idex.eval();
+			return exmem;
+		});
+
+		TestKt.test("set on less", () -> {
+			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
+			BusKt.set(idex.function , BusKt.toBus(42,6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
+			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
+			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
+			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
+
+			BusKt.set(idex.rsData,BusKt.toBus(16,32));
+			BusKt.set(idex.rtData,BusKt.toBus(14,32));
+			idex.eval();
+			return exmem;
+		});
+
+		TestKt.test("set on less", () -> {
+			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
+			BusKt.set(idex.function , BusKt.toBus(42,6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
+			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
+			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
+			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
+
+			BusKt.set(idex.rsData,BusKt.toBus(16,32));
+			BusKt.set(idex.rtData,BusKt.toBus(16,32));
+			idex.eval();
+			return exmem;
+		});
+
+		TestKt.test("set on less", () -> {
+			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
+			BusKt.set(idex.function , BusKt.toBus(42,6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
+			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
+			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
+			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
+
+			BusKt.set(idex.rsData,BusKt.toBus(16,32));
+			BusKt.set(idex.rtData,BusKt.toBus(17,32));
+			idex.eval();
+			return exmem;
+		});
+
+		TestKt.test("load word and store word addi", () -> {
+			BusKt.set(idex.aluOp , BusKt.toBus(2,0));
+			BusKt.set(idex.function , BusKt.toBus(42,6));
+			idex.aluSrc.set(true);
+			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
+			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
+			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
+			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
+
+			BusKt.set(idex.rsData,BusKt.toBus(16,32));
+			BusKt.set(idex.immediate,BusKt.toBus(2,32));
+			idex.eval();
+			return exmem;
+		});
+
+
+
+		//System.out.println(test);
 
 
 	}

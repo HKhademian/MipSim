@@ -55,12 +55,12 @@ public final class ControlUnit {
 
 	public static void main(String[] args) {
 		var opcode = BusKt.bus(6);
-		opcode.set(0, ValueKt.mut(false));
-		opcode.set(1,ValueKt.mut(true));
-		opcode.set(2,ValueKt.mut(false));
-		opcode.set(3,ValueKt.mut(false));
-		opcode.set(4,ValueKt.mut(false));
-		opcode.set(5,ValueKt.mut(false));
+		opcode.get(0).set(false);
+		opcode.get(1).set(false);
+		opcode.get(2).set(false);
+		opcode.get(3).set(false);
+		opcode.get(4).set(false);
+		opcode.get(5).set(false);
 
 
 		var regDst = ValueKt.mut();

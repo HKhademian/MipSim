@@ -1,9 +1,12 @@
 package mipsim.pipeline.registers;
 
+import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 
 import java.util.List;
+
+import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
 
 public final class EXMEM_PipelineRegister extends PipelineRegister {
 
@@ -37,5 +40,30 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 
 	public EXMEM_PipelineRegister() {
 		super(73);
+	}
+
+	@Override
+	public void writeDebug(@NotNull StringBuffer buffer) {
+		var memToReg = this.memToReg.get();
+		var regWrite = this.regWrite.get();
+		var memRead = this.memRead.get();
+		var memWrite = this.memWrite.get();
+
+		var aluData = BusKt.toInt(this.aluData);
+		var aluDataString = parseBinToInstruction(aluData);
+		var writeMem = BusKt.toInt(this.writeMem);
+		var writeMemString = parseBinToInstruction(writeMem);
+		var rtRegister = BusKt.toInt(this.rtRegister);
+		var rtRegisterString = parseBinToInstruction(rtRegister);
+		buffer
+			.append("memory to register: "+memToReg)
+			.append("\t,register write: "+regWrite)
+			.append("\t,memory read: "+memRead)
+			.append("\t,memory write: "+memWrite)
+			.append(String.format("\t,rdData: %08xH = ' %s '", aluData,aluDataString))
+			.append(String.format("\t,rdRegister: %08xH = ' %s '",writeMem,writeMemString))
+
+			.append(String.format("\t,rtData: %08xH = ' %s '",rtRegister,rtRegisterString));
+
 	}
 }
