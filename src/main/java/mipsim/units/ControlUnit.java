@@ -1,12 +1,14 @@
 package mipsim.units;
 
+import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.Value;
+import sim.base.ValueKt;
 
 import java.util.List;
 
 import static sim.gates.GatesKt.*;
-
+//test:done
 public final class ControlUnit {
 	public static void control(
 		List<? extends Value> opcode,
@@ -49,5 +51,39 @@ public final class ControlUnit {
 		aluOp.get(1).set(not(or(opcode)));
 		aluOp.get(0).set(opcode.get(2));
 		jump.set(and(not(opcode.get(5)), opcode.get(1)));
+	}
+
+	public static void main(String[] args) {
+		var opcode = BusKt.bus(6);
+		opcode.set(0, ValueKt.mut(false));
+		opcode.set(1,ValueKt.mut(true));
+		opcode.set(2,ValueKt.mut(false));
+		opcode.set(3,ValueKt.mut(false));
+		opcode.set(4,ValueKt.mut(false));
+		opcode.set(5,ValueKt.mut(false));
+
+
+		var regDst = ValueKt.mut();
+		var ALUsrc = ValueKt.mut();
+		var memToReg = ValueKt.mut();
+		var regWrite = ValueKt.mut();
+		var memRead = ValueKt.mut();
+		var memWrite = ValueKt.mut();
+		var branch = ValueKt.mut();
+		var jump = ValueKt.mut();
+		var aluOp = BusKt.bus(2);
+		ControlUnit.control(opcode,regDst,ALUsrc,memToReg,regWrite,memRead,memWrite,branch,jump,aluOp);
+
+		System.out.println("regDst: "+regDst);
+		System.out.println("ALUsrc: "+ALUsrc);
+		System.out.println("memToReg: "+memToReg);
+		System.out.println("regWrite: "+regWrite);
+		System.out.println("memRead: "+memRead);
+		System.out.println("memWrite: "+memWrite);
+		System.out.println("branch: "+branch);
+		System.out.println("jump: "+jump);
+		System.out.println("aluOp: "+aluOp.get(1)+""+aluOp.get(0));
+
+
 	}
 }
