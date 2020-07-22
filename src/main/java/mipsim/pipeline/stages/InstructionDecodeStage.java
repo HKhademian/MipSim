@@ -150,7 +150,7 @@ public class InstructionDecodeStage extends Stage {
 		final var processor = new Processor();
 		processor.idStage.init();
 
-		var instBin = parseInstructionToBin("add $t2, $fp, $t0");
+		var instBin = parseInstructionToBin("addi $t2, $t1,100");
 		var inst = BusKt.toBus(instBin, 32);
 
 
@@ -158,13 +158,12 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
 		System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
-		System.out.println("\n####################################################################\n");
 
 		processor.ifid.eval();
 
-
 		System.out.println("instruction next=" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("new pc next = " + BusKt.toInt(processor.ifid.pc));
+		System.out.println("\n####################################################################\n");
 		System.out.println("rs before = " + BusKt.toInt(processor.idex.rsRegister));
 		System.out.println("rs before = " + BusKt.toInt(processor.idex.rsData));
 		System.out.println("rt before = " + BusKt.toInt(processor.idex.rtRegister));
@@ -194,7 +193,7 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("rs data next = " + BusKt.toInt(processor.idex.rsData));
 		System.out.println("rt next=" + BusKt.toInt(processor.idex.rtRegister));
 		System.out.println("rt data next = " + BusKt.toInt(processor.idex.rtData));
-		System.out.println("rd =" + BusKt.toInt(processor.idex.rsRegister));
+		System.out.println("rd =" + BusKt.toInt(processor.idex.rdRegister));
 		System.out.println("immadiate =" + BusKt.toInt(processor.idex.immediate));
 		System.out.println("aluOp =" + BusKt.toInt(processor.idex.aluOp));
 		System.out.println("mem to reg next =" + processor.idex.memToReg);
@@ -224,8 +223,10 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("next jump = "+processor.ifStage.jump);
 		System.out.println("next  stall = "+processor.ifStage.stall);
 
-		
+
 		System.out.println("\n###########################################################################\n");
+
+
 
 	}
 }
