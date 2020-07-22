@@ -1,13 +1,13 @@
 package mipsim.pipeline.stages;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import sim.base.Eval;
 
 public abstract class Stage implements Eval {
-	protected final Simulator simulator;
+	protected final Processor processor;
 
-	protected Stage(final Simulator simulator) {
-		this.simulator = simulator;
+	protected Stage(final Processor processor) {
+		this.processor = processor;
 	}
 
 	/**

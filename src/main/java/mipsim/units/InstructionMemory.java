@@ -1,6 +1,6 @@
 package mipsim.units;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import sim.base.BusKt;
 import sim.base.Eval;
 import sim.base.MutableValue;
@@ -14,7 +14,7 @@ public final class InstructionMemory implements Eval {
 	public final List<Value> instruction = (List) instructionBus;
 	public final List<MutableValue> pc = BusKt.bus(32);
 
-	public InstructionMemory(Simulator simulator,  int wordSize) {
+	public InstructionMemory(Processor processor, int wordSize) {
 		memory = MemoryKt.createWords(wordSize);
 		BusKt.set(pc, BusKt.EMPTY_BUS);
 	}

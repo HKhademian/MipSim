@@ -1,6 +1,6 @@
 package mipsim.units;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import sim.base.*;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public final class DataMemory implements Eval {
 	public final MutableValue memRead = ValueKt.mut(false);
 	public final List<Value> readData = (List) readDataBus;
 
-	public DataMemory(Simulator simulator, int wordSize) {
+	public DataMemory(Processor processor, int wordSize) {
 		memory = MemoryKt.createWords(wordSize);
 		BusKt.set(address, ZERO_BUS);
 		BusKt.set(writeData, ZERO_BUS);

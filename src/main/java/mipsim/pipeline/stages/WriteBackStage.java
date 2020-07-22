@@ -1,18 +1,18 @@
 package mipsim.pipeline.stages;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import sim.base.BusKt;
 import sim.real.MuxKt;
 
 public class WriteBackStage extends Stage {
-	public WriteBackStage(final Simulator simulator) {
-		super(simulator);
+	public WriteBackStage(final Processor processor) {
+		super(processor);
 	}
 
 	@Override
 	public void init() {
-		final var memwb = simulator.memwb;
-		final var regFile = simulator.registerFile;
+		final var memwb = processor.memwb;
+		final var regFile = processor.registerFile;
 
 		//choice data memory and alu --> to write data
 		final var writeData = MuxKt.mux2(memwb.memToReg, memwb.aluData, memwb.memoryData);

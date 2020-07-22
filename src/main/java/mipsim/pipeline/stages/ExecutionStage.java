@@ -1,21 +1,21 @@
 package mipsim.pipeline.stages;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import mipsim.module.LogicALU;
 import mipsim.units.ForwardingUnit;
 import mipsim.units.Multiplexer;
 import sim.base.BusKt;
 
 public class ExecutionStage extends Stage {
-	public ExecutionStage(final Simulator simulator) {
-		super(simulator);
+	public ExecutionStage(final Processor processor) {
+		super(processor);
 	}
 
 	@Override
 	public void init() {
-		final var idex = simulator.idex;
-		final var exmem = simulator.exmem;
-		final var memwb = simulator.memwb;
+		final var idex = processor.idex;
+		final var exmem = processor.exmem;
+		final var memwb = processor.memwb;
 
 		BusKt.set(exmem.WB, idex.WB);
 		BusKt.set(exmem.MEM, idex.MEM);

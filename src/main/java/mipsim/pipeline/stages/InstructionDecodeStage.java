@@ -1,6 +1,6 @@
 package mipsim.pipeline.stages;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import mipsim.module.TinyModules;
 import mipsim.units.ControlUnit;
 import mipsim.units.HazardDetectionUnit;
@@ -10,17 +10,17 @@ import sim.base.BusKt;
 import sim.base.ValueKt;
 
 public class InstructionDecodeStage extends Stage {
-	public InstructionDecodeStage(final Simulator simulator) {
-		super(simulator);
+	public InstructionDecodeStage(final Processor processor) {
+		super(processor);
 	}
 
 	@Override
 	public void init() {
 		//help for coding
-		final var ID_EX = simulator.idex;
-		final var IF_ID = simulator.ifid;
-		final var REG_FILE = simulator.registerFile;
-		final var IF_STAGE = simulator.ifStage;
+		final var ID_EX = processor.idex;
+		final var IF_ID = processor.ifid;
+		final var REG_FILE = processor.registerFile;
+		final var IF_STAGE = processor.ifStage;
 		// 32 bit instruction,pc 32 bit
 		final var instruction = IF_ID.instruction;
 		final var PC = IF_ID.pc;

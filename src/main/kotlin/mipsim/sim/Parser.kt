@@ -1,19 +1,19 @@
 package mipsim.sim
 
-import mipsim.Simulator
+import mipsim.Processor
 import mipsim.units.reset
 import mipsim.units.writeWords
 import java.io.File
 
 /** load instructions from a file and write to instructionMemory */
-fun Simulator.loadInstructions(instructionFile: File) =
+fun Processor.loadInstructions(instructionFile: File) =
 	loadInstructions(instructionFile.readLines())
 
 //fun Simulator.loadInstructions(instructions: String) =
 //	loadInstructions(instructions.lines())
 
 /** parse instructions and write to instructionMemory */
-fun Simulator.loadInstructions(instructionLines: List<String>) {
+fun Processor.loadInstructions(instructionLines: List<String>) {
 	val instructions = instructionLines.map { parseInstruction(it) } // convert to int
 	instructionMemory.memory.reset()
 	instructionMemory.memory.writeWords(instructions)

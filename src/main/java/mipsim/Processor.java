@@ -8,7 +8,7 @@ import mipsim.pipeline.stages.*;
 import mipsim.units.*;
 import sim.base.*;
 
-public class Simulator implements Eval {
+public class Processor implements Eval {
 	public final Value clock;
 	public final Memory pc;
 	public final InstructionMemory instructionMemory;
@@ -28,7 +28,7 @@ public class Simulator implements Eval {
 	public final EXMEM_PipelineRegister exmem;
 	public final MEMWB_PipelineRegister memwb;
 
-	public Simulator() {
+	public Processor() {
 		clock = ValueKt.mut(false);
 		pc = MemoryKt.createWords(1);
 		instructionMemory = new InstructionMemory(this, 100);

@@ -1,6 +1,6 @@
 package mipsim.pipeline.stages;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import mipsim.module.TinyModules;
 import mipsim.units.Multiplexer;
 import sim.base.BusKt;
@@ -16,14 +16,14 @@ public class InstructionFetchStage extends Stage {
 	public final MutableValue branch = ValueKt.mut();
 	public final MutableValue jump = ValueKt.mut();
 
-	public InstructionFetchStage(final Simulator simulator) {
-		super(simulator);
+	public InstructionFetchStage(final Processor processor) {
+		super(processor);
 	}
 
 	@Override
 	public void init() {
-		final var pc = simulator.pc;
-		final var ifid = simulator.ifid;
+		final var pc = processor.pc;
+		final var ifid = processor.ifid;
 
 
 		// new pc that will show next instruction
@@ -35,11 +35,11 @@ public class InstructionFetchStage extends Stage {
 		// todo: watch stall
 
 		//set pc to read data
-		BusKt.set(simulator.instructionMemory.pc, pc);
+		BusKt.set(processor.instructionMemory.pc, pc);
 
 		//set pc and instruction
 		BusKt.set(ifid.pc, pc4);
-		BusKt.set(ifid.instruction, simulator.instructionMemory.instruction);
+		BusKt.set(ifid.instruction, processor.instructionMemory.instruction);
 	}
 
 	@Override

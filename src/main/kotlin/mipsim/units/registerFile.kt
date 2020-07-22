@@ -1,10 +1,10 @@
 package mipsim.units
 
-import mipsim.Simulator
+import mipsim.Processor
 import sim.base.bus
 import sim.base.set
 
-private val sim = Simulator()
+private val sim = Processor()
 val regFile = sim.registerFile
 
 fun main() {

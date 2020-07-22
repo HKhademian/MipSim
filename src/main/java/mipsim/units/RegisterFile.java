@@ -1,6 +1,6 @@
 package mipsim.units;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import sim.base.*;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public final class RegisterFile implements Eval {
 	public final List<Value> readData1 = (List) readData1Bus;
 	public final List<Value> readData2 = (List) readData2Bus;
 
-	public RegisterFile(Simulator simulator) {
+	public RegisterFile(Processor processor) {
 		memory = MemoryKt.createWords(32);
 		BusKt.set(readReg1, ZERO_BUS);
 		BusKt.set(readReg2, ZERO_BUS);

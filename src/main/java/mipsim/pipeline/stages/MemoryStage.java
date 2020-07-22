@@ -1,18 +1,18 @@
 package mipsim.pipeline.stages;
 
-import mipsim.Simulator;
+import mipsim.Processor;
 import sim.base.BusKt;
 
 public class MemoryStage extends Stage {
-	public MemoryStage(final Simulator simulator) {
-		super(simulator);
+	public MemoryStage(final Processor processor) {
+		super(processor);
 	}
 
 	@Override
 	public void init() {
-		final var exmem = simulator.exmem;
-		final var memwb = simulator.memwb;
-		final var dataMem = simulator.dataMemory;
+		final var exmem = processor.exmem;
+		final var memwb = processor.memwb;
+		final var dataMem = processor.dataMemory;
 
 		// write next pipeline register
 		BusKt.set(memwb.WB, exmem.WB);
