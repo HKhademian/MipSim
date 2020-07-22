@@ -158,6 +158,7 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
 		System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
+		System.out.println("\n####################################################################\n");
 
 		processor.ifid.eval();
 
@@ -165,8 +166,12 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("instruction next=" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("new pc next = " + BusKt.toInt(processor.ifid.pc));
 		System.out.println("rs before = " + BusKt.toInt(processor.idex.rsRegister));
+		System.out.println("rs before = " + BusKt.toInt(processor.idex.rsData));
 		System.out.println("rt before = " + BusKt.toInt(processor.idex.rtRegister));
+		System.out.println("rt data before = " + BusKt.toInt(processor.idex.rtData));
 		System.out.println("rd before = " + BusKt.toInt(processor.idex.rdRegister));
+
+
 		System.out.println("immadiate = " + BusKt.toInt(processor.idex.immediate));
 		System.out.println("aluOp = " + BusKt.toInt(processor.idex.aluOp));
 		System.out.println("mem to reg before = " + processor.idex.memToReg);
@@ -177,15 +182,18 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("Mem=" + BusKt.toInt(processor.idex.MEM));
 		System.out.println("Exe next=" + BusKt.toInt(processor.idex.EX));
 		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
-		System.out.println("Web before = "+processor.idex.WB);
+		System.out.println("Wb before = "+processor.idex.WB);
+		System.out.println("shiftMa before = "+processor.idex.shiftMa);
 
-		System.out.println("\n----------------------------------------------------------------");
+		System.out.println("\n----------------------------------------------------------------\n");
 
 		processor.idex.eval();
 
 
 		System.out.println("rs next = " + BusKt.toInt(processor.idex.rsRegister));
+		System.out.println("rs data next = " + BusKt.toInt(processor.idex.rsData));
 		System.out.println("rt next=" + BusKt.toInt(processor.idex.rtRegister));
+		System.out.println("rt data next = " + BusKt.toInt(processor.idex.rtData));
 		System.out.println("rd =" + BusKt.toInt(processor.idex.rsRegister));
 		System.out.println("immadiate =" + BusKt.toInt(processor.idex.immediate));
 		System.out.println("aluOp =" + BusKt.toInt(processor.idex.aluOp));
@@ -197,10 +205,27 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("MeM next = " + BusKt.toInt(processor.idex.MEM));
 		System.out.println("Ex next=" + BusKt.toInt(processor.idex.EX));
 		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
-
-
 		System.out.println("Wb next = "+processor.idex.WB);
+		System.out.println("shiftMa next = "+processor.idex.shiftMa);
 
+		System.out.println("\n############################################################################\n");
+
+		System.out.println("before branch = "+processor.ifStage.branch);;
+		System.out.println("before branch traget = "+processor.ifStage.branchTarget);
+		System.out.println("before jump "+processor.ifStage.jump);
+		System.out.println("before stall"+processor.ifStage.stall);
+
+		processor.ifStage.eval();
+		System.out.println("\n--------------------------------------------------------------------\n");
+
+
+		System.out.println("next branch = "+processor.ifStage.branch);;
+		System.out.println("next branch target = "+processor.ifStage.branchTarget);
+		System.out.println("next jump = "+processor.ifStage.jump);
+		System.out.println("next  stall = "+processor.ifStage.stall);
+
+		
+		System.out.println("\n###########################################################################\n");
 
 	}
 }
