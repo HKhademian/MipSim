@@ -30,6 +30,12 @@ public final class RegisterFile implements Eval, DebugWriter {
 		BusKt.set(readData1Bus, ZERO_BUS);
 		BusKt.set(readData2Bus, ZERO_BUS);
 		BusKt.set(writeData, ZERO_BUS);
+
+		// set $0 non-writable
+		var regZero = MemoryKt.getWord(_memory, 0);
+		for (var i = 0; i < 32; i++) {
+			((MemBit) regZero.get(i)).getMemWrite().set(false);
+		}
 	}
 
 	@Override

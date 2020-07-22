@@ -8,18 +8,18 @@ import sim.base.set
 internal fun main() {
 	val sim = Processor()
 
-	val regFile = sim.registerFile
+	val regFile = sim.registerFile as RegisterFile
 	val mem = regFile._memory
-
-	test("init") {
-		(0 until 32).forEach { mem.getWord(it).set(it * 3) }
-		mem.eval()
-		regFile
-	}
 
 	val readReg = bus(5)
 	val writeReg = bus(5)
 	val writeData = bus(32)
+
+	test("init") {
+		(0 until 32).forEach { mem.getWord(it).set(it * 3 + 1) }
+		mem.eval()
+		regFile
+	}
 
 	test("noEvalTest") {
 		writeData.set(74)
@@ -56,6 +56,16 @@ internal fun main() {
 
 	test("readOtherReg") {
 		readReg.set(3)
+		regFile.eval()
+
+		regFile
+	}
+
+
+	test("writeOnZero") {
+		regFile.regWrite.set(true)
+		regFile.writeReg.set(0)
+		regFile.writeData.set(74)
 		regFile.eval()
 
 		regFile
