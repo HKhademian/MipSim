@@ -1,6 +1,5 @@
 package mipsim.units;
 
-import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.DebugWriter;
 import sim.base.*;
@@ -24,7 +23,7 @@ public final class RegisterFile implements Eval, DebugWriter {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public final List<Value> readData2 = (List) readData2Bus;
 
-	public RegisterFile(Processor processor) {
+	public RegisterFile(final Value clock) {
 		_memory = MemoryKt.createWords(32);
 		BusKt.set(readReg1, ZERO_BUS);
 		BusKt.set(readReg2, ZERO_BUS);

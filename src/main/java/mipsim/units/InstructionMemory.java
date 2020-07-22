@@ -1,6 +1,5 @@
 package mipsim.units;
 
-import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.DebugWriter;
 import sim.base.BusKt;
@@ -21,7 +20,7 @@ public final class InstructionMemory implements Eval, DebugWriter {
 	public final List<Value> instruction = (List) instructionBus;
 	public final List<MutableValue> pc = BusKt.bus(32);
 
-	public InstructionMemory(Processor processor, int wordSize) {
+	public InstructionMemory(final Value clock, final int wordSize) {
 		_memory = MemoryKt.createWords(wordSize);
 		BusKt.set(pc, BusKt.EMPTY_BUS);
 	}
@@ -41,10 +40,14 @@ public final class InstructionMemory implements Eval, DebugWriter {
 	public void writeDebug(@NotNull final StringBuffer buffer) {
 		var pc = BusKt.toInt(this.pc);
 		var instructionBin = BusKt.toInt(this.instruction);
-		var instruction = parseBinToInstruction(instructionBin);
+		var instructionStr = parseBinToInstruction(instructionBin);
 		buffer
 			.append("InstructionMemory:\t")
 			.append(String.format("PC=%08xH\t", pc))
-			.append(String.format("INST=' %s '\t", instruction));
+			.append(String.format("INST=%08xH=' %s '\t", instructionBin, instructionStr));
+	}
+
+	public static void main(String[] args) {
+		final var instMem = new InstructionMemory(null, 100);
 	}
 }

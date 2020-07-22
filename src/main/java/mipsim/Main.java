@@ -2,8 +2,6 @@ package mipsim;
 
 import sim.base.ValueKt;
 
-import sim.base.Variable;
-
 import static sim.gates.GatesKt.xor;
 
 public class Main {
@@ -11,7 +9,6 @@ public class Main {
 		var m = ValueKt.mut(true);
 
 		var i = ValueKt.mut(true);
-
 
 
 		var x = xor(i, m);

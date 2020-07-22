@@ -71,8 +71,8 @@ inline val List<Value>.bitCount: Int get() = this.size
 inline val List<Value>.byteCount: Int get() = this.bitCount / BYTE_SIZE
 inline val List<Value>.wordCount: Int get() = this.bitCount / WORD_SIZE
 
-fun List<MutableValue>.getByte(i: Int): List<MutableValue> = this.subList(BYTE_SIZE * i, BYTE_SIZE * i + BYTE_SIZE)
-fun List<MutableValue>.getWord(i: Int): List<MutableValue> = this.subList(WORD_SIZE * i, WORD_SIZE * i + WORD_SIZE)
+fun <T : Value> List<T>.getByte(i: Int): List<T> = this.subList(BYTE_SIZE * i, BYTE_SIZE * i + BYTE_SIZE)
+fun <T : Value> List<T>.getWord(i: Int): List<T> = this.subList(WORD_SIZE * i, WORD_SIZE * i + WORD_SIZE)
 
 fun createMemory(n: Int = 1) = Memory(n)
 fun createBytes(n: Int = 1) = createMemory(n * BYTE_SIZE)

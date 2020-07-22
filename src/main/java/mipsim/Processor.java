@@ -31,9 +31,9 @@ public class Processor implements Eval {
 	public Processor() {
 		clock = ValueKt.mut(false);
 		pc = MemoryKt.createWords(1);
-		instructionMemory = new InstructionMemory(this, 100);
-		dataMemory = new DataMemory(this, 100);
-		registerFile = new RegisterFile(this);
+		instructionMemory = new InstructionMemory(clock, 128);
+		dataMemory = new DataMemory(clock, 128);
+		registerFile = new RegisterFile(clock);
 
 		ifStage = new InstructionFetchStage(this);
 		idStage = new InstructionDecodeStage(this);
@@ -94,7 +94,8 @@ public class Processor implements Eval {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("simulator test");
-
+		final var processor = new Processor();
+		processor.init();
+		System.out.println(processor.ifid);
 	}
 }

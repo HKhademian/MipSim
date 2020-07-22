@@ -19,7 +19,7 @@ public final class DataMemory implements Eval {
 	public final MutableValue memRead = ValueKt.mut(false);
 	public final List<Value> readData = (List) readDataBus;
 
-	public DataMemory(Processor processor, int wordSize) {
+	public DataMemory(final Value clock, int wordSize) {
 		_memory = MemoryKt.createWords(wordSize);
 		BusKt.set(address, ZERO_BUS);
 		BusKt.set(writeData, ZERO_BUS);
