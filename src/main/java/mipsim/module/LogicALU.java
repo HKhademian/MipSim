@@ -13,7 +13,7 @@ import sim.real.AdderKt;
 import java.util.List;
 
 import static sim.gates.GatesKt.*;
-
+//tested by ramin
 public final class LogicALU {
 	public static void thirtyTwoBitOr(
 		List<? extends Value> A,
@@ -118,5 +118,27 @@ public final class LogicALU {
 
 
 		Multiplexer.aluResult(aluOp, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
+
+	}
+
+	public static void main(String[] args) {
+
+
+		var input1 = BusKt.toBus(5,32);
+		var input2 = BusKt.toBus(6,32);
+
+		var aluOp = BusKt.bus(4);
+		aluOp.get(0).set(true);
+		aluOp.get(1).set(true);
+		aluOp.get(2).set(true);
+		aluOp.get(3).set(false);
+
+		var shiftMa = BusKt.toBus(0,5);
+
+		var result = BusKt.bus(32);
+
+		AluInStage(input1,input2,aluOp,shiftMa,result);
+
+		System.out.println(BusKt.toInt(result));
 	}
 }
