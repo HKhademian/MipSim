@@ -1,7 +1,9 @@
 package mipsim.units;
 
+import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.Value;
+import sim.base.ValueKt;
 
 import java.util.List;
 
@@ -52,5 +54,24 @@ public final class AluControlUnit {
 		);
 
 		aluControlInput.get(3).set(false);
+	}
+
+	public static void main(String[] args) {
+		var aluO = BusKt.bus(2);
+		aluO.set(0, ValueKt.mut(false));
+		aluO.set(1,ValueKt.mut(true));
+
+		var func = BusKt.bus(6);
+		func.set(0, ValueKt.mut(false));
+		func.set(1,ValueKt.mut(true));
+		func.set(2,ValueKt.mut(false));
+		func.set(3,ValueKt.mut(false));
+		func.set(4,ValueKt.mut(false));
+		func.set(5,ValueKt.mut(false));
+
+		var aluControlInput = BusKt.bus(4);
+		AluControlUnit.aluControlUnit(aluO,func,aluControlInput);
+		System.out.println(aluControlInput.get(3)+""+aluControlInput.get(2)+""+aluControlInput.get(1)+""+aluControlInput.get(0));
+
 	}
 }
