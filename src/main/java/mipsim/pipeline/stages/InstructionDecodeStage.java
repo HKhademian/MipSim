@@ -147,18 +147,22 @@ public class InstructionDecodeStage extends Stage {
 	public static void main(final String... args) {
 		final var processor = new Processor();
 
-		BusKt.set(processor.ifid.instruction, BusKt.toBus(2004, 32));
+		BusKt.set(processor.ifid.instruction, BusKt.toBus(4294967295l, 32));
 		BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
 		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("pc =" + BusKt.toInt(processor.ifid.pc));
 		processor.ifid.eval();
 		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("new pc= " + BusKt.toInt(processor.ifid.pc));
-		processor.idex.eval();
+
+		processor.ifStage.eval();
+		//processor.idStage.eval();
+		System.out.println("pc shift ="+processor.ifStage.jump);
+
 		processor.idex.eval();
 		System.out.println("func =" + BusKt.toInt(processor.idex.function));
 		System.out.println("rt =" + BusKt.toInt(processor.idex.rsRegister));
-		//todo friends there are some problem in update the value idex register they can't be update and all result of this stage is zero
+
 
 	}
 }

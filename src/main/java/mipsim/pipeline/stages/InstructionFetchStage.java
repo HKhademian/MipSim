@@ -53,7 +53,7 @@ public class InstructionFetchStage extends Stage {
 	public static void main(final String... args) {
 		final var processor = new Processor();
 
-		BusKt.set(processor.ifid.instruction, BusKt.toBus(20004, 32));
+		BusKt.set(processor.ifid.instruction, BusKt.toBus(2004l, 32));
 
 		BusKt.set(processor.pc, BusKt.toBus(8, 32));
 
@@ -61,9 +61,8 @@ public class InstructionFetchStage extends Stage {
 		System.out.println(BusKt.toInt(processor.pc));
 		processor.ifid.eval();
 		System.out.println(BusKt.toInt(processor.ifid.pc));
-		//Todo oh freinds the ifid.pc don't update
 		System.out.println(BusKt.toInt(processor.ifid.instruction));
-		//Todo I find the bug it's because of class of public void init this class don't run I think see
+
 	}
 
 }

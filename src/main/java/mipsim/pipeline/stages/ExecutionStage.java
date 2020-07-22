@@ -32,6 +32,8 @@ public class ExecutionStage extends Stage {
 		var resultOneOfAlu = BusKt.bus(32);
 		var forwarding1 = BusKt.bus(2);
 		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rsRegister, forwarding1);
+
+
 		Multiplexer.aluInput(forwarding1, idex.rsData, exmem.aluData, memwb.aluData, resultOneOfAlu);
 		// code above have can not detective load hazard detection
 		var resultTowOfAlu = BusKt.bus(32);
@@ -40,6 +42,8 @@ public class ExecutionStage extends Stage {
 		var resAluSrc = BusKt.bus(32);
 		Multiplexer.aluSrc(idex.aluSrc, idex.rtData, idex.immediate, resAluSrc);
 		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rtRegister, forwarding2);
+
+
 		Multiplexer.aluInput(forwarding2, resAluSrc, exmem.aluData, memwb.aluData, resultOneOfAlu);
 		LogicALU.AluInStage(resultOneOfAlu, resultTowOfAlu, idex.function, idex.aluOp, exmem.aluData);
 
