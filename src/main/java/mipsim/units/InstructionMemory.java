@@ -6,6 +6,7 @@ import sim.base.BusKt;
 import sim.base.Eval;
 import sim.base.MutableValue;
 import sim.base.Value;
+import sim.test.TestKt;
 
 import java.util.List;
 
@@ -48,6 +49,24 @@ public final class InstructionMemory implements Eval, DebugWriter {
 	}
 
 	public static void main(String[] args) {
-		final var instMem = new InstructionMemory(null, 100);
+		final var size = 64;
+		final var instMem = new InstructionMemory(null, size);
+		TestKt.testOn(instMem, "beforeInit");
+
+		TestKt.testOn(instMem, "init", () -> {
+			for (int i = 0; i < size; i++) {
+				var word = MemoryKt.getWord(instMem._memory, i);
+				BusKt.set(word, 2 + i * 3);
+			}
+		});
+
+		TestKt.testOn(instMem, "changePCNoEval", () -> {
+			BusKt.set(instMem.pc, 5);
+		});
+
+		TestKt.testOn(instMem, "eval+pcChange", () -> {
+			BusKt.set(instMem.pc, 5);
+			instMem.eval();
+		});
 	}
 }
