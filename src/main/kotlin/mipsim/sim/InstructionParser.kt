@@ -24,17 +24,25 @@ fun InstructionMemory.loadInstructions(instructionLines: List<String>) =
 
 /** parse instructions and write to instructionMemory */
 fun Memory.loadInstructions(instructionLines: List<String>) {
-	val instructions = instructionLines.map { parseInstruction(it) } // convert to int
+	val instructions = instructionLines.map { parseInstructionToBin(it) } // convert to int
 	val memory = this
 	memory.reset()
 	memory.writeWords(instructions)
 }
 
-private fun parseInstruction(instruction: String): Int {
-	val inst = instruction.toLowerCase().trim().split(" |,").filterNot { it.isBlank() }
+fun parseInstructionToBin(instruction: String): Int {
+	val inst = instruction.toLowerCase().trim().split(",", " ").filterNot { it.isBlank() }
 	val commandStr = inst[0]
-	val command = commands.find { it.command == commandStr } ?: return 0
-	return command.parse(inst)
+	val command = commands.find { it.command.toLowerCase() == commandStr } ?: throw RuntimeException("unsupported command")
+	val format = command.format
+	return format.parseInstructionToBin(command, inst)
+}
+
+fun parseBinToInstruction(instruction: Int): String {
+	val opcode = instruction shr 26
+	val command = commands.find { it.opCode == opcode } ?: throw RuntimeException("unsupported opCode")
+	val format = command.format
+	return format.parseBinToInstruction()
 }
 
 /** supported commands with this parser */
@@ -95,67 +103,82 @@ private fun splitAddress(rsAndOffset: String): List<String> {
 }
 
 
-private enum class Format { R, I, J }
+private enum class Format {
+	R {
+		override fun parseInstructionToBin(command: Command, inst: List<String>): Int {
+			if (inst.size != 4) throw Exception("Bad R-format instruction")
+			var res = (command.opCode shl 26)
+			res = res or command.func
+
+			res = res or (parseRegister(inst[1]) shl 11)
+			res = res or (parseRegister(inst[2]) shl 21)
+
+			res = res or if (command.shamt) {
+				(parseConstant(inst[3], 5) shl 6)
+			} else {
+				(parseRegister(inst[3]) shl 16)
+			}
+
+			return res
+		}
+
+		override fun parseBinToInstruction(): String {
+			TODO("Not yet implemented")
+		}
+	},
+
+	I {
+		override fun parseInstructionToBin(command: Command, inst: List<String>): Int {
+			var res = (command.opCode shl 26)
+
+			if (inst[0] in listOf("LW", "SW", "LUI")) {
+				if (inst.size != 3) throw RuntimeException("Bad I-format instruction: " + inst[0])
+				if (inst[0] == "LUI") {
+					res = res or parseConstant(inst[1], 16) //constant
+				} else {
+					res = res or (parseRegister(inst[1]) shl 16) //rt - source/destination
+					val rsAndOffset = splitAddress(inst[2])
+					res = res or (parseRegister(rsAndOffset[0]) shl 21) //rs - base address
+					res = res or parseConstant(rsAndOffset[1], 16) //constant - offset
+				}
+			} else {
+				if (inst.size != 4) throw RuntimeException("Bad I-format instruction: " + inst[0])
+				val rs = if (inst[0] in listOf("BEQ", "BNE")) 1 else 2
+				val rt = (rs - 1 xor 1) + 1
+				res = res or (parseRegister(inst[rs]) shl 21) //rs
+				res = res or (parseRegister(inst[rt]) shl 16) //rt
+				res = res or parseConstant(inst[3], 16)   //address or constant
+			}
+
+			return res
+		}
+
+		override fun parseBinToInstruction(): String {
+			TODO("Not yet implemented")
+		}
+	},
+
+	J {
+		override fun parseInstructionToBin(command: Command, inst: List<String>): Int {
+			if (inst.size != 2) throw RuntimeException("Bad J-format instruction")
+			var res = (command.opCode shl 26)
+			res = res or parseConstant(inst[1], 16) //address
+
+			return res
+		}
+
+		override fun parseBinToInstruction(): String {
+			TODO("Not yet implemented")
+		}
+	};
+
+	/** parse a command to int eq */
+	abstract fun parseInstructionToBin(command: Command, inst: List<String>): Int
+	abstract fun parseBinToInstruction(): String
+}
 
 private class Command(val command: String, val format: Format, val opCode: Int, val func: Int = 0, val shamt: Boolean = false) {
 	constructor(command: String, format: Format, opCode: String = "", func: String = "", shamt: Boolean = false) :
 		this(command, format, opCode.toInt(16), func.toIntOrNull(16) ?: 0, shamt)
-
-	/** parse a command to int eq */
-	fun parse(inst: List<String>): Int {
-		var res = 0
-
-		when (format) {
-
-			Format.R -> {
-				if (inst.size != 4) throw Exception("Bad R-format instruction")
-				res = res or (opCode shl 26)
-				res = res or func
-
-				res = res or (parseRegister(inst[1]) shl 11)
-				res = res or (parseRegister(inst[2]) shl 21)
-
-				res = res or if (shamt) {
-					(parseConstant(inst[3], 5) shl 6)
-				} else {
-					(parseRegister(inst[3]) shl 16)
-				}
-			}
-
-
-			Format.I -> {
-				res = res or (opCode shl 26)
-
-				if (inst[0] in listOf("LW", "SW", "LUI")) {
-					if (inst.size != 3) throw RuntimeException("Bad I-format instruction: " + inst[0])
-					if (inst[0] == "LUI") {
-						res = res or parseConstant(inst[1], 16) //constant
-					} else {
-						res = res or (parseRegister(inst[1]) shl 16) //rt - source/destination
-						val rsAndOffset = splitAddress(inst[2])
-						res = res or (parseRegister(rsAndOffset[0]) shl 21) //rs - base address
-						res = res or parseConstant(rsAndOffset[1], 16) //constant - offset
-					}
-				} else {
-					if (inst.size != 4) throw RuntimeException("Bad I-format instruction: " + inst[0])
-					val rs = if (inst[0] in listOf("BEQ", "BNE")) 1 else 2
-					val rt = (rs - 1 xor 1) + 1
-					res = res or (parseRegister(inst[rs]) shl 21) //rs
-					res = res or (parseRegister(inst[rt]) shl 16) //rt
-					res = res or parseConstant(inst[3], 16)   //address or constant
-				}
-			}
-
-
-			Format.J -> {
-				if (inst.size != 2) throw RuntimeException("Bad J-format instruction")
-				res = res or (opCode shl 26)
-				res = res or parseConstant(inst[1], 16) //address
-			}
-
-		}
-
-		return res
-	}
 }
 
