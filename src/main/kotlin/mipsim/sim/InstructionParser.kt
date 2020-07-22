@@ -164,13 +164,14 @@ private enum class Format {
 		override fun parseInstructionToBin(command: Command, inst: List<String>): Int {
 			if (inst.size != 2) throw RuntimeException("Bad J-format instruction")
 			var res = (command.opCode shl 26)
-			res = res or parseConstant(inst[1], 16) //address
+			res = res or parseConstant(inst[1], 26) //address
 
 			return res
 		}
 
 		override fun parseBinToInstruction(command: Command, binary: Int): String {
-			TODO("Not yet implemented")
+			val imm = binary and ((1 shl 26) - 1)
+			return "${command.name} ${imm.toString(16)}H"
 		}
 	};
 
@@ -240,5 +241,6 @@ internal fun main() {
 	testInst("addi \$t1, \$t2, 1374")
 	testInst("addi \$s1, \$t2, 74")
 	testInst("lw \$t1, 4(\$t2)")
+	testInst("J 1000")
 
 }
