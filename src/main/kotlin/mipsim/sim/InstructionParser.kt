@@ -7,44 +7,6 @@ import mipsim.units.reset
 import mipsim.units.writeWords
 import java.io.File
 
-/** load instructions from a file and write to memory */
-fun Memory.loadInstructions(instructionFile: File) =
-	loadInstructions(instructionFile.readLines())
-
-//fun Simulator.loadInstructions(instructions: String) =
-//	loadInstructions(instructions.lines())
-
-/** parse instructions and write to instructionMemory */
-fun Processor.loadInstructions(instructionLines: List<String>) =
-	instructionMemory.loadInstructions(instructionLines)
-
-/** parse instructions and write to instructionMemory */
-fun InstructionMemory.loadInstructions(instructionLines: List<String>) =
-	_memory.loadInstructions(instructionLines)
-
-/** parse instructions and write to instructionMemory */
-fun Memory.loadInstructions(instructionLines: List<String>) {
-	val instructions = instructionLines.map { parseInstructionToBin(it) } // convert to int
-	val memory = this
-	memory.reset()
-	memory.writeWords(instructions)
-}
-
-fun parseInstructionToBin(instruction: String): Int {
-	val inst = instruction.toLowerCase().trim().split(",", " ").filterNot { it.isBlank() }
-	val commandStr = inst[0]
-	val command = commands.find { it.command.toLowerCase() == commandStr } ?: throw RuntimeException("unsupported command")
-	val format = command.format
-	return format.parseInstructionToBin(command, inst)
-}
-
-fun parseBinToInstruction(instruction: Int): String {
-	val opcode = instruction shr 26
-	val command = commands.find { it.opCode == opcode } ?: throw RuntimeException("unsupported opCode")
-	val format = command.format
-	return format.parseBinToInstruction()
-}
-
 /** supported commands with this parser */
 private val commands = listOf(
 	Command("ADD", Format.R, "0", "20"),
@@ -110,20 +72,34 @@ private enum class Format {
 			var res = (command.opCode shl 26)
 			res = res or command.func
 
-			res = res or (parseRegister(inst[1]) shl 11)
-			res = res or (parseRegister(inst[2]) shl 21)
+			res = res or (parseRegister(inst[1]) shl 11) // rd
+			res = res or (parseRegister(inst[2]) shl 21) // rs
 
 			res = res or if (command.shamt) {
-				(parseConstant(inst[3], 5) shl 6)
+				(parseConstant(inst[3], 5) shl 6) // shift amount
 			} else {
-				(parseRegister(inst[3]) shl 16)
+				(parseRegister(inst[3]) shl 16) // rt
 			}
 
 			return res
 		}
 
-		override fun parseBinToInstruction(): String {
-			TODO("Not yet implemented")
+		override fun parseBinToInstruction(command: Command, binary: Int): String {
+			val mask = ((1 shl 5) - 1)
+			val rd = (binary shr 11) and mask
+			val rs = (binary shr 21) and mask
+			val rt = (binary shr 16) and mask
+			val sa = (binary shr 6) and mask
+
+			val RD = registers.entries.find { it.value == rd }!!.component1()
+			val RS = registers.entries.find { it.value == rs }!!.component1()
+
+			return if (command.shamt) {
+				"${command.name} $RD, $RS, $sa"
+			} else {
+				val RT = registers.entries.find { it.value == rt }!!.component1()
+				"${command.name} $RD, $RS, $RT"
+			}
 		}
 	},
 
@@ -153,7 +129,7 @@ private enum class Format {
 			return res
 		}
 
-		override fun parseBinToInstruction(): String {
+		override fun parseBinToInstruction(command: Command, binary: Int): String {
 			TODO("Not yet implemented")
 		}
 	},
@@ -167,18 +143,67 @@ private enum class Format {
 			return res
 		}
 
-		override fun parseBinToInstruction(): String {
+		override fun parseBinToInstruction(command: Command, binary: Int): String {
 			TODO("Not yet implemented")
 		}
 	};
 
 	/** parse a command to int eq */
 	abstract fun parseInstructionToBin(command: Command, inst: List<String>): Int
-	abstract fun parseBinToInstruction(): String
+
+	/** parse a binary number to eq. instruction */
+	abstract fun parseBinToInstruction(command: Command, binary: Int): String
 }
 
-private class Command(val command: String, val format: Format, val opCode: Int, val func: Int = 0, val shamt: Boolean = false) {
-	constructor(command: String, format: Format, opCode: String = "", func: String = "", shamt: Boolean = false) :
-		this(command, format, opCode.toInt(16), func.toIntOrNull(16) ?: 0, shamt)
+private class Command(val name: String, val format: Format, val opCode: Int, val func: Int = 0, val shamt: Boolean = false) {
+	constructor(name: String, format: Format, opCode: String = "", func: String = "", shamt: Boolean = false) :
+		this(name, format, opCode.toInt(16), func.toIntOrNull(16) ?: 0, shamt)
 }
 
+/** load instructions from a file and write to memory */
+fun Memory.loadInstructions(instructionFile: File) =
+	loadInstructions(instructionFile.readLines())
+
+//fun Simulator.loadInstructions(instructions: String) =
+//	loadInstructions(instructions.lines())
+
+/** parse instructions and write to instructionMemory */
+fun Processor.loadInstructions(instructionLines: List<String>) =
+	instructionMemory.loadInstructions(instructionLines)
+
+/** parse instructions and write to instructionMemory */
+fun InstructionMemory.loadInstructions(instructionLines: List<String>) =
+	_memory.loadInstructions(instructionLines)
+
+/** parse instructions and write to instructionMemory */
+fun Memory.loadInstructions(instructionLines: List<String>) {
+	val instructions = instructionLines.map { parseInstructionToBin(it) } // convert to int
+	val memory = this
+	memory.reset()
+	memory.writeWords(instructions)
+}
+
+fun parseInstructionToBin(instruction: String): Int {
+	val inst = instruction.toLowerCase().trim().split(",", " ").filterNot { it.isBlank() }
+	val commandStr = inst[0]
+	val command = commands.find { it.name.toLowerCase() == commandStr } ?: throw RuntimeException("unsupported command")
+	val format = command.format
+	return format.parseInstructionToBin(command, inst)
+}
+
+fun parseBinToInstruction(binaryInstruction: Int): String {
+	val opcode = binaryInstruction shr 26
+	val func = binaryInstruction and ((1 shl 6) - 1)
+	val command = commands.find { it.opCode == opcode && (opcode != 0 || it.func == func) } ?: throw RuntimeException("unsupported opCode")
+	val format = command.format
+	return format.parseBinToInstruction(command, binaryInstruction)
+}
+
+internal fun main() {
+	val inst = "add \$zero $1 \$fp"
+	println(inst)
+	val instBin = parseInstructionToBin(inst)
+	println(instBin)
+	val instStr = parseBinToInstruction(instBin)
+	println(instStr)
+}

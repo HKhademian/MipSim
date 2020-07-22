@@ -150,7 +150,7 @@ public class InstructionDecodeStage extends Stage {
 		final var processor = new Processor();
 		processor.idStage.init();
 
-		var instBin = parseInstructionToBin("ADD | $1 | $1 | $1");
+		var instBin = parseInstructionToBin("ADD  $1  $1  $1");
 		var inst = BusKt.toBus(instBin, 32);
 
 		BusKt.set(processor.ifid.instruction, inst);
