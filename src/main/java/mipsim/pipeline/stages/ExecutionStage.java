@@ -7,10 +7,9 @@ import mipsim.units.AluControlUnit;
 import mipsim.units.ForwardingUnit;
 import mipsim.module.Multiplexer;
 import sim.base.BusKt;
-<<<<<<< Updated upstream
-=======
+
 import sim.base.ValueKt;
->>>>>>> Stashed changes
+
 import sim.test.TestKt;
 
 import static sim.gates.GatesKt.or;
