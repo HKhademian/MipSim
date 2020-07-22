@@ -1,9 +1,9 @@
 package mipsim.units
 
 import mipsim.Processor
-import mipsim.test.test
 import sim.base.bus
 import sim.base.set
+import sim.test.test
 
 internal fun main() {
 	val sim = Processor()
