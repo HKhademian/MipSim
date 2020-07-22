@@ -42,6 +42,7 @@ public final class LogicALU {
 		BusKt.set(outPut, xor(A, B));
 	}
 
+
 	/**
 	 * in this function we Make a decision to add or sub
 	 * if select variable is true or (1) we do subtract
@@ -103,7 +104,17 @@ public final class LogicALU {
 		var resSetLes = BusKt.bus(32);
 		setLess(input1, input2, resSetLes);
 		var resXor = BusKt.bus(32);
-
+		thirtyTwoBitXor(input1,input2,resXor);
 		Multiplexer.aluResult(aluControlUnit, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
 	}
+	/**
+	 * mehdi Fe check
+	 */
+	static void main(String args[]){
+
+
+	}
+
+
+
 }

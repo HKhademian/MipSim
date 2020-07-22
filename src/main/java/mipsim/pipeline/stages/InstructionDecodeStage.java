@@ -152,14 +152,15 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("pc =" + BusKt.toInt(processor.ifid.pc));
 		processor.ifid.eval();
+		processor.idex.eval();
 		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("new pc= " + BusKt.toInt(processor.ifid.pc));
 
-		processor.ifStage.eval();
+		//processor.ifStage.eval();
 		//processor.idStage.eval();
 		System.out.println("pc shift ="+processor.ifStage.jump);
 
-		processor.idex.eval();
+
 		System.out.println("func =" + BusKt.toInt(processor.idex.function));
 		System.out.println("rt =" + BusKt.toInt(processor.idex.rsRegister));
 
