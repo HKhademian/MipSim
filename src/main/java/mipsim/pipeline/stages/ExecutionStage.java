@@ -3,7 +3,7 @@ package mipsim.pipeline.stages;
 import mipsim.Processor;
 import mipsim.module.LogicALU;
 import mipsim.units.ForwardingUnit;
-import mipsim.units.Multiplexer;
+import mipsim.module.Multiplexer;
 import sim.base.BusKt;
 
 public class ExecutionStage extends Stage {

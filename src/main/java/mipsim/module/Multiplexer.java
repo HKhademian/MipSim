@@ -1,4 +1,4 @@
-package mipsim.units;
+package mipsim.module;
 
 import sim.base.BusKt;
 import sim.base.MutableValue;
@@ -10,6 +10,8 @@ import java.util.List;
 import static sim.base.BusKt.ZERO_BUS;
 
 public final class Multiplexer {
+	private Multiplexer() {
+	}
 
 
 	/**

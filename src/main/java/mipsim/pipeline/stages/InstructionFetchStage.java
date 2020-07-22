@@ -2,7 +2,7 @@ package mipsim.pipeline.stages;
 
 import mipsim.Processor;
 import mipsim.module.TinyModules;
-import mipsim.units.Multiplexer;
+import mipsim.module.Multiplexer;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;

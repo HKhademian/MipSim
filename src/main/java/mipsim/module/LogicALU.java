@@ -1,7 +1,6 @@
 package mipsim.module;
 
 import mipsim.units.AluControlUnit;
-import mipsim.units.Multiplexer;
 import sim.base.*;
 import sim.complex.MuxKt;
 import sim.real.AdderKt;

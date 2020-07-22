@@ -4,7 +4,7 @@ import mipsim.Processor;
 import mipsim.module.TinyModules;
 import mipsim.units.ControlUnit;
 import mipsim.units.HazardDetectionUnit;
-import mipsim.units.Multiplexer;
+import mipsim.module.Multiplexer;
 import sim.HelpersKt;
 import sim.base.BusKt;
 import sim.base.ValueKt;
