@@ -94,26 +94,26 @@ public final class LogicALU {
 		List<? extends Value> aluControlUnit,
 		List<? extends MutableValue> result
 	) {
-		var carry = BusKt.bus(32);
 		var select = BusKt.bus(4);
-		AluControlUnit.aluControlUnit(aluControlUnit, function, select);
 		var resAdd = BusKt.bus(32);
-		AddSub(input1, input2, ValueKt.mut(false), resAdd, null);
 		var resSub = BusKt.bus(32);
-		AddSub(input1, input2, ValueKt.mut(false), resSub, null);
 		var resOr = BusKt.bus(32);
-		thirtyTwoBitOr(input1, input2, resOr);
 		var resAnd = BusKt.bus(32);
-		thirtyTwoBitAnd(input1, input2, resAnd);
 		var resNor = BusKt.bus(32);
-		thirtyTwoBitNor(input1, input2, resNor);
 		var resShift_R = BusKt.bus(32);
-		ShiftHelper.thirtyTwoBitShifterRight(input1, input2, resShift_R);
 		var resShift_L = BusKt.bus(32);
-		ShiftHelper.thirtyTwoBitShifterLeft(input1, input2, resShift_L);
 		var resSetLes = BusKt.bus(32);
+		// var resXor = BusKt.bus(32);
+
+		AluControlUnit.aluControlUnit(aluControlUnit, function, select);
+		AddSub(input1, input2, ValueKt.mut(false), resAdd, null);
+		AddSub(input1, input2, ValueKt.mut(false), resSub, null);
+		thirtyTwoBitOr(input1, input2, resOr);
+		thirtyTwoBitAnd(input1, input2, resAnd);
+		thirtyTwoBitNor(input1, input2, resNor);
+		ShiftHelper.thirtyTwoBitShifterRight(input1, input2, resShift_R);
+		ShiftHelper.thirtyTwoBitShifterLeft(input1, input2, resShift_L);
 		setLess(input1, input2, resSetLes);
-		var resXor = BusKt.bus(32);
 
 		Multiplexer.aluResult(aluControlUnit, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
 	}
