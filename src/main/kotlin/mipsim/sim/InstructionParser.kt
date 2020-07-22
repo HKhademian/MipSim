@@ -194,7 +194,9 @@ fun parseInstructionToBin(instruction: String): Int {
 fun parseBinToInstruction(binaryInstruction: Int): String {
 	val opcode = binaryInstruction shr 26
 	val func = binaryInstruction and ((1 shl 6) - 1)
-	val command = commands.find { it.opCode == opcode && (opcode != 0 || it.func == func) } ?: throw RuntimeException("unsupported opCode")
+	val command = commands.find { it.opCode == opcode && (opcode != 0 || it.func == func) }
+	//?: throw RuntimeException("unsupported opCode")
+		?: return "{UNKNOWN_INSTRUCTION}"
 	val format = command.format
 	return format.parseBinToInstruction(command, binaryInstruction)
 }

@@ -2,10 +2,7 @@ package mipsim.units;
 
 import org.jetbrains.annotations.NotNull;
 import sim.DebugWriter;
-import sim.base.BusKt;
-import sim.base.Eval;
-import sim.base.MutableValue;
-import sim.base.Value;
+import sim.base.*;
 import sim.test.TestKt;
 
 import java.util.List;
@@ -48,6 +45,9 @@ public final class InstructionMemory implements Eval, DebugWriter {
 			.append(String.format("INST=%08xH=' %s '\t", instructionBin, instructionStr));
 	}
 
+	/**
+	 * test in progress by: hossain
+	 */
 	public static void main(String[] args) {
 		final var size = 64;
 		final var instMem = new InstructionMemory(null, size);
@@ -57,7 +57,9 @@ public final class InstructionMemory implements Eval, DebugWriter {
 			for (int i = 0; i < size; i++) {
 				var word = MemoryKt.getWord(instMem._memory, i);
 				BusKt.set(word, 2 + i * 3);
+				EvalKt.eval(word);
 			}
+			instMem.eval();
 		});
 
 		TestKt.testOn(instMem, "changePCNoEval", () -> {

@@ -97,10 +97,15 @@ fun List<MutableValue>.reset() =
 	forEach { it.reset() }
 
 /** write some words to bus */
-fun List<MutableValue>.writeWords(words: List<Int>) =
+@JvmOverloads
+fun List<MutableValue>.writeWords(words: List<Int>, eval: Boolean = true) =
 	words.asSequence()
 		.map { it.toBus(32) }
-		.forEachIndexed { i, word -> getWord(i).set(word) }
+		.forEachIndexed { i, word ->
+			val wordBus = getWord(i)
+			wordBus.set(word)
+			if (eval) wordBus.eval()
+		}
 
 /** set all `memBit`s memWrite flags to given value */
 fun List<MemBit>.setMemWrite(memWrite: Value) =
