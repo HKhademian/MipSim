@@ -79,13 +79,13 @@ public final class LogicALU {
 	public static void AluInStage(
 		List<? extends Value> input1,
 		List<? extends Value> input2,
-		List<? extends Value> function,
-		List<? extends Value> aluControlUnit,
+		List<? extends Value> aluOp,
+		List<? extends Value> shiftMa,
 		List<? extends MutableValue> result
 	) {
-		var carry = BusKt.bus(32);
+		var carry = BusKt.bus(33);
 		var select = BusKt.bus(4);
-		AluControlUnit.aluControlUnit(function, aluControlUnit, select);
+
 		var resAdd = BusKt.bus(32);
 		AddSub(input1, input2, new Variable(false, ""), resAdd, carry);
 		var resSub = BusKt.bus(32);
@@ -97,13 +97,13 @@ public final class LogicALU {
 		var resNor = BusKt.bus(32);
 		thirtyTwoBitNor(input1, input2, resNor);
 		var resShift_R = BusKt.bus(32);
-		ShiftHelper.thirtyTwoBitShifterRight(input1, input2, resShift_R);
+		ShiftHelper.thirtyTwoBitShifterRight(input1, shiftMa, resShift_R);
 		var resShift_L = BusKt.bus(32);
-		ShiftHelper.thirtyTwoBitShifterLeft(input1, input2, resShift_L);
+		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
 		var resSetLes = BusKt.bus(32);
 		setLess(input1, input2, resSetLes);
 		var resXor = BusKt.bus(32);
 
-		Multiplexer.aluResult(aluControlUnit, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
+		Multiplexer.aluResult(aluOp, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
 	}
 }

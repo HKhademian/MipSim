@@ -2,6 +2,8 @@ package mipsim.pipeline.stages;
 
 import mipsim.Processor;
 import mipsim.module.LogicALU;
+import mipsim.units.AluControlUnit;
+import mipsim.units.ControlUnit;
 import mipsim.units.ForwardingUnit;
 import mipsim.module.Multiplexer;
 import sim.base.BusKt;
@@ -22,7 +24,9 @@ public class ExecutionStage extends Stage {
 
 
 
-
+		//alu control unit
+		var aluOp = BusKt.bus(4);
+		AluControlUnit.aluControlUnit(idex.aluOp,idex.function,aluOp);
 
 
 
@@ -48,7 +52,7 @@ public class ExecutionStage extends Stage {
 
 		//alu result
 		var aluData = BusKt.bus(32);
-		LogicALU.AluInStage(resultOneOfAlu, resultTwoOfAlu, idex.function, idex.aluOp, aluData);
+		LogicALU.AluInStage(resultOneOfAlu, resultTwoOfAlu, aluOp, idex.shiftMa, aluData);
 		BusKt.set(exmem.aluData,aluData);
 
 
@@ -75,7 +79,7 @@ public class ExecutionStage extends Stage {
 
 	public static void main(String[] args) {
 		Processor processor = new Processor();
-
+		processor.exStage.init();
 
 
 	}

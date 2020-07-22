@@ -33,7 +33,7 @@ public final class Multiplexer {
 		List<? extends Value> MEM_WB,
 		List<? extends MutableValue> result
 	) {
-		BusKt.set(result, mux(forwarding, regSource, MEM_WB, EXE_MEM, ZERO_BUS));
+		BusKt.set(result, mux4(forwarding.get(0),forwarding.get(1), regSource, MEM_WB, EXE_MEM, ZERO_BUS));
 	}
 
 
