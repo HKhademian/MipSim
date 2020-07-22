@@ -1,7 +1,6 @@
 package mipsim.units;
 
 import mipsim.Processor;
-import mipsim.test.TestKey;
 import sim.base.*;
 
 import java.util.List;
