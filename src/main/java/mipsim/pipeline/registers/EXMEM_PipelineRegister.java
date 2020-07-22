@@ -60,10 +60,10 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 			.append("\t,register write: "+regWrite)
 			.append("\t,memory read: "+memRead)
 			.append("\t,memory write: "+memWrite)
-			.append(String.format("\t,rdData: %08xH = ' %s '", aluData,aluDataString))
-			.append(String.format("\t,rdRegister: %08xH = ' %s '",writeMem,writeMemString))
+			.append(String.format("\t,aluData: %08xH '", aluData))
+			.append(String.format("\t,writeMem: %08xH  '",writeMem))
 
-			.append(String.format("\t,rtData: %08xH = ' %s '",rtRegister,rtRegisterString));
+			.append(String.format("\t,rdRegister: %08xH ",rtRegister));
 
 	}
 }
