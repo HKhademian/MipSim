@@ -22,11 +22,11 @@ public final class TinyModules {
 		@NotNull List<? extends MutableValue> result
 	) {
 		Value currentCarry = ValueKt.constant(false);
-		MutableValue nextCarry = ValueKt.mut(false);
+		MutableValue nextCarry;
 		for (int i = 0; i < input1.size(); i++) {
+			nextCarry = ValueKt.mut(false);
 			AdderKt.fullAdder(input1.get(i), input2.get(i), currentCarry, result.get(i), nextCarry);
 			currentCarry = nextCarry;
-			nextCarry = ValueKt.mut(false);
 		}
 	}
 

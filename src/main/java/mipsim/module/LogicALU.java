@@ -1,7 +1,12 @@
 package mipsim.module;
 
 import mipsim.units.AluControlUnit;
-import sim.base.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import sim.base.BusKt;
+import sim.base.MutableValue;
+import sim.base.Value;
+import sim.base.ValueKt;
 import sim.complex.MuxKt;
 import sim.real.AdderKt;
 
@@ -49,16 +54,22 @@ public final class LogicALU {
 	 * carry out when we need to set carry flag
 	 */
 	public static void AddSub(
-		List<? extends Value> input1,
-		List<? extends Value> input2,
-		Value select,
-		List<? extends MutableValue> result,
-		List<? extends MutableValue> carryOut
+		@NotNull List<? extends Value> A,
+		@NotNull List<? extends Value> B,
+		@NotNull Value addSubSelect,
+		@NotNull List<? extends MutableValue> result,
+		@Nullable MutableValue carryOut
 	) {
-		carryOut.get(0).set(select.get());
-		for (int i = 31; i >= 0; i--) {
-			AdderKt.fullAdder(input1.get(i), (xor(input2.get(i), select)), carryOut.get(i), result.get(i), carryOut.get(i + 1));
+		final var xB = xor(B, addSubSelect);
+		Value currentCarry = ValueKt.constant(addSubSelect);
+		MutableValue nextCarry = null;
+		for (int i = 0; i < A.size(); i++) {
+			nextCarry = ValueKt.mut(false);
+			AdderKt.fullAdder(A.get(i), xB.get(i), currentCarry, result.get(i), nextCarry);
+			currentCarry = nextCarry;
 		}
+		if (carryOut != null && nextCarry != null)
+			carryOut.set(nextCarry);
 	}
 
 
@@ -83,26 +94,27 @@ public final class LogicALU {
 		List<? extends Value> shiftMa,
 		List<? extends MutableValue> result
 	) {
-		var carry = BusKt.bus(33);
-		var select = BusKt.bus(4);
-
 		var resAdd = BusKt.bus(32);
-		AddSub(input1, input2, new Variable(false, ""), resAdd, carry);
 		var resSub = BusKt.bus(32);
-		AddSub(input1, input2, new Variable(true, ""), resSub, carry);
 		var resOr = BusKt.bus(32);
-		thirtyTwoBitOr(input1, input2, resOr);
 		var resAnd = BusKt.bus(32);
-		thirtyTwoBitAnd(input1, input2, resAnd);
 		var resNor = BusKt.bus(32);
-		thirtyTwoBitNor(input1, input2, resNor);
 		var resShift_R = BusKt.bus(32);
-		ShiftHelper.thirtyTwoBitShifterRight(input1, shiftMa, resShift_R);
 		var resShift_L = BusKt.bus(32);
-		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
 		var resSetLes = BusKt.bus(32);
+
+
+
+
+		AddSub(input1, input2, ValueKt.constant(false), resAdd, null);
+		AddSub(input1, input2, ValueKt.constant(true), resSub, null);
+		thirtyTwoBitOr(input1, input2, resOr);
+		thirtyTwoBitAnd(input1, input2, resAnd);
+		thirtyTwoBitNor(input1, input2, resNor);
+		ShiftHelper.thirtyTwoBitShifterRight(input1, shiftMa, resShift_R);
+		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
 		setLess(input1, input2, resSetLes);
-		var resXor = BusKt.bus(32);
+
 
 		Multiplexer.aluResult(aluOp, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
 	}
