@@ -12,7 +12,7 @@ internal fun main() {
 	(0 until 32).forEach { mem.getWord(it).set(it * 3) }
 	mem.eval()
 
-
+	mem
 }
 
 internal fun main1() {
