@@ -1,5 +1,6 @@
 package mipsim.units
 
+import sim.DebugWriter
 import sim.base.*
 
 /// each byte is 8 bit of data
@@ -39,11 +40,24 @@ class MemBit : Element, MutableValue {
  *  InstructionMemory and DataMemory is not a simple memory,
  *  but they use memory to stores data
  */
-class Memory private constructor(private val bits: List<MemBit>) : Eval, List<MemBit> by bits {
+class Memory private constructor(private val bits: List<MemBit>) : Eval, List<MemBit> by bits, DebugWriter {
 	internal constructor(bitCount: Int) : this((0 until bitCount).map { MemBit() })
 
 	override fun eval() =
 		(bits as List<Value>).eval()
+
+
+	override fun writeDebug(buffer: StringBuffer) {
+		val wordCount = this.wordCount
+		for (i in 0 until wordCount) {
+			buffer
+				.append("WORD#")
+				.append(i)
+				.append("=")
+				.append(Integer.toHexString(getWord(i).toInt()))
+				.append("\t\t")
+		}
+	}
 }
 
 inline val List<Value>.bitCount: Int get() = this.size

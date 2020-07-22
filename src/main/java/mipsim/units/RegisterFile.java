@@ -1,13 +1,15 @@
 package mipsim.units;
 
 import mipsim.Processor;
+import org.jetbrains.annotations.NotNull;
+import sim.DebugWriter;
 import sim.base.*;
 
 import java.util.List;
 
 import static sim.base.BusKt.ZERO_BUS;
 
-public final class RegisterFile implements Eval {
+public final class RegisterFile implements Eval, DebugWriter {
 	public final Memory _memory;
 	private final List<MutableValue> readData1Bus = BusKt.bus(32);
 	private final List<MutableValue> readData2Bus = BusKt.bus(32);
@@ -47,9 +49,11 @@ public final class RegisterFile implements Eval {
 
 		if (regWrite.get()) {
 			var reg = BusKt.toInt(writeReg);
-			var word = MemoryKt.getWord(_memory, reg);
-			BusKt.set(word, writeData);
-			EvalKt.eval(word);
+			if (reg != 0) {
+				var word = MemoryKt.getWord(_memory, reg);
+				BusKt.set(word, writeData);
+				EvalKt.eval(word);
+			}
 		}
 
 		{  // write reg1 to output line
@@ -63,6 +67,22 @@ public final class RegisterFile implements Eval {
 			var word = MemoryKt.getWord(_memory, reg);
 			BusKt.set(readData2Bus, word);
 		}
+	}
+
+	@Override
+	public void writeDebug(@NotNull final StringBuffer buffer) {
+		for (int i = 0; i < 32; i++) {
+			var value = BusKt.toInt(MemoryKt.getWord(_memory, i));
+			buffer.append(String.format("$%d=%08xH ", i, value));
+		}
+		buffer.append("\n");
+		buffer.append("ReadReg1: ").append(BusKt.toInt(readReg1)).append("\t");
+		buffer.append("ReadReg2: ").append(BusKt.toInt(readReg2)).append("\t");
+		buffer.append("WriteReg: ").append(BusKt.toInt(writeReg)).append("\n");
+		buffer.append("RegWrite: ").append(regWrite).append("\t");
+		buffer.append("ReadData1: ").append(BusKt.toInt(readData1)).append("\t");
+		buffer.append("ReadData2: ").append(BusKt.toInt(readData2)).append("\t");
+		buffer.append("WriteData: ").append(BusKt.toInt(writeData));
 	}
 
 	public static void main(final String... args) {
