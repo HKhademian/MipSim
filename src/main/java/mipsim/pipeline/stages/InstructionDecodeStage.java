@@ -166,7 +166,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 		TestKt.testOn(processor.idex, "test branch", () -> {
@@ -174,7 +174,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 		TestKt.testOn(processor.idex, "test set less than", () -> {
@@ -182,7 +182,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 //		TestKt.testOn(processor.idex, "test shiftR", () -> {
@@ -199,7 +199,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 		TestKt.testOn(processor.idex, "test and", () -> {
@@ -207,7 +207,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 
@@ -216,7 +216,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 
@@ -225,7 +225,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 
@@ -243,7 +243,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 
@@ -253,7 +253,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 		TestKt.testOn(processor.idex, "test LW", () -> {
@@ -261,7 +261,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 		TestKt.testOn(processor.idex, "Jump ", () -> {
@@ -270,7 +270,7 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.idex.eval();
 		});
 
 //		System.out.println("instruction next=" + BusKt.toInt(processor.ifid.instruction));

@@ -50,7 +50,7 @@ private fun parseRegister(text: String): Int {
 
 /** parse string to eq constant limited to `size` number of bits */
 private fun parseConstant(text: String, size: Int): Int {
-	val value = text.toIntOrNull() ?: throw RuntimeException("Constant '$text' is not valid.")
+		val value = text.toIntOrNull() ?: throw RuntimeException("Constant '$text' is not valid.")
 	return value and ((1 shl size) - 1)
 }
 
