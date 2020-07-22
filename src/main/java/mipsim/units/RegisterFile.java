@@ -8,7 +8,7 @@ import java.util.List;
 import static sim.base.BusKt.ZERO_BUS;
 
 public final class RegisterFile implements Eval {
-	private final Memory memory;
+	public final Memory _memory;
 	private final List<MutableValue> readData1Bus = BusKt.bus(32);
 	private final List<MutableValue> readData2Bus = BusKt.bus(32);
 
@@ -21,7 +21,7 @@ public final class RegisterFile implements Eval {
 	public final List<Value> readData2 = (List) readData2Bus;
 
 	public RegisterFile(Processor processor) {
-		memory = MemoryKt.createWords(32);
+		_memory = MemoryKt.createWords(32);
 		BusKt.set(readReg1, ZERO_BUS);
 		BusKt.set(readReg2, ZERO_BUS);
 		BusKt.set(writeReg, ZERO_BUS);
@@ -47,20 +47,20 @@ public final class RegisterFile implements Eval {
 
 		if (regWrite.get()) {
 			var reg = BusKt.toInt(writeReg);
-			var word = MemoryKt.getWord(memory, reg);
+			var word = MemoryKt.getWord(_memory, reg);
 			BusKt.set(word, writeData);
 			EvalKt.eval(word);
 		}
 
 		{  // write reg1 to output line
 			var reg = BusKt.toInt(readReg1);
-			var word = MemoryKt.getWord(memory, reg);
+			var word = MemoryKt.getWord(_memory, reg);
 			BusKt.set(readData1Bus, word);
 		}
 
 		{  // write reg2 to output line
 			var reg = BusKt.toInt(readReg2);
-			var word = MemoryKt.getWord(memory, reg);
+			var word = MemoryKt.getWord(_memory, reg);
 			BusKt.set(readData2Bus, word);
 		}
 	}

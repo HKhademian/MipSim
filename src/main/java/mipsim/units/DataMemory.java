@@ -1,6 +1,7 @@
 package mipsim.units;
 
 import mipsim.Processor;
+import mipsim.test.TestKey;
 import sim.base.*;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import static sim.base.BusKt.ZERO_BUS;
 import static sim.real.MuxKt.mux2;
 
 public final class DataMemory implements Eval {
-	private final Memory memory;
+	public final Memory _memory;
 	private final List<MutableValue> readDataBus = BusKt.bus(32);
 
 	public final List<MutableValue> address = BusKt.bus(5);
@@ -20,7 +21,7 @@ public final class DataMemory implements Eval {
 	public final List<Value> readData = (List) readDataBus;
 
 	public DataMemory(Processor processor, int wordSize) {
-		memory = MemoryKt.createWords(wordSize);
+		_memory = MemoryKt.createWords(wordSize);
 		BusKt.set(address, ZERO_BUS);
 		BusKt.set(writeData, ZERO_BUS);
 		BusKt.set(readDataBus, ZERO_BUS);
@@ -41,7 +42,7 @@ public final class DataMemory implements Eval {
 		var memRead = ValueKt.constant(this.memRead);
 
 		var wordAddress = BusKt.toInt(address) >> 2; // it's address/4 to get word number
-		var word = MemoryKt.getWord(memory, wordAddress);
+		var word = MemoryKt.getWord(_memory, wordAddress);
 
 		{ // write data to memory
 			var writeFinalData = mux2(memWrite, EMPTY_BUS, writeData);
