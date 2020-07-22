@@ -9,6 +9,8 @@ import sim.HelpersKt;
 import sim.base.BusKt;
 import sim.base.ValueKt;
 
+import javax.swing.plaf.basic.BasicButtonUI;
+
 import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
 
 public class InstructionDecodeStage extends Stage {
@@ -29,9 +31,10 @@ public class InstructionDecodeStage extends Stage {
 
 		//split the instruction
 		final var opcode = BusKt.slice(instruction, 26, 32);
+		//System.out.println(opcode);
 		final var rs = BusKt.slice(instruction, 21, 26);
-		final var rd = BusKt.slice(instruction, 16, 21);
-		final var rt = BusKt.slice(instruction, 11, 16);
+		final var rt = BusKt.slice(instruction, 16, 21);
+		final var rd = BusKt.slice(instruction, 11, 16);
 		final var shiftMa = BusKt.slice(instruction, 6, 11);
 		final var func = BusKt.slice(instruction, 0, 6);
 
@@ -66,6 +69,7 @@ public class InstructionDecodeStage extends Stage {
 
 
 		Multiplexer.hazardDetection(stallFlag, regWrite, memWrite, regWriteFinal, memWriteFinal);
+		//todo debuge
 
 
 		//register result
@@ -107,7 +111,7 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set(ID_EX.rdRegister, rd);
 		BusKt.set(ID_EX.rsRegister, rs);
 		//setFlag
-		ID_EX.memToReg.set(regDst);
+		ID_EX.regDst.set(regDst);
 		ID_EX.memToReg.set(memToReg);
 		ID_EX.regWrite.set(regWriteFinal);
 		ID_EX.memRead.set(memRead);
@@ -124,6 +128,7 @@ public class InstructionDecodeStage extends Stage {
 
 		//set branch and jump
 		BusKt.set(IF_STAGE.branchTarget.subList(0, 26), finalBranch);
+		//todo check it friends
 		BusKt.set(IF_STAGE.jumpTarget, jumpAddressExtended);
 
 
@@ -150,11 +155,11 @@ public class InstructionDecodeStage extends Stage {
 		final var processor = new Processor();
 		processor.idStage.init();
 
-		var instBin = parseInstructionToBin("addi $t2, $t1,100");
-		var inst = BusKt.toBus(instBin, 32);
+//		var instBin = parseInstructionToBin("add $t1,$t2,$t3");
+//		var inst = BusKt.toBus(instBin, 32);
 
 
-		BusKt.set(processor.ifid.instruction, inst);
+		BusKt.set(processor.ifid.instruction,2348810240l );
 		BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
 		System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
@@ -206,6 +211,7 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
 		System.out.println("Wb next = "+processor.idex.WB);
 		System.out.println("shiftMa next = "+processor.idex.shiftMa);
+		System.out.println("Dg reg next = "+processor.idex.regDst);
 
 		System.out.println("\n############################################################################\n");
 

@@ -86,7 +86,7 @@ public final class Multiplexer {
 		MutableValue memWriteResult
 	) {
 		regWriteResult.set(MuxKt.mux2(hazardDetection, regWrite, Value.ZERO));
-		regWriteResult.set(MuxKt.mux2(memWriteResult, memWrite, Value.ZERO));
+		memWriteResult.set(MuxKt.mux2(hazardDetection, memWrite, Value.ZERO));
 	}
 
 
