@@ -8,10 +8,7 @@ import mipsim.units.HazardDetectionUnit;
 import sim.HelpersKt;
 import sim.base.BusKt;
 import sim.base.ValueKt;
-
-import javax.swing.plaf.basic.BasicButtonUI;
-
-import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
+import sim.test.TestKt;
 
 public class InstructionDecodeStage extends Stage {
 	public InstructionDecodeStage(final Processor processor) {
@@ -153,18 +150,20 @@ public class InstructionDecodeStage extends Stage {
 	 */
 	public static void main(final String... args) {
 		final var processor = new Processor();
-		processor.idStage.init();
+		final var idStage = processor.idStage;
+		idStage.init();
 
 //		var instBin = parseInstructionToBin("add $t1,$t2,$t3");
 //		var inst = BusKt.toBus(instBin, 32);
 
+		TestKt.testOn(processor.idex, "test LW", () -> {
+			BusKt.set(processor.ifid.instruction, 2348810240L);
+			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+			System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
+			System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
+			processor.ifid.eval();
+		});
 
-		BusKt.set(processor.ifid.instruction,2348810240l );
-		BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-		System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
-		System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
-
-		processor.ifid.eval();
 
 		System.out.println("instruction next=" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("new pc next = " + BusKt.toInt(processor.ifid.pc));
@@ -181,13 +180,13 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("mem to reg before = " + processor.idex.memToReg);
 		System.out.println("Write register before= " + (processor.idex.regWrite));
 		System.out.println("aluSrc before =" + (processor.idex.aluSrc));
-		System.out.println("meme to Read befor = "+processor.idex.memRead);
-		System.out.println("meme to write before = "+processor.idex.memWrite);
+		System.out.println("meme to Read befor = " + processor.idex.memRead);
+		System.out.println("meme to write before = " + processor.idex.memWrite);
 		System.out.println("Mem=" + BusKt.toInt(processor.idex.MEM));
 		System.out.println("Exe next=" + BusKt.toInt(processor.idex.EX));
 		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
-		System.out.println("Wb before = "+processor.idex.WB);
-		System.out.println("shiftMa before = "+processor.idex.shiftMa);
+		System.out.println("Wb before = " + processor.idex.WB);
+		System.out.println("shiftMa before = " + processor.idex.shiftMa);
 
 		System.out.println("\n----------------------------------------------------------------\n");
 
@@ -204,34 +203,35 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("mem to reg next =" + processor.idex.memToReg);
 		System.out.println("Write register next = " + (processor.idex.regWrite));
 		System.out.println("aluSrc next = " + (processor.idex.aluSrc));
-		System.out.println("meme to Read next = "+processor.idex.memRead);
-		System.out.println("meme to write next = "+processor.idex.memWrite);
+		System.out.println("meme to Read next = " + processor.idex.memRead);
+		System.out.println("meme to write next = " + processor.idex.memWrite);
 		System.out.println("MeM next = " + BusKt.toInt(processor.idex.MEM));
 		System.out.println("Ex next=" + BusKt.toInt(processor.idex.EX));
 		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
-		System.out.println("Wb next = "+processor.idex.WB);
-		System.out.println("shiftMa next = "+processor.idex.shiftMa);
-		System.out.println("Dg reg next = "+processor.idex.regDst);
+		System.out.println("Wb next = " + processor.idex.WB);
+		System.out.println("shiftMa next = " + processor.idex.shiftMa);
+		System.out.println("Dg reg next = " + processor.idex.regDst);
 
 		System.out.println("\n############################################################################\n");
 
-		System.out.println("before branch = "+processor.ifStage.branch);;
-		System.out.println("before branch traget = "+processor.ifStage.branchTarget);
-		System.out.println("before jump "+processor.ifStage.jump);
-		System.out.println("before stall"+processor.ifStage.stall);
+		System.out.println("before branch = " + processor.ifStage.branch);
+		;
+		System.out.println("before branch traget = " + processor.ifStage.branchTarget);
+		System.out.println("before jump " + processor.ifStage.jump);
+		System.out.println("before stall" + processor.ifStage.stall);
 
 		processor.ifStage.eval();
 		System.out.println("\n--------------------------------------------------------------------\n");
 
 
-		System.out.println("next branch = "+processor.ifStage.branch);;
-		System.out.println("next branch target = "+processor.ifStage.branchTarget);
-		System.out.println("next jump = "+processor.ifStage.jump);
-		System.out.println("next  stall = "+processor.ifStage.stall);
+		System.out.println("next branch = " + processor.ifStage.branch);
+		;
+		System.out.println("next branch target = " + processor.ifStage.branchTarget);
+		System.out.println("next jump = " + processor.ifStage.jump);
+		System.out.println("next  stall = " + processor.ifStage.stall);
 
 
 		System.out.println("\n###########################################################################\n");
-
 
 
 	}

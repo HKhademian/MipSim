@@ -3,10 +3,9 @@ package mipsim.pipeline.registers;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
+import sim.base.ValueKt;
 
 import java.util.List;
-
-import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
 
 public final class IDEX_PipelineRegister extends PipelineRegister {
 
@@ -56,86 +55,52 @@ public final class IDEX_PipelineRegister extends PipelineRegister {
 	}
 
 
-
 	@Override
 	public void writeDebug(@NotNull StringBuffer buffer) {
 		var rdDataBin = BusKt.toInt(this.rtData);
-		var rdDataStr = parseBinToInstruction(rdDataBin);
-
 		var rsDataBin = BusKt.toInt(this.rsData);
-		var rsDataStr = parseBinToInstruction(rsDataBin);
-
-
 		var rdRegisterBin = BusKt.toInt(this.rdRegister);
-		var rdRegisterStr = parseBinToInstruction(rdRegisterBin);
-
 		var ExBin = BusKt.toInt(this.EX);
-		var ExStr = parseBinToInstruction(ExBin);
-
 		var MEMBin = BusKt.toInt(this.MEM);
-		var MEMStr = parseBinToInstruction(MEMBin);
-
 		var aluOpBin = BusKt.toInt(this.aluOp);
-		var aluOpStr = parseBinToInstruction(aluOpBin);
-
 		var immediateBin = BusKt.toInt(this.immediate);
-		var immediateStr = parseBinToInstruction(immediateBin);
-
 		var rsRegisterBin = BusKt.toInt(this.rsRegister);
-		var rsRegisterStr = parseBinToInstruction(rsRegisterBin);
-
 		var functionBin = BusKt.toInt(this.function);
-		var functionStr = parseBinToInstruction(functionBin);
-
 		var rtRegisterBin = BusKt.toInt(this.rtRegister);
-		var rtRegisterStr = parseBinToInstruction(rtRegisterBin);
 		var rtDataBin = BusKt.toInt(this.rtData);
-		var rtDataStr = parseBinToInstruction(rtRegisterBin);
-
-
 		var shiftMaBin = BusKt.toInt(this.shiftMa);
-		var shiftMaStr = parseBinToInstruction(shiftMaBin);
-
 		var WbBin = BusKt.toInt(this.WB);
-		var WbStr = parseBinToInstruction(WbBin);
-
-		var memToReg = this.memToReg;
-		var regDst   = this.regDst ;
-		var regWrite = this.regWrite;
-		var aluSrc	 = this.aluSrc;
-		var	memWrite = this.memWrite;
-		var memRead	 =	this.memRead;
-
-
+		var memToReg = ValueKt.toInt(this.memToReg);
+		var regDst = ValueKt.toInt(this.regDst);
+		var regWrite = ValueKt.toInt(this.regWrite);
+		var aluSrc = ValueKt.toInt(this.aluSrc);
+		var memWrite = ValueKt.toInt(this.memWrite);
+		var memRead = ValueKt.toInt(this.memRead);
 
 		buffer
+			.append(String.format("rdData: %08xH\t", rdDataBin))
+			.append(String.format("rdRegister: %08xH\t", rdRegisterBin))
 
-			.append(String.format("rdData: %08xH = ' %s '\t", rdDataBin,rdDataStr))
-			.append(String.format("rdRegister: %08xH = ' %s '\t",rdRegisterBin,rdRegisterStr))
+			.append(String.format("rtData: %08xH\t", rtDataBin))
+			.append(String.format("rtRegister: %08xH\t", rtRegisterBin))
 
-			.append(String.format("rtData: %08xH = ' %s '\t",rtDataBin,rtDataStr))
-			.append(String.format("rtRegister: %08xH = ' %s '\t",rtRegisterBin,rtRegisterStr))
+			.append(String.format("rsRegister: %08xH\t", rsRegisterBin))
+			.append(String.format("rdData: %08xH\t", rsDataBin))
 
+			.append(String.format("Ex: %08xH\t", ExBin))
+			.append(String.format("MEM: %08xH\t", MEMBin))
+			.append(String.format("aluOp: %8xH\t", aluOpBin))
+			.append(String.format("immediate: %08xH\t", immediateBin))
+			.append(String.format("function: %08xH\t", functionBin))
+			.append(String.format("shiftMa: %08xH\t", shiftMaBin))
+			.append(String.format("WbBin: %08xH\t", WbBin))
 
-			.append(String.format("rsRegister: %08xH = ' %s '\t",rsRegisterBin,rsRegisterStr))
-			.append(String.format("rdData: %08xH = ' %s '\t",rsDataBin,rsDataStr))
-
-
-			.append(String.format("Ex: %08xH = ' %s '\t",ExBin,ExStr))
-			.append(String.format("MEM: %08xH = ' %s '\t",MEMBin,MEMStr))
-			.append(String.format("aluOp: %8xH = ' %s '\t",aluOpBin,aluOpStr))
-			.append(String.format("immediate: %08xH = ' %s '\t",immediateBin,immediateStr))
-			.append(String.format("function: %08xH = ' %s '\t",functionBin,functionStr))
-			.append(String.format("shiftMa: %08xH = ' %s '\t",shiftMaBin,shiftMaStr))
-			.append(String.format("WbBin: %08xH = ' %s '\t",WbBin,WbStr))
-
-			.append(String.format("memToReg: \t", memToReg))
-			.append(String.format("regDst: \t",regDst))
-			.append(String.format("regWrite: \t",regWrite))
-			.append(String.format("memRead: \t",memRead))
-			.append(String.format("aluSrc: \t",aluSrc))
-			.append(String.format("memWrite: \t",memWrite));
+			.append(String.format("memToReg: %d\t", memToReg))
+			.append(String.format("regDst: %d\t", regDst))
+			.append(String.format("regWrite: %d\t", regWrite))
+			.append(String.format("memRead: %d\t", memRead))
+			.append(String.format("aluSrc: %d\t", aluSrc))
+			.append(String.format("memWrite: %d\t", memWrite));
 	}
-
 
 }
