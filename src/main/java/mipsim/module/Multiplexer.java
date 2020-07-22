@@ -161,11 +161,11 @@ public final class Multiplexer {
 	}
 
 	public static void aluSrc(
-		Value rgDst,
+		Value aluSrc,
 		List<? extends Value> rtReg,
 		List<? extends Value> imm,
 		List<? extends MutableValue> res
 	) {
-		BusKt.set(res, MuxKt.mux2(rgDst, rtReg, imm));
+		BusKt.set(res, MuxKt.mux2(aluSrc, rtReg, imm));
 	}
 }
