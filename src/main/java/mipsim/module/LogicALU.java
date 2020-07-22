@@ -110,7 +110,8 @@ public final class LogicALU {
 		AddSub(input1, input2, ValueKt.constant(true), resSub, null);
 		thirtyTwoBitOr(input1, input2, resOr);
 		thirtyTwoBitAnd(input1, input2, resAnd);
-		thirtyTwoBitNor(input1, input2, resNor);
+		thirtyTwoBitNor(input1, input2
+			, resNor);
 		ShiftHelper.thirtyTwoBitShifterRight(input1, shiftMa, resShift_R);
 		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
 		setLess(input1, input2, resSetLes);
