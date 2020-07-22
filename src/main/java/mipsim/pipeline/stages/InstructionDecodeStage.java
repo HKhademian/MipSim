@@ -150,21 +150,57 @@ public class InstructionDecodeStage extends Stage {
 		final var processor = new Processor();
 		processor.idStage.init();
 
-		var instBin = parseInstructionToBin("ADD | $1 | $1 | $1");
+		var instBin = parseInstructionToBin("add $t2, $fp, $t0");
 		var inst = BusKt.toBus(instBin, 32);
+
 
 		BusKt.set(processor.ifid.instruction, inst);
 		BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
-		System.out.println("pc =" + BusKt.toInt(processor.ifid.pc));
+		System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
+		System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
+
 		processor.ifid.eval();
-		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
-		System.out.println("new pc= " + BusKt.toInt(processor.ifid.pc));
+
+
+		System.out.println("instruction next=" + BusKt.toInt(processor.ifid.instruction));
+		System.out.println("new pc next = " + BusKt.toInt(processor.ifid.pc));
+		System.out.println("rs before = " + BusKt.toInt(processor.idex.rsRegister));
+		System.out.println("rt before = " + BusKt.toInt(processor.idex.rtRegister));
+		System.out.println("rd before = " + BusKt.toInt(processor.idex.rdRegister));
+		System.out.println("immadiate = " + BusKt.toInt(processor.idex.immediate));
+		System.out.println("aluOp = " + BusKt.toInt(processor.idex.aluOp));
+		System.out.println("mem to reg before = " + processor.idex.memToReg);
+		System.out.println("Write register before= " + (processor.idex.regWrite));
+		System.out.println("aluSrc before =" + (processor.idex.aluSrc));
+		System.out.println("meme to Read befor = "+processor.idex.memRead);
+		System.out.println("meme to write before = "+processor.idex.memWrite);
+		System.out.println("Mem=" + BusKt.toInt(processor.idex.MEM));
+		System.out.println("Exe next=" + BusKt.toInt(processor.idex.EX));
+		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
+		System.out.println("Web before = "+processor.idex.WB);
+
+		System.out.println("\n----------------------------------------------------------------");
+
 		processor.idex.eval();
-		processor.idex.eval();
-		System.out.println("func =" + BusKt.toInt(processor.idex.function));
-		System.out.println("rt =" + BusKt.toInt(processor.idex.rsRegister));
-		//todo friends there are some problem in update the value idex register they can't be update and all result of this stage is zero
+
+
+		System.out.println("rs next = " + BusKt.toInt(processor.idex.rsRegister));
+		System.out.println("rt next=" + BusKt.toInt(processor.idex.rtRegister));
+		System.out.println("rd =" + BusKt.toInt(processor.idex.rsRegister));
+		System.out.println("immadiate =" + BusKt.toInt(processor.idex.immediate));
+		System.out.println("aluOp =" + BusKt.toInt(processor.idex.aluOp));
+		System.out.println("mem to reg next =" + processor.idex.memToReg);
+		System.out.println("Write register next = " + (processor.idex.regWrite));
+		System.out.println("aluSrc next = " + (processor.idex.aluSrc));
+		System.out.println("meme to Read next = "+processor.idex.memRead);
+		System.out.println("meme to write next = "+processor.idex.memWrite);
+		System.out.println("MeM next = " + BusKt.toInt(processor.idex.MEM));
+		System.out.println("Ex next=" + BusKt.toInt(processor.idex.EX));
+		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
+
+
+		System.out.println("Wb next = "+processor.idex.WB);
+
 
 	}
 }
