@@ -134,28 +134,30 @@ public class InstructionDecodeStage extends Stage {
 
 
 	}
+
 	@Override
 	public void eval() {
 
 	}
 
 
+	/**
+	 * test in progress by: mehdi
+	 */
+	public static void main(final String... args) {
+		final var processor = new Processor();
 
-	public static void main(String args[]){
-
-		Simulator simulator = new Simulator();
-		int x = 200002;
-		BusKt.set(simulator.ifid.instruction,BusKt.toBus(2004,32));
-		BusKt.set(simulator.ifid.pc,BusKt.toBus(20,32));
-		System.out.println("instruction ="+BusKt.toInt(simulator.ifid.instruction));
-		System.out.println("pc ="+BusKt.toInt(simulator.ifid.pc));
-		simulator.ifid.eval();
-		System.out.println("instruction ="+BusKt.toInt(simulator.ifid.instruction));
-		System.out.println("new pc= "+BusKt.toInt(simulator.ifid.pc));
-		simulator.idex.eval();
-		simulator.idex.eval();
-		System.out.println("func ="+BusKt.toInt(simulator.idex.function));
-		System.out.println("rt ="+BusKt.toInt(simulator.idex.rsRegister));
+		BusKt.set(processor.ifid.instruction, BusKt.toBus(2004, 32));
+		BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
+		System.out.println("pc =" + BusKt.toInt(processor.ifid.pc));
+		processor.ifid.eval();
+		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
+		System.out.println("new pc= " + BusKt.toInt(processor.ifid.pc));
+		processor.idex.eval();
+		processor.idex.eval();
+		System.out.println("func =" + BusKt.toInt(processor.idex.function));
+		System.out.println("rt =" + BusKt.toInt(processor.idex.rsRegister));
 		//todo friends there are some problem in update the value idex register they can't be update and all result of this stage is zero
 
 	}
