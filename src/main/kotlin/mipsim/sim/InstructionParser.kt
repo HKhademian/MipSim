@@ -45,7 +45,7 @@ private val registers: Map<String, Int> = mutableMapOf<String, Int>().also { reg
 
 /** parse string to register number */
 private fun parseRegister(text: String): Int {
-	return registers[text] ?: throw RuntimeException("Register '$text' is not valid.")
+	return registers[text.toLowerCase()] ?: throw RuntimeException("Register '$text' is not valid.")
 }
 
 /** parse string to eq constant limited to `size` number of bits */
@@ -85,20 +85,20 @@ private enum class Format {
 		}
 
 		override fun parseBinToInstruction(command: Command, binary: Int): String {
-			val mask = ((1 shl 5) - 1)
-			val rd = (binary shr 11) and mask
-			val rs = (binary shr 21) and mask
-			val rt = (binary shr 16) and mask
-			val sa = (binary shr 6) and mask
+			val regMask = ((1 shl 5) - 1)
+			val rd = (binary ushr 11) and regMask
+			val rs = (binary ushr 21) and regMask
+			val rt = (binary ushr 16) and regMask
+			val sa = (binary ushr 6) and regMask
 
-			val RD = registers.entries.find { it.value == rd }!!.component1()
-			val RS = registers.entries.find { it.value == rs }!!.component1()
+			val rdStr = registers.entries.find { it.value == rd }!!.component1()
+			val rsStr = registers.entries.find { it.value == rs }!!.component1()
 
 			return if (command.shamt) {
-				"${command.name} $RD, $RS, $sa"
+				"${command.name} $rdStr, $rsStr, $sa"
 			} else {
-				val RT = registers.entries.find { it.value == rt }!!.component1()
-				"${command.name} $RD, $RS, $RT"
+				val rtStr = registers.entries.find { it.value == rt }!!.component1()
+				"${command.name} $rdStr, $rsStr, $rtStr"
 			}
 		}
 	},
@@ -130,7 +130,33 @@ private enum class Format {
 		}
 
 		override fun parseBinToInstruction(command: Command, binary: Int): String {
-			TODO("Not yet implemented")
+			val regMask = ((1 shl 5) - 1)
+			if (command.name == "LUI") {
+				TODO("Not yet implemented")
+			}
+
+			if (command.name in listOf("LW", "SW")) {
+				val rd = (binary ushr 16) and regMask
+				val rs = (binary ushr 21) and regMask
+				val imm = binary and ((1 shl 16) - 1)
+
+				val rdStr = registers.entries.find { it.value == rd }!!.component1()
+				val rsStr = registers.entries.find { it.value == rs }!!.component1()
+
+				return "${command.name} $rdStr, $imm($rsStr)"
+			}
+
+			val regs = listOf(0, 16, 21)
+			val rsI = if (command.name in listOf("BEQ", "BNE")) 1 else 2
+			val rtI = (rsI - 1 xor 1) + 1
+			val rs = (binary ushr regs[rsI]) and regMask
+			val rt = (binary ushr regs[rtI]) and regMask
+			val imm = binary and ((1 shl 16) - 1)
+
+			val rtStr = registers.entries.find { it.value == rt }!!.component1()
+			val rsStr = registers.entries.find { it.value == rs }!!.component1()
+
+			return "${command.name} $rtStr, $rsStr, $imm"
 		}
 	},
 
@@ -184,15 +210,15 @@ fun Memory.loadInstructions(instructionLines: List<String>) {
 }
 
 fun parseInstructionToBin(instruction: String): Int {
-	val inst = instruction.toLowerCase().trim().split(",", " ").filterNot { it.isBlank() }
+	val inst = instruction.toUpperCase().trim().split(",", " ").filterNot { it.isBlank() }
 	val commandStr = inst[0]
-	val command = commands.find { it.name.toLowerCase() == commandStr } ?: throw RuntimeException("unsupported command")
+	val command = commands.find { it.name.toUpperCase() == commandStr } ?: throw RuntimeException("unsupported command")
 	val format = command.format
 	return format.parseInstructionToBin(command, inst)
 }
 
 fun parseBinToInstruction(binaryInstruction: Int): String {
-	val opcode = binaryInstruction shr 26
+	val opcode = binaryInstruction ushr 26
 	val func = binaryInstruction and ((1 shl 6) - 1)
 	val command = commands.find { it.opCode == opcode && (opcode != 0 || it.func == func) }
 	//?: throw RuntimeException("unsupported opCode")
@@ -202,10 +228,17 @@ fun parseBinToInstruction(binaryInstruction: Int): String {
 }
 
 internal fun main() {
-	val inst = "add \$zero $1 \$fp"
-	println(inst)
-	val instBin = parseInstructionToBin(inst)
-	println(instBin)
-	val instStr = parseBinToInstruction(instBin)
-	println(instStr)
+	fun testInst(inst: String) {
+		println("\ntesting '$inst'")
+		val instBin = parseInstructionToBin(inst)
+		println(instBin)
+		val instStr = parseBinToInstruction(instBin)
+		println(instStr)
+	}
+
+	testInst("add \$zero $1 \$fp")
+	testInst("addi \$t1, \$t2, 1374")
+	testInst("addi \$s1, \$t2, 74")
+	testInst("lw \$t1, 4(\$t2)")
+
 }
