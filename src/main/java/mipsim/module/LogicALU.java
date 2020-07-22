@@ -1,7 +1,12 @@
 package mipsim.module;
 
 import mipsim.units.AluControlUnit;
-import sim.base.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import sim.base.BusKt;
+import sim.base.MutableValue;
+import sim.base.Value;
+import sim.base.ValueKt;
 import sim.complex.MuxKt;
 import sim.real.AdderKt;
 
@@ -49,16 +54,22 @@ public final class LogicALU {
 	 * carry out when we need to set carry flag
 	 */
 	public static void AddSub(
-		List<? extends Value> input1,
-		List<? extends Value> input2,
-		Value select,
-		List<? extends MutableValue> result,
-		List<? extends MutableValue> carryOut
+		@NotNull List<? extends Value> A,
+		@NotNull List<? extends Value> B,
+		@NotNull Value addSubSelect,
+		@NotNull List<? extends MutableValue> result,
+		@Nullable MutableValue carryOut
 	) {
-		carryOut.get(0).set(select.get());
-		for (int i = 31; i >= 0; i--) {
-			AdderKt.fullAdder(input1.get(i), (xor(input2.get(i), select)), carryOut.get(i), result.get(i), carryOut.get(i + 1));
+		final var xB = xor(B, addSubSelect);
+		Value currentCarry = ValueKt.constant(addSubSelect);
+		MutableValue nextCarry = null;
+		for (int i = 0; i < A.size(); i++) {
+			nextCarry = ValueKt.mut(false);
+			AdderKt.fullAdder(A.get(i), xB.get(i), currentCarry, result.get(i), nextCarry);
+			currentCarry = nextCarry;
 		}
+		if (carryOut != null && nextCarry != null)
+			carryOut.set(nextCarry);
 	}
 
 
@@ -85,11 +96,11 @@ public final class LogicALU {
 	) {
 		var carry = BusKt.bus(32);
 		var select = BusKt.bus(4);
-		AluControlUnit.aluControlUnit(function, aluControlUnit, select);
+		AluControlUnit.aluControlUnit(aluControlUnit, function, select);
 		var resAdd = BusKt.bus(32);
-		AddSub(input1, input2, new Variable(false, ""), resAdd, carry);
+		AddSub(input1, input2, ValueKt.mut(false), resAdd, null);
 		var resSub = BusKt.bus(32);
-		AddSub(input1, input2, new Variable(true, ""), resSub, carry);
+		AddSub(input1, input2, ValueKt.mut(false), resSub, null);
 		var resOr = BusKt.bus(32);
 		thirtyTwoBitOr(input1, input2, resOr);
 		var resAnd = BusKt.bus(32);
