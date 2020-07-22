@@ -1,13 +1,15 @@
 package mipsim.pipeline.stages;
 
 import mipsim.Processor;
+import mipsim.module.Multiplexer;
 import mipsim.module.TinyModules;
 import mipsim.units.ControlUnit;
 import mipsim.units.HazardDetectionUnit;
-import mipsim.module.Multiplexer;
 import sim.HelpersKt;
 import sim.base.BusKt;
 import sim.base.ValueKt;
+
+import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
 
 public class InstructionDecodeStage extends Stage {
 	public InstructionDecodeStage(final Processor processor) {
@@ -73,7 +75,7 @@ public class InstructionDecodeStage extends Stage {
 
 		//this will calculator address of jump and branch
 
-		final var branchAddress = HelpersKt.shift(immediate, 2);
+		final var branchAddress = HelpersKt.shift(immediateValue, 2);
 		final var finalBranch = BusKt.bus(32);
 		TinyModules.easyAdder(PC, branchAddress, finalBranch);
 
@@ -146,23 +148,23 @@ public class InstructionDecodeStage extends Stage {
 	 */
 	public static void main(final String... args) {
 		final var processor = new Processor();
+		processor.idStage.init();
 
-		BusKt.set(processor.ifid.instruction, BusKt.toBus(4294967295l, 32));
+		var instBin = parseInstructionToBin("ADD | $1 | $1 | $1");
+		var inst = BusKt.toBus(instBin, 32);
+
+		BusKt.set(processor.ifid.instruction, inst);
 		BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
 		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("pc =" + BusKt.toInt(processor.ifid.pc));
 		processor.ifid.eval();
 		System.out.println("instruction =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("new pc= " + BusKt.toInt(processor.ifid.pc));
-
-		processor.ifStage.eval();
-		//processor.idStage.eval();
-		System.out.println("pc shift ="+processor.ifStage.jump);
-
+		processor.idex.eval();
 		processor.idex.eval();
 		System.out.println("func =" + BusKt.toInt(processor.idex.function));
 		System.out.println("rt =" + BusKt.toInt(processor.idex.rsRegister));
-
+		//todo friends there are some problem in update the value idex register they can't be update and all result of this stage is zero
 
 	}
 }

@@ -27,10 +27,8 @@ public final class IDEX_PipelineRegister extends PipelineRegister {
 	// note --> we used branch jump  in stage decode
 
 
-
 	//function 6 bit
-	public final List<MutableValue> function  = BusKt.slice(memory, 8, 14);
-
+	public final List<MutableValue> function = BusKt.slice(memory, 8, 14);
 
 
 	//this will be out put of register --> we use mux before of rt with aluSrc to select right value;32 bit
@@ -46,14 +44,8 @@ public final class IDEX_PipelineRegister extends PipelineRegister {
 	public final List<MutableValue> rtRegister = BusKt.slice(memory, 120, 125);
 
 
-
 	//this will be shiftMa for alu the number of bit that would be shifted ,5 bit
 	public final List<MutableValue> shiftMa = BusKt.slice(memory, 125, 130);
-
-
-
-
-
 
 
 	public IDEX_PipelineRegister() {

@@ -8,6 +8,8 @@ import sim.complex.MuxKt;
 import java.util.List;
 
 import static sim.base.BusKt.ZERO_BUS;
+import static sim.complex.MuxKt.mux;
+import static sim.complex.MuxKt.mux4;
 
 public final class Multiplexer {
 	private Multiplexer() {
@@ -31,7 +33,7 @@ public final class Multiplexer {
 		List<? extends Value> MEM_WB,
 		List<? extends MutableValue> result
 	) {
-		BusKt.set(result, MuxKt.mux(forwarding, regSource, MEM_WB, EXE_MEM, ZERO_BUS));
+		BusKt.set(result, mux(forwarding, regSource, MEM_WB, EXE_MEM, ZERO_BUS));
 	}
 
 
@@ -107,10 +109,8 @@ public final class Multiplexer {
 		List<? extends Value> branch,
 		List<? extends MutableValue> PCSelect
 	) {
-		var select = BusKt.toBus(0, 2);
-		select.set(0, jumpFlag);
-		select.set(1, branchFlag);
-		BusKt.set(PCSelect, MuxKt.mux(select, PC, jump, branch, PC));//I put pc for 11 of select
+		var muxRes = mux4(jumpFlag, branchFlag, PC, jump, branch, PC);
+		BusKt.set(PCSelect, muxRes);//I put pc for 11 of select
 	}
 
 
@@ -156,7 +156,7 @@ public final class Multiplexer {
 		List<? extends MutableValue> shiftLogicalRight,
 		List<? extends MutableValue> result
 	) {
-		BusKt.set(result, MuxKt.mux(aluControlInput, and, or, add, ZERO_BUS, shiftLogicalLeft, shiftLogicalRight, sub, setOnLessThan
+		BusKt.set(result, mux(aluControlInput, and, or, add, ZERO_BUS, shiftLogicalLeft, shiftLogicalRight, sub, setOnLessThan
 			, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS));
 	}
 
