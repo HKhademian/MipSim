@@ -134,6 +134,7 @@ public class InstructionDecodeStage extends Stage {
 		IF_STAGE.branch.set(branch);
 
 
+
 		//set stall
 		IF_STAGE.stall.set(stallFlag);
 
@@ -162,21 +163,20 @@ public class InstructionDecodeStage extends Stage {
 
 
 		TestKt.testOn(processor.idex, "test beq", () -> {
-			var instBin = parseInstructionToBin("beq $s1,$t1,6");
+			var instBin = parseInstructionToBin("beq $s1,$t1,1");
 			var inst = BusKt.toBus(instBin);
+			System.out.println(BusKt.toInt(inst));
+			//todo it must be check again
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
-		});
+			processor.ifid.eval();
 
-		TestKt.testOn(processor.idex, "test branch", () -> {
-			var instBin = parseInstructionToBin("beq $zero,$t1,2");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
 			processor.idex.eval();
-		});
+			processor.ifStage.eval();
+			System.out.println("\n branchTarget: "+processor.ifStage.branchTarget);
 
+		});
+		//todo we have some bug in beq or branch
 		TestKt.testOn(processor.idex, "test set less than", () -> {
 			var instBin = parseInstructionToBin("slt $s2,$t7,$5");
 			var inst = BusKt.toBus(instBin);
@@ -270,7 +270,11 @@ public class InstructionDecodeStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+			processor.ifid.eval();
+			processor.ifStage.eval();
 			processor.idex.eval();
+			System.out.println("jump: "+processor.ifStage.jumpTarget);
+			//todo why it's jump don't be update
 		});
 
 //		System.out.println("instruction next=" + BusKt.toInt(processor.ifid.instruction));
