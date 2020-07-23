@@ -14,8 +14,8 @@ public final class MEMWB_PipelineRegister extends PipelineRegister {
 
 	//WB
 	public final List<MutableValue> WB = BusKt.slice(memory, 0, 2);
-	public MutableValue memToReg = WB.get(0);
-	public MutableValue regWrite = WB.get(1);
+	public final MutableValue memToReg = WB.get(0);
+	public final MutableValue regWrite = WB.get(1);
 	// we use the memRead memWrite
 
 

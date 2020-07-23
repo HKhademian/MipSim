@@ -2,7 +2,6 @@ package mipsim.pipeline.stages;
 
 import mipsim.Processor;
 import sim.base.BusKt;
-import sim.base.ValueKt;
 import sim.real.MuxKt;
 import sim.test.TestKt;
 
@@ -41,28 +40,28 @@ public class WriteBackStage extends Stage {
 		TestKt.testOn(regFile, "init", () -> {
 			BusKt.set(MemWbReg.aluData, 4005);
 			BusKt.set(MemWbReg.memoryData, 12044);
-			BusKt.set(MemWbReg.rdRegister, 10);//write in $s9
+			BusKt.set(MemWbReg.rdRegister, 10); //write in $s9
 			processor.wbStage.init();
 		});
 
 		TestKt.testOn(regFile, "Don't write anything", () -> {
-			MemWbReg.regWrite = ValueKt.mut(false);
-			MemWbReg.memToReg = ValueKt.mut(false);
+			MemWbReg.regWrite.set(false);
+			MemWbReg.memToReg.set(false);
 			MemWbReg.eval();
 			regFile.eval();
 		});
 
 		TestKt.testOn(regFile, "write something from memory", () -> {
-			MemWbReg.regWrite = ValueKt.mut(true);
-			MemWbReg.memToReg = ValueKt.mut(true);
+			MemWbReg.regWrite.set(true);
+			MemWbReg.memToReg.set(true);
 			MemWbReg.eval();
 			regFile.eval();
 		});
 
 		//todo check it with help of hossain :)
 		TestKt.testOn(regFile, "write something from aluResult", () -> {
-			MemWbReg.regWrite = ValueKt.mut(true);
-			MemWbReg.memToReg = ValueKt.mut(false);
+			MemWbReg.regWrite.set(true);
+			MemWbReg.memToReg.set(false);
 			MemWbReg.eval();
 			regFile.eval();
 		});
