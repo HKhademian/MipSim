@@ -6,7 +6,7 @@ import sim.base.Value;
 
 import java.util.List;
 
-import static sim.gates.GatesKt.*;
+import static sim.base.GateKt.*;
 
 public final class AluControlUnit {
 	/**

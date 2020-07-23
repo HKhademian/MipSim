@@ -7,7 +7,7 @@ import sim.base.ValueKt;
 
 import java.util.List;
 
-import static sim.gates.GatesKt.*;
+import static sim.base.GateKt.*;
 
 public class Compare {
 	public static void comp4Bit(

@@ -4,10 +4,11 @@ import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.Value;
 import sim.base.ValueKt;
-import static sim.base.ValueKt.mut;
+
 import java.util.List;
 
-import static sim.gates.GatesKt.*;
+import static sim.base.GateKt.*;
+
 //test:done
 public final class ControlUnit {
 	public static void control(
@@ -72,17 +73,17 @@ public final class ControlUnit {
 		var branch = ValueKt.mut(false);
 		var jump = ValueKt.mut(false);
 		var aluOp = BusKt.bus(2);
-		ControlUnit.control(opcode,regDst,ALUsrc,memToReg,regWrite,memRead,memWrite,branch,jump,aluOp);
+		ControlUnit.control(opcode, regDst, ALUsrc, memToReg, regWrite, memRead, memWrite, branch, jump, aluOp);
 
-		System.out.println("regDst: "+regDst);
-		System.out.println("ALUsrc: "+ALUsrc);
-		System.out.println("memToReg: "+memToReg);
-		System.out.println("regWrite: "+regWrite);
-		System.out.println("memRead: "+memRead);
-		System.out.println("memWrite: "+memWrite);
-		System.out.println("branch: "+branch);
-		System.out.println("jump: "+jump);
-		System.out.println("aluOp: "+aluOp.get(1)+""+aluOp.get(0));
+		System.out.println("regDst: " + regDst);
+		System.out.println("ALUsrc: " + ALUsrc);
+		System.out.println("memToReg: " + memToReg);
+		System.out.println("regWrite: " + regWrite);
+		System.out.println("memRead: " + memRead);
+		System.out.println("memWrite: " + memWrite);
+		System.out.println("branch: " + branch);
+		System.out.println("jump: " + jump);
+		System.out.println("aluOp: " + aluOp.get(1) + "" + aluOp.get(0));
 
 
 	}

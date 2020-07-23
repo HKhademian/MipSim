@@ -2,7 +2,7 @@ package mipsim;
 
 import sim.base.ValueKt;
 
-import static sim.gates.GatesKt.xor;
+import static sim.base.GateKt.xor;
 
 public class Main {
 	public static void main(String[] args) {

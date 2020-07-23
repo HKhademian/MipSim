@@ -8,7 +8,7 @@ import mipsim.units.ForwardingUnit;
 import sim.base.BusKt;
 import sim.test.TestKt;
 
-import static sim.gates.GatesKt.or;
+import static sim.base.GateKt.*;
 
 public class ExecutionStage extends Stage {
 	public ExecutionStage(final Processor processor) {
@@ -40,8 +40,8 @@ public class ExecutionStage extends Stage {
 		var forwardingExe2 = BusKt.bus(2);
 		var forwardingMem2 = BusKt.bus(2);
 		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rtRegister, forwardingExe2);
-		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite,memwb.rdRegister,idex.rsRegister,exmem.regWrite,exmem.rtRegister,forwardingMem2);
-		Multiplexer.aluInput(or(forwardingExe2,forwardingMem2), idex.rtData, exmem_aluData, memwb.memoryData, forwardingResult2);
+		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite, memwb.rdRegister, idex.rsRegister, exmem.regWrite, exmem.rtRegister, forwardingMem2);
+		Multiplexer.aluInput(or(forwardingExe2, forwardingMem2), idex.rtData, exmem_aluData, memwb.memoryData, forwardingResult2);
 
 		var resultTwoOfAlu = BusKt.bus(32);
 		Multiplexer.aluSrc(idex.aluSrc, forwardingResult2, idex.immediate, resultTwoOfAlu);
@@ -50,7 +50,6 @@ public class ExecutionStage extends Stage {
 		var aluData = BusKt.bus(32);
 		LogicALU.AluInStage(resultOneOfAlu, resultTwoOfAlu, aluOp, idex.shiftMa, aluData);
 		BusKt.set(exmem.aluData, aluData);
-
 
 
 		//dt register
@@ -212,14 +211,12 @@ public class ExecutionStage extends Stage {
 //		});
 
 
-
 		TestKt.test("forwarding add", () -> {
 
-			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
-			BusKt.set(idex.function , BusKt.toBus(0x20,6));
+			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
+			BusKt.set(idex.function, BusKt.toBus(0x20, 6));
 			idex.aluSrc.set(false);
 			idex.regDst.set(true);
-
 
 
 			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));

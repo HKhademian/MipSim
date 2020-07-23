@@ -9,7 +9,7 @@ import java.util.List;
 
 import static mipsim.module.TinyModules.isEqual;
 import static mipsim.module.TinyModules.isNotEqual;
-import static sim.gates.GatesKt.*;
+import static sim.base.GateKt.*;
 
 
 //test:done;

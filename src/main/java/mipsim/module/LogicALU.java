@@ -1,6 +1,5 @@
 package mipsim.module;
 
-import mipsim.units.AluControlUnit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sim.base.BusKt;
@@ -12,7 +11,8 @@ import sim.real.AdderKt;
 
 import java.util.List;
 
-import static sim.gates.GatesKt.*;
+import static sim.base.GateKt.*;
+
 //tested by ramin
 public final class LogicALU {
 	public static void thirtyTwoBitOr(
@@ -103,41 +103,34 @@ public final class LogicALU {
 		var resShift_L = BusKt.bus(32);
 		var resSetLes = BusKt.bus(32);
 
-
-
-
 		AddSub(input1, input2, ValueKt.constant(false), resAdd, null);
 		AddSub(input1, input2, ValueKt.constant(true), resSub, null);
 		thirtyTwoBitOr(input1, input2, resOr);
 		thirtyTwoBitAnd(input1, input2, resAnd);
-		thirtyTwoBitNor(input1, input2
-			, resNor);
+		thirtyTwoBitNor(input1, input2			, resNor);
 		ShiftHelper.thirtyTwoBitShifterRight(input1, shiftMa, resShift_R);
 		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
 		setLess(input1, input2, resSetLes);
 
-
 		Multiplexer.aluResult(aluOp, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
-
 	}
 
 	public static void main(String[] args) {
+		var input1 = BusKt.toBus(5, 32);
+		var input2 = BusKt.toBus(6, 32);
 
-
-		var input1 = BusKt.toBus(5,32);
-		var input2 = BusKt.toBus(6,32);
-
+		// todo: wrong
 		var aluOp = BusKt.bus(4);
 		aluOp.get(0).set(false);
 		aluOp.get(1).set(true);
 		aluOp.get(2).set(false);
 		aluOp.get(3).set(false);
 
-		var shiftMa = BusKt.toBus(0,5);
+		var shiftMa = BusKt.toBus(0, 5);
 
 		var result = BusKt.bus(32);
 
-		AluInStage(input1,input2,aluOp,shiftMa,result);
+		AluInStage(input1, input2, aluOp, shiftMa, result);
 
 		System.out.println(BusKt.toInt(result));
 	}
