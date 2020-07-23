@@ -207,7 +207,7 @@ fun InstructionMemory.loadInstructions(instructionLines: List<String>) =
 
 /** parse instructions and write to instructionMemory */
 fun Memory.loadInstructions(instructionLines: List<String>) {
-	val instructions = instructionLines.map { parseInstructionToBin(it) } // convert to int
+	val instructions = instructionLines.map { parseInstructionToBin(it) }.map { listOf(it, 0, 0) }.flatten() // convert to int
 	val memory = this
 	val time = System.currentTimeMillis()
 	memory.reset()
