@@ -6,7 +6,7 @@ import sim.base.MutableValue;
 
 import java.util.List;
 
-	import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
+import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
 
 public final class EXMEM_PipelineRegister extends PipelineRegister {
 
@@ -33,9 +33,6 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 	public final List<MutableValue> rtRegister = BusKt.slice(memory, 68, 73);
 
 
-
-
-
 	// note --> we used aluOp  in stage execution
 
 	public EXMEM_PipelineRegister() {
@@ -50,20 +47,16 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 		var memWrite = this.memWrite.get();
 
 		var aluData = BusKt.toInt(this.aluData);
-		var aluDataString = parseBinToInstruction(aluData);
 		var writeMem = BusKt.toInt(this.writeMem);
-		var writeMemString = parseBinToInstruction(writeMem);
 		var rtRegister = BusKt.toInt(this.rtRegister);
-		var rtRegisterString = parseBinToInstruction(rtRegister);
+
 		buffer
-			.append("memory to register: "+memToReg)
-			.append("\t,register write: "+regWrite)
-			.append("\t,memory read: "+memRead)
-			.append("\t,memory write: "+memWrite)
+			.append("memory to register: ").append(memToReg)
+			.append("\t,register write: ").append(regWrite)
+			.append("\t,memory read: ").append(memRead)
+			.append("\t,memory write: ").append(memWrite)
 			.append(String.format("\t,aluData: %08xH '", aluData))
-			.append(String.format("\t,writeMem: %08xH  '",writeMem))
-
-			.append(String.format("\t,rdRegister: %08xH ",rtRegister));
-
+			.append(String.format("\t,writeMem: %08xH  '", writeMem))
+			.append(String.format("\t,rdRegister: %08xH ", rtRegister));
 	}
 }

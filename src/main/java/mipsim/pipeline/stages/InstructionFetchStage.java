@@ -1,8 +1,8 @@
 package mipsim.pipeline.stages;
 
 import mipsim.Processor;
-import mipsim.module.TinyModules;
 import mipsim.module.Multiplexer;
+import mipsim.module.TinyModules;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;
@@ -15,9 +15,9 @@ import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
 public class InstructionFetchStage extends Stage {
 	public final List<MutableValue> branchTarget = BusKt.bus(32);
 	public final List<MutableValue> jumpTarget = BusKt.bus(32);
-	public final MutableValue stall = ValueKt.mut();
-	public final MutableValue branch = ValueKt.mut();
-	public final MutableValue jump = ValueKt.mut();
+	public final MutableValue stall = ValueKt.mut(false);
+	public final MutableValue branch = ValueKt.mut(false);
+	public final MutableValue jump = ValueKt.mut(false);
 
 	public InstructionFetchStage(final Processor processor) {
 		super(processor);
@@ -65,10 +65,6 @@ public class InstructionFetchStage extends Stage {
 //		processor.ifid.eval();
 //		System.out.println(BusKt.toInt(processor.ifid.pc));
 //		System.out.println(BusKt.toInt(processor.ifid.instruction));
-
-
-
-
 
 
 		TestKt.testOn(processor.ifid, "test beq", () -> {
@@ -156,7 +152,6 @@ public class InstructionFetchStage extends Stage {
 			processor.pc.eval();
 			processor.ifid.eval();
 		});
-
 
 
 		TestKt.testOn(processor.ifid, "test SW", () -> {

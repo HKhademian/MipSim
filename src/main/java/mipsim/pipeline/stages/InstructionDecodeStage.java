@@ -8,8 +8,9 @@ import mipsim.units.HazardDetectionUnit;
 import sim.HelpersKt;
 import sim.base.BusKt;
 import sim.base.ValueKt;
-import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
 import sim.test.TestKt;
+
+import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
 
 public class InstructionDecodeStage extends Stage {
 	public InstructionDecodeStage(final Processor processor) {
@@ -59,12 +60,11 @@ public class InstructionDecodeStage extends Stage {
 		final var ID_EX_registerRt = BusKt.slice(ID_EX.rtRegister, 0, 5);
 		//rt ==  IF_ID_registerRt;
 		//rs ==  IF_ID_registerRs;
-		final var stallFlag = ValueKt.mut();
+		final var stallFlag = ValueKt.mut(false);
 		HazardDetectionUnit.hazardDetectionUnit(ID_EX_memRead, ID_EX_registerRt, rt, rs, stallFlag);
 
-		final var regWriteFinal = ValueKt.mut();
-		final var memWriteFinal = ValueKt.mut();
-
+		final var regWriteFinal = ValueKt.mut(false);
+		final var memWriteFinal = ValueKt.mut(false);
 
 		Multiplexer.hazardDetection(stallFlag, regWrite, memWrite, regWriteFinal, memWriteFinal);
 		//todo debuge
@@ -134,7 +134,6 @@ public class InstructionDecodeStage extends Stage {
 		IF_STAGE.branch.set(branch);
 
 
-
 		//set stall
 		IF_STAGE.stall.set(stallFlag);
 
@@ -150,16 +149,13 @@ public class InstructionDecodeStage extends Stage {
 	/**
 	 * test in progress by: mehdi
 	 */
-	public static void main(final String[]args) {
+	public static void main(final String[] args) {
 		final var processor = new Processor();
 		final var idStage = processor.idStage;
 		idStage.init();
 
 		System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
-
-
-
 
 
 		TestKt.testOn(processor.idex, "test beq", () -> {
@@ -173,7 +169,7 @@ public class InstructionDecodeStage extends Stage {
 
 			processor.idex.eval();
 			processor.ifStage.eval();
-			System.out.println("\n branchTarget: "+processor.ifStage.branchTarget);
+			System.out.println("\n branchTarget: " + processor.ifStage.branchTarget);
 
 		});
 		//todo we have some bug in beq or branch
@@ -247,7 +243,6 @@ public class InstructionDecodeStage extends Stage {
 		});
 
 
-
 		TestKt.testOn(processor.idex, "test SW", () -> {
 			var instBin = parseInstructionToBin("sw $t1,6($t2)");
 			var inst = BusKt.toBus(instBin);
@@ -273,7 +268,7 @@ public class InstructionDecodeStage extends Stage {
 			processor.ifid.eval();
 			processor.ifStage.eval();
 			processor.idex.eval();
-			System.out.println("jump: "+processor.ifStage.jumpTarget);
+			System.out.println("jump: " + processor.ifStage.jumpTarget);
 			//todo why it's jump don't be update
 		});
 

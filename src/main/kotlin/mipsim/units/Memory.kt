@@ -31,8 +31,8 @@ class MemBit : Element, MutableValue {
 	override fun eval() {
 		next.eval()
 		// at moment of clock pos-edge, we calculate next value and store it to cache
-		val currValue = curr.const()
-		val nextValue = next.const()
+		val currValue = curr.toConst()
+		val nextValue = next.toConst()
 		val writeValue = mux2(memWrite, currValue, nextValue)
 		curr.set(writeValue)
 	}

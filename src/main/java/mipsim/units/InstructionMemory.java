@@ -66,14 +66,10 @@ public final class InstructionMemory implements Eval, DebugWriter {
 			BusKt.set(instMem.pc, 5);
 		});
 
-		 TestKt.testOn(instMem, "eval+pcChange", () -> {
+		TestKt.testOn(instMem, "eval+pcChange", () -> {
 			BusKt.set(instMem.pc, 5);
 			instMem.eval();
 		});
 
-		TestKt.test("hello", ()-> {
-
-			return 1;
-		});
 	}
 }

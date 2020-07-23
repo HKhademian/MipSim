@@ -45,8 +45,8 @@ public final class MEMWB_PipelineRegister extends PipelineRegister {
 		var rdRegisterStr = parseBinToInstruction(rdRegisterBin);
 
 		buffer
-			.append(String.format("memToReg: ", memToReg))
-			.append(String.format("regWrite: ", regWrite))
+			.append("memToReg: ").append(memToReg)
+			.append("regWrite: ").append(regWrite)
 			.append(String.format("aluData: %08xH = ' %s '\t", aluDataBin, aluDataBinStr))
 			.append(String.format("memoryData: %08xH = ' %s '\t", memoryDataBin, memoryDataStr))
 			.append(String.format("rdRegister: %08xH = ' %s '\t", rdRegisterBin, rdRegisterStr));
