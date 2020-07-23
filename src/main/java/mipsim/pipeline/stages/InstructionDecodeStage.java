@@ -181,14 +181,14 @@ public class InstructionDecodeStage extends Stage {
 			processor.idex.eval();
 		});
 
-//		TestKt.testOn(processor.idex, "test shiftR", () -> {
-//			var instBin = parseInstructionToBin("slr $s1,$s3,4");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.ifid.eval();
-//		});
-		//todo hossain check it's shift right
+		TestKt.testOn(processor.idex, "test shiftR", () -> {
+			var instBin = parseInstructionToBin("srl $s1,$s3,4");
+			var inst = BusKt.toBus(instBin);
+			BusKt.set(processor.ifid.instruction, inst);
+			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+			processor.ifid.eval();
+		});
+
 
 		TestKt.testOn(processor.idex, "test shiftL", () -> {
 			var instBin = parseInstructionToBin("sll $s1,$t1,6");
