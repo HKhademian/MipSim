@@ -67,15 +67,14 @@ public class ExecutionStage extends Stage {
 
 
 	public static void main(String[] args) {
-		final var processor = new Processor();
-		final var idex = processor.idex;
-		final var exmem = processor.exmem;
-		final var memwb = processor.memwb;
-		processor.idStage.init();
-		processor.exStage.init();
 		//..
 		TestKt.test("and", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x24);
@@ -96,6 +95,11 @@ public class ExecutionStage extends Stage {
 		//..
 		TestKt.test("add", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x20);
@@ -115,6 +119,12 @@ public class ExecutionStage extends Stage {
 		//..
 		TestKt.test("sub", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
+
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x22);
@@ -133,6 +143,12 @@ public class ExecutionStage extends Stage {
 		//..
 		TestKt.test("or", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
+
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x25);
@@ -151,6 +167,12 @@ public class ExecutionStage extends Stage {
 		//ohh we have some bug
 		TestKt.test("set on less", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
+
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x2A);
@@ -169,6 +191,12 @@ public class ExecutionStage extends Stage {
 		//..
 		TestKt.test("set on less", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
+
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x2A);
@@ -187,6 +215,12 @@ public class ExecutionStage extends Stage {
 		//..
 		TestKt.test("set on less", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
+
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x2A);
@@ -205,6 +239,12 @@ public class ExecutionStage extends Stage {
 
 		TestKt.test("load word and store word addi", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
+
 
 			BusKt.set(idex.aluOp, 0);
 			BusKt.set(idex.function, 0);
@@ -225,27 +265,39 @@ public class ExecutionStage extends Stage {
 		//..
 		TestKt.test("forwarding add", () -> {
 			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			processor.init();
+
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x20);
 			idex.aluSrc.set(false);
 			idex.regDst.set(true);
 
-
 			BusKt.set(memwb.rdRegister, 7);
+
+			BusKt.set(idex.regWrite, true);
 
 			BusKt.set(idex.rtRegister, 6);
 			idex.rsRegister.get(0).set(true);
-			BusKt.set(idex.rdRegister,1);
+			BusKt.set(idex.rdRegister, 1);
 
 			BusKt.set(idex.shiftMa, 0);
 			BusKt.set(idex.rsData, 5);
 			BusKt.set(idex.rtData, 8);
-			idex.eval(time);
-			exmem.eval(time);
 
 			idex.eval(time);
+			System.out.println(exmem);
 			exmem.eval(time);
+			System.out.println(exmem);
+
+			idex.eval(time + 1);
+			System.out.println(exmem);
+			exmem.eval(time + 1);
+			System.out.println(exmem);
 
 			return exmem;
 		});

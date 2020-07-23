@@ -1,17 +1,26 @@
 package mipsim;
 
-import sim.base.ValueKt;
+import mipsim.sim.InstructionParserKt;
 
-import static sim.base.GateKt.xor;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
+	static List<String> instructions = Arrays.asList(
+		"add $t0, $t1, $t2",
+		"add $t3, $t0, $t2",
+		"add $t4, $t0, $t2"
+	);
+
 	public static void main(String[] args) {
-		var m = ValueKt.mut(true);
+		final var processor = new Processor();
+		processor.init();
 
-		var i = ValueKt.mut(true);
+		InstructionParserKt.loadInstructions(processor, instructions);
 
-
-		var x = xor(i, m);
-		System.out.println("Hello World, " + x);
+		processor.eval(System.nanoTime());
+		processor.eval(System.nanoTime());
+		processor.eval(System.nanoTime());
+		processor.eval(System.nanoTime());
 	}
 }
