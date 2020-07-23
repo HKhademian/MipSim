@@ -8,7 +8,7 @@ import mipsim.units.ForwardingUnit;
 import sim.base.BusKt;
 import sim.test.TestKt;
 
-import static sim.base.GateKt.*;
+import static sim.base.GateKt.or;
 
 public class ExecutionStage extends Stage {
 	public ExecutionStage(final Processor processor) {
@@ -25,15 +25,13 @@ public class ExecutionStage extends Stage {
 		var aluOp = BusKt.bus(4);
 		AluControlUnit.aluControlUnit(idex.aluOp, idex.function, aluOp);
 
-		var exmem_aluData = BusKt.constant(exmem.aluData);
-
 		//first alu src
 		var resultOneOfAlu = BusKt.bus(32);
 		var forwardingEx1 = BusKt.bus(2);
 		var forwardingMem1 = BusKt.bus(2);
 		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rsRegister, forwardingEx1);
 		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite, memwb.rdRegister, idex.rsRegister, exmem.regWrite, exmem.rtRegister, forwardingMem1);
-		Multiplexer.aluInput(or(forwardingEx1, forwardingMem1), idex.rsData, exmem_aluData, memwb.memoryData, resultOneOfAlu);
+		Multiplexer.aluInput(or(forwardingEx1, forwardingMem1), idex.rsData, exmem.aluData, memwb.memoryData, resultOneOfAlu);
 
 		//second alu  src
 		var forwardingResult2 = BusKt.bus(32);
@@ -41,7 +39,7 @@ public class ExecutionStage extends Stage {
 		var forwardingMem2 = BusKt.bus(2);
 		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rtRegister, forwardingExe2);
 		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite, memwb.rdRegister, idex.rsRegister, exmem.regWrite, exmem.rtRegister, forwardingMem2);
-		Multiplexer.aluInput(or(forwardingExe2, forwardingMem2), idex.rtData, exmem_aluData, memwb.memoryData, forwardingResult2);
+		Multiplexer.aluInput(or(forwardingExe2, forwardingMem2), idex.rtData, exmem.aluData, memwb.memoryData, forwardingResult2);
 
 		var resultTwoOfAlu = BusKt.bus(32);
 		Multiplexer.aluSrc(idex.aluSrc, forwardingResult2, idex.immediate, resultTwoOfAlu);
@@ -64,7 +62,6 @@ public class ExecutionStage extends Stage {
 
 		//set write memory
 		BusKt.set(exmem.writeMem, idex.WB);
-
 	}
 
 	@Override
@@ -80,135 +77,135 @@ public class ExecutionStage extends Stage {
 		processor.idStage.init();
 		processor.exStage.init();
 
-//		TestKt.test("and", () -> {
-//			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
-//			BusKt.set(idex.function , BusKt.toBus(0x24,6));
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
-//			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
-//			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
-//			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
-//
-//			BusKt.set(idex.rsData,BusKt.toBus(14,32));
-//			BusKt.set(idex.rtData,BusKt.toBus(14,32));
-//			idex.eval();
-//			exmem.eval();
-//			return exmem;
-//		});
-//
-//		TestKt.test("add", () -> {
-//			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
-//			BusKt.set(idex.function , BusKt.toBus(0x20,6));
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister,BusKt.toBus(12,5));
-//			BusKt.set(memwb.rdRegister,BusKt.toBus(13,5));
-//			BusKt.set(idex.rsRegister,BusKt.toBus(15,5));
-//			BusKt.set(idex.rdRegister,BusKt.toBus(16,5));
-//			BusKt.set(idex.shiftMa,BusKt.toBus(0,5));
-//			BusKt.set(idex.rsData,BusKt.toBus(5,32));
-//			BusKt.set(idex.rtData,BusKt.toBus(8,32));
-//
-//			idex.eval();
-//			exmem.eval();
-//			return exmem;
-//		});
-//
-//		TestKt.test("sub", () -> {
-//			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
-//			BusKt.set(idex.function , BusKt.toBus(0x22,6));
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
-//			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
-//			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
-//			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
-//
-//			BusKt.set(idex.rsData,BusKt.toBus(20,32));
-//			BusKt.set(idex.rtData,BusKt.toBus(14,32));
-//			idex.eval();
-//			exmem.eval();
-//			return exmem;
-//		});
-//
-//		TestKt.test("or", () -> {
-//			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
-//			BusKt.set(idex.function , BusKt.toBus(0x25,6));
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
-//			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
-//			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
-//			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
-//
-//			BusKt.set(idex.rsData,BusKt.toBus(16,32));
-//			BusKt.set(idex.rtData,BusKt.toBus(14,32));
-//			idex.eval();
-//			exmem.eval();
-//			return exmem;
-//		});
-//
-//		TestKt.test("set on less", () -> {
-//			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
-//			BusKt.set(idex.function , BusKt.toBus(0x2A,6));
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
-//			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
-//			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
-//			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
-//
-//			BusKt.set(idex.rsData,BusKt.toBus(16,32));
-//			BusKt.set(idex.rtData,BusKt.toBus(14,32));
-//			idex.eval();
-//			exmem.eval();
-//			return exmem;
-//		});
-//
-//		TestKt.test("set on less", () -> {
-//			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
-//			BusKt.set(idex.function , BusKt.toBus(0x2A,6));
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
-//			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
-//			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
-//			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
-//
-//			BusKt.set(idex.rsData,BusKt.toBus(16,32));
-//			BusKt.set(idex.rtData,BusKt.toBus(16,32));
-//			idex.eval();
-//			exmem.eval();
-//			return exmem;
-//		});
-//
-//		TestKt.test("set on less", () -> {
-//			BusKt.set(idex.aluOp , BusKt.toBus(2,2));
-//			BusKt.set(idex.function , BusKt.toBus(0x2A,6));
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
-//			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
-//			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
-//			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
-//
-//			BusKt.set(idex.rsData,BusKt.toBus(18,32));
-//			BusKt.set(idex.rtData,BusKt.toBus(17,32));
-//			idex.eval();
-//			exmem.eval();
-//			return exmem;
-//		});
-//
-//		TestKt.test("load word and store word addi", () -> {
-//			BusKt.set(idex.aluOp , BusKt.toBus(0,2));
-//			BusKt.set(idex.function , BusKt.toBus(0,6));
-//			idex.aluSrc.set(true);
-//			BusKt.set(exmem.rtRegister,BusKt.toBus(7,5));
-//			BusKt.set(memwb.rdRegister,BusKt.toBus(7,5));
-//			BusKt.set(idex.rsRegister,BusKt.toBus(5,5));
-//			BusKt.set(idex.rdRegister,BusKt.toBus(6,5));
-//
-//			BusKt.set(idex.rsData,BusKt.toBus(16,32));
-//			BusKt.set(idex.rtData,BusKt.toBus(16,32));
-//			BusKt.set(idex.immediate,BusKt.toBus(2,32));
-//			idex.eval();
-//			exmem.eval();
-//			return exmem;
-//		});
+		TestKt.test("and", () -> {
+			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
+			BusKt.set(idex.function, BusKt.toBus(0x24, 6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
+			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
+			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
+			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+
+			BusKt.set(idex.rsData, BusKt.toBus(14, 32));
+			BusKt.set(idex.rtData, BusKt.toBus(14, 32));
+			idex.eval();
+			exmem.eval();
+			return exmem;
+		});
+
+		TestKt.test("add", () -> {
+			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
+			BusKt.set(idex.function, BusKt.toBus(0x20, 6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister, BusKt.toBus(12, 5));
+			BusKt.set(memwb.rdRegister, BusKt.toBus(13, 5));
+			BusKt.set(idex.rsRegister, BusKt.toBus(15, 5));
+			BusKt.set(idex.rdRegister, BusKt.toBus(16, 5));
+			BusKt.set(idex.shiftMa, BusKt.toBus(0, 5));
+			BusKt.set(idex.rsData, BusKt.toBus(5, 32));
+			BusKt.set(idex.rtData, BusKt.toBus(8, 32));
+
+			idex.eval();
+			exmem.eval();
+			return exmem;
+		});
+
+		TestKt.test("sub", () -> {
+			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
+			BusKt.set(idex.function, BusKt.toBus(0x22, 6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
+			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
+			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
+			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+
+			BusKt.set(idex.rsData, BusKt.toBus(20, 32));
+			BusKt.set(idex.rtData, BusKt.toBus(14, 32));
+			idex.eval();
+			exmem.eval();
+			return exmem;
+		});
+
+		TestKt.test("or", () -> {
+			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
+			BusKt.set(idex.function, BusKt.toBus(0x25, 6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
+			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
+			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
+			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+
+			BusKt.set(idex.rsData, BusKt.toBus(16, 32));
+			BusKt.set(idex.rtData, BusKt.toBus(14, 32));
+			idex.eval();
+			exmem.eval();
+			return exmem;
+		});
+
+		TestKt.test("set on less", () -> {
+			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
+			BusKt.set(idex.function, BusKt.toBus(0x2A, 6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
+			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
+			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
+			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+
+			BusKt.set(idex.rsData, BusKt.toBus(16, 32));
+			BusKt.set(idex.rtData, BusKt.toBus(14, 32));
+			idex.eval();
+			exmem.eval();
+			return exmem;
+		});
+
+		TestKt.test("set on less", () -> {
+			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
+			BusKt.set(idex.function, BusKt.toBus(0x2A, 6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
+			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
+			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
+			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+
+			BusKt.set(idex.rsData, BusKt.toBus(16, 32));
+			BusKt.set(idex.rtData, BusKt.toBus(16, 32));
+			idex.eval();
+			exmem.eval();
+			return exmem;
+		});
+
+		TestKt.test("set on less", () -> {
+			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
+			BusKt.set(idex.function, BusKt.toBus(0x2A, 6));
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
+			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
+			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
+			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+
+			BusKt.set(idex.rsData, BusKt.toBus(18, 32));
+			BusKt.set(idex.rtData, BusKt.toBus(17, 32));
+			idex.eval();
+			exmem.eval();
+			return exmem;
+		});
+
+		TestKt.test("load word and store word addi", () -> {
+			BusKt.set(idex.aluOp, BusKt.toBus(0, 2));
+			BusKt.set(idex.function, BusKt.toBus(0, 6));
+			idex.aluSrc.set(true);
+			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
+			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
+			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
+			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+
+			BusKt.set(idex.rsData, BusKt.toBus(16, 32));
+			BusKt.set(idex.rtData, BusKt.toBus(16, 32));
+			BusKt.set(idex.immediate, BusKt.toBus(2, 32));
+			idex.eval();
+			exmem.eval();
+			return exmem;
+		});
 
 
 		TestKt.test("forwarding add", () -> {
