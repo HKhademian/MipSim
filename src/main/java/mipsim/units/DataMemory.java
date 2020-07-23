@@ -1,6 +1,5 @@
 package mipsim.units;
 
-import mipsim.Processor;
 import sim.base.*;
 
 import java.util.List;
@@ -27,12 +26,12 @@ public final class DataMemory implements Eval {
 	}
 
 	@Override
-	public void eval() {
-		EvalKt.eval(address);
-		EvalKt.eval(writeData);
-		EvalKt.eval(memWrite);
-		EvalKt.eval(memRead);
-		EvalKt.eval(readData);
+	public void eval(final long time) {
+		EvalKt.eval(address, time);
+		EvalKt.eval(writeData, time);
+		EvalKt.eval(memWrite, time);
+		EvalKt.eval(memRead, time);
+		EvalKt.eval(readData, time);
 
 		// cache values, can ignore (comment) this section
 		var address = BusKt.constant(this.address);
@@ -46,7 +45,7 @@ public final class DataMemory implements Eval {
 		{ // write data to memory
 			var writeFinalData = mux2(memWrite, EMPTY_BUS, writeData);
 			BusKt.set(word, writeFinalData);
-			EvalKt.eval(word);
+			EvalKt.eval(word, time);
 		}
 
 		{  // read value or zero out

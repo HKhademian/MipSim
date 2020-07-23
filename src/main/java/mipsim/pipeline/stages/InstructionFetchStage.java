@@ -45,11 +45,6 @@ public class InstructionFetchStage extends Stage {
 		BusKt.set(ifid.instruction, processor.instructionMemory.instruction);
 	}
 
-	@Override
-	public void eval() {
-
-	}
-
 	/**
 	 * test in progress by: mehdi
 	 */
@@ -68,22 +63,26 @@ public class InstructionFetchStage extends Stage {
 
 
 		TestKt.testOn(processor.ifid, "test beq", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("beq $s1,$t1,1");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 
 		});
 
 		TestKt.testOn(processor.ifid, "test set less than", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("slt $s2,$t7,$5");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 //		TestKt.testOn(processor.idex, "test shiftR", () -> {
@@ -96,90 +95,107 @@ public class InstructionFetchStage extends Stage {
 		//todo hossain check it's shift right
 
 		TestKt.testOn(processor.ifid, "test shiftL", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("sll $s1,$t1,6");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 		TestKt.testOn(processor.ifid, "test and", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("and $s1,$t1,$t2");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 
 		TestKt.testOn(processor.ifid, "test or", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("or $s1,$t1,$t2");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 
 		TestKt.testOn(processor.ifid, "test sub", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("sub $s1,$t1,$t2");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 
 		TestKt.testOn(processor.ifid, "test addi", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("addi $s1,$zero,5");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 
 		TestKt.testOn(processor.ifid, "test add", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("add $s1,$t1,$t2");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 
 		TestKt.testOn(processor.ifid, "test SW", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("sw $t1,6($t2)");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 		TestKt.testOn(processor.ifid, "test LW", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("lw $t1,5($t2)");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 		TestKt.testOn(processor.ifid, "Jump ", () -> {
+			final var time = System.currentTimeMillis();
 
 			var instBin = parseInstructionToBin("j 50");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval();
-			processor.ifid.eval();
+			processor.pc.eval(time);
+			processor.ifid.eval(time);
 		});
 
 

@@ -50,7 +50,7 @@ private fun parseRegister(text: String): Int {
 
 /** parse string to eq constant limited to `size` number of bits */
 private fun parseConstant(text: String, size: Int): Int {
-		val value = text.toIntOrNull() ?: throw RuntimeException("Constant '$text' is not valid.")
+	val value = text.toIntOrNull() ?: throw RuntimeException("Constant '$text' is not valid.")
 	return value and ((1 shl size) - 1)
 }
 
@@ -206,8 +206,9 @@ fun InstructionMemory.loadInstructions(instructionLines: List<String>) =
 fun Memory.loadInstructions(instructionLines: List<String>) {
 	val instructions = instructionLines.map { parseInstructionToBin(it) } // convert to int
 	val memory = this
+	val time = System.currentTimeMillis()
 	memory.reset()
-	memory.writeWords(instructions)
+	memory.writeWords(instructions, time)
 }
 
 fun parseInstructionToBin(instruction: String): Int {

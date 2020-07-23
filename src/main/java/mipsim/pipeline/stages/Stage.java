@@ -14,4 +14,8 @@ public abstract class Stage implements Eval {
 	 * wiring here
 	 */
 	public abstract void init();
+
+	@Override
+	public void eval(final long time) {
+	}
 }

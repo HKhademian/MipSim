@@ -17,8 +17,8 @@ public abstract class PipelineRegister implements Eval, DebugWriter {
 	}
 
 	@Override
-	public void eval() {
-		memory.eval();
+	public void eval(final long time) {
+		memory.eval(time);
 	}
 
 	@Override

@@ -140,12 +140,6 @@ public class InstructionDecodeStage extends Stage {
 
 	}
 
-	@Override
-	public void eval() {
-
-	}
-
-
 	/**
 	 * test in progress by: mehdi
 	 */
@@ -159,187 +153,144 @@ public class InstructionDecodeStage extends Stage {
 
 
 		TestKt.testOn(processor.idex, "test beq", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("beq $s1,$t1,1");
 			var inst = BusKt.toBus(instBin);
 			System.out.println(BusKt.toInt(inst));
 			//todo it must be check again
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.ifid.eval(time);
 
-			processor.idex.eval();
-			processor.ifStage.eval();
+			processor.idex.eval(time);
+			processor.ifStage.eval(time);
 			System.out.println("\n branchTarget: " + processor.ifStage.branchTarget);
 
 		});
+
+
 		//todo we have some bug in beq or branch
 		TestKt.testOn(processor.idex, "test set less than", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("slt $s2,$t7,$5");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
+			processor.idex.eval(time);
 		});
 
+
 		TestKt.testOn(processor.idex, "test shiftR", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("srl $s1,$s3,4");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.ifid.eval(time);
 		});
 
 
 		TestKt.testOn(processor.idex, "test shiftL", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("sll $s1,$t1,6");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
+			processor.idex.eval(time);
 		});
 
+
 		TestKt.testOn(processor.idex, "test and", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("and $s1,$t1,$t2");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
+			processor.idex.eval(time);
 		});
 
 
 		TestKt.testOn(processor.idex, "test or", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("or $s1,$t1,$t2");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
+			processor.idex.eval(time);
 		});
 
 
 		TestKt.testOn(processor.idex, "test sub", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("sub $s1,$t1,$t2");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
+			processor.idex.eval(time);
 		});
 
 
 		TestKt.testOn(processor.idex, "test addi", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("addi $s1,$zero,5");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
+			processor.ifid.eval(time);
 		});
 
 
 		TestKt.testOn(processor.idex, "test add", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("add $s1,$t1,$t2");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
+			processor.idex.eval(time);
 		});
 
 
 		TestKt.testOn(processor.idex, "test SW", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("sw $t1,6($t2)");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
+			processor.idex.eval(time);
 		});
 
 		TestKt.testOn(processor.idex, "test LW", () -> {
+			final var time = System.currentTimeMillis();
+
 			var instBin = parseInstructionToBin("lw $t1,5($t2)");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval();
+			processor.idex.eval(time);
 		});
 
 		TestKt.testOn(processor.idex, "Jump ", () -> {
+			final var time = System.currentTimeMillis();
 
 			var instBin = parseInstructionToBin("j 50");
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval();
-			processor.ifStage.eval();
-			processor.idex.eval();
+			processor.ifid.eval(time);
+			processor.ifStage.eval(time);
+			processor.idex.eval(time);
 			System.out.println("jump: " + processor.ifStage.jumpTarget);
 			//todo why it's jump don't be update
 		});
-
-//		System.out.println("instruction next=" + BusKt.toInt(processor.ifid.instruction));
-//		System.out.println("new pc next = " + BusKt.toInt(processor.ifid.pc));
-//		System.out.println("\n####################################################################\n");
-//		System.out.println("rs before = " + BusKt.toInt(processor.idex.rsRegister));
-//		System.out.println("rs before = " + BusKt.toInt(processor.idex.rsData));
-//		System.out.println("rt before = " + BusKt.toInt(processor.idex.rtRegister));
-//		System.out.println("rt data before = " + BusKt.toInt(processor.idex.rtData));
-//		System.out.println("rd before = " + BusKt.toInt(processor.idex.rdRegister));
-//
-//
-//		System.out.println("immadiate = " + BusKt.toInt(processor.idex.immediate));
-//		System.out.println("aluOp = " + BusKt.toInt(processor.idex.aluOp));
-//		System.out.println("mem to reg before = " + processor.idex.memToReg);
-//		System.out.println("Write register before= " + (processor.idex.regWrite));
-//		System.out.println("aluSrc before =" + (processor.idex.aluSrc));
-//		System.out.println("meme to Read befor = " + processor.idex.memRead);
-//		System.out.println("meme to write before = " + processor.idex.memWrite);
-//		System.out.println("Mem=" + BusKt.toInt(processor.idex.MEM));
-//		System.out.println("Exe next=" + BusKt.toInt(processor.idex.EX));
-//		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
-//		System.out.println("Wb before = " + processor.idex.WB);
-//		System.out.println("shiftMa before = " + processor.idex.shiftMa);
-//
-//		System.out.println("\n----------------------------------------------------------------\n");
-//
-//		processor.idex.eval();
-//
-//
-//		System.out.println("rs next = " + BusKt.toInt(processor.idex.rsRegister));
-//		System.out.println("rs data next = " + BusKt.toInt(processor.idex.rsData));
-//		System.out.println("rt next=" + BusKt.toInt(processor.idex.rtRegister));
-//		System.out.println("rt data next = " + BusKt.toInt(processor.idex.rtData));
-//		System.out.println("rd =" + BusKt.toInt(processor.idex.rdRegister));
-//		System.out.println("immadiate =" + BusKt.toInt(processor.idex.immediate));
-//		System.out.println("aluOp =" + BusKt.toInt(processor.idex.aluOp));
-//		System.out.println("mem to reg next =" + processor.idex.memToReg);
-//		System.out.println("Write register next = " + (processor.idex.regWrite));
-//		System.out.println("aluSrc next = " + (processor.idex.aluSrc));
-//		System.out.println("meme to Read next = " + processor.idex.memRead);
-//		System.out.println("meme to write next = " + processor.idex.memWrite);
-//		System.out.println("MeM next = " + BusKt.toInt(processor.idex.MEM));
-//		System.out.println("Ex next=" + BusKt.toInt(processor.idex.EX));
-//		System.out.println("func next=" + BusKt.toInt(processor.idex.function));
-//		System.out.println("Wb next = " + processor.idex.WB);
-//		System.out.println("shiftMa next = " + processor.idex.shiftMa);
-//		System.out.println("Dg reg next = " + processor.idex.regDst);
-//
-//		System.out.println("\n############################################################################\n");
-//
-//		System.out.println("before branch = " + processor.ifStage.branch);
-//		;
-//		System.out.println("before branch traget = " + processor.ifStage.branchTarget);
-//		System.out.println("before jump " + processor.ifStage.jump);
-//		System.out.println("before stall" + processor.ifStage.stall);
-//
-//		processor.ifStage.eval();
-//		System.out.println("\n--------------------------------------------------------------------\n");
-//
-//
-//		System.out.println("next branch = " + processor.ifStage.branch);
-//		;
-//		System.out.println("next branch target = " + processor.ifStage.branchTarget);
-//		System.out.println("next jump = " + processor.ifStage.jump);
-//		System.out.println("next  stall = " + processor.ifStage.stall);
-//
-//
-//		System.out.println("\n###########################################################################\n");
-
-
 	}
 }

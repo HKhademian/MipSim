@@ -27,9 +27,4 @@ public class MemoryStage extends Stage {
 		BusKt.set(dataMem.memRead, exmem.memRead);
 		BusKt.set(memwb.memoryData, dataMem.readData);
 	}
-
-	@Override
-	public void eval() {
-
-	}
 }

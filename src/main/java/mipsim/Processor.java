@@ -69,7 +69,7 @@ public class Processor implements Eval {
 	}
 
 	@Override
-	public void eval() {
+	public void eval(final long time) {
 		// we have two `eval`s per clock cycle
 		((MutableValue) clock).toggle();
 
@@ -81,16 +81,16 @@ public class Processor implements Eval {
 		// TODO: we must investigate to realize  which one is correct
 		// plz do not remove this comment, to keep eye one the results
 
-		pc.eval();
-		ifStage.eval();
-		ifid.eval();
-		idStage.eval();
-		idex.eval();
-		exStage.eval();
-		exmem.eval();
-		memStage.eval();
-		memwb.eval();
-		wbStage.eval();
+		pc.eval(time);
+		ifStage.eval(time);
+		ifid.eval(time);
+		idStage.eval(time);
+		idex.eval(time);
+		exStage.eval(time);
+		exmem.eval(time);
+		memStage.eval(time);
+		memwb.eval(time);
+		wbStage.eval(time);
 	}
 
 	public static void main(String[] args) {

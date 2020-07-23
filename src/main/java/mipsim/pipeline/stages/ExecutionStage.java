@@ -64,10 +64,6 @@ public class ExecutionStage extends Stage {
 		BusKt.set(exmem.writeMem, idex.WB);
 	}
 
-	@Override
-	public void eval() {
-
-	}
 
 	public static void main(String[] args) {
 		final var processor = new Processor();
@@ -78,6 +74,8 @@ public class ExecutionStage extends Stage {
 		processor.exStage.init();
 
 		TestKt.test("and", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x24);
 			idex.aluSrc.set(false);
@@ -88,12 +86,16 @@ public class ExecutionStage extends Stage {
 
 			BusKt.set(idex.rsData, 14);
 			BusKt.set(idex.rtData, 14);
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
+			idex.eval(time);
+			exmem.eval(time);
 			return exmem;
 		});
 
 		TestKt.test("add", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x20);
 			idex.aluSrc.set(false);
@@ -105,12 +107,14 @@ public class ExecutionStage extends Stage {
 			BusKt.set(idex.rsData, 5);
 			BusKt.set(idex.rtData, 8);
 
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
 			return exmem;
 		});
 
 		TestKt.test("sub", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x22);
 			idex.aluSrc.set(false);
@@ -121,12 +125,14 @@ public class ExecutionStage extends Stage {
 
 			BusKt.set(idex.rsData, 20);
 			BusKt.set(idex.rtData, 14);
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
 			return exmem;
 		});
 
 		TestKt.test("or", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x25);
 			idex.aluSrc.set(false);
@@ -137,12 +143,14 @@ public class ExecutionStage extends Stage {
 
 			BusKt.set(idex.rsData, 16);
 			BusKt.set(idex.rtData, 14);
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
 			return exmem;
 		});
 
 		TestKt.test("set on less", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x2A);
 			idex.aluSrc.set(false);
@@ -153,12 +161,14 @@ public class ExecutionStage extends Stage {
 
 			BusKt.set(idex.rsData, 16);
 			BusKt.set(idex.rtData, 14);
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
 			return exmem;
 		});
 
 		TestKt.test("set on less", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x2A);
 			idex.aluSrc.set(false);
@@ -169,12 +179,14 @@ public class ExecutionStage extends Stage {
 
 			BusKt.set(idex.rsData, 16);
 			BusKt.set(idex.rtData, 16);
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
 			return exmem;
 		});
 
 		TestKt.test("set on less", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x2A);
 			idex.aluSrc.set(false);
@@ -185,12 +197,14 @@ public class ExecutionStage extends Stage {
 
 			BusKt.set(idex.rsData, 18);
 			BusKt.set(idex.rtData, 17);
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
 			return exmem;
 		});
 
 		TestKt.test("load word and store word addi", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(idex.aluOp, 0);
 			BusKt.set(idex.function, 0);
 			idex.aluSrc.set(true);
@@ -202,13 +216,14 @@ public class ExecutionStage extends Stage {
 			BusKt.set(idex.rsData, 16);
 			BusKt.set(idex.rtData, 16);
 			BusKt.set(idex.immediate, 2);
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
 			return exmem;
 		});
 
 
 		TestKt.test("forwarding add", () -> {
+			final var time = System.currentTimeMillis();
 
 			BusKt.set(idex.aluOp, 2);
 			BusKt.set(idex.function, 0x20);
@@ -225,14 +240,12 @@ public class ExecutionStage extends Stage {
 			BusKt.set(idex.shiftMa, 0);
 			BusKt.set(idex.rsData, 5);
 			BusKt.set(idex.rtData, 8);
-			idex.eval();
-			exmem.eval();
-			idex.eval();
-			exmem.eval();
+			idex.eval(time);
+			exmem.eval(time);
+			idex.eval(time);
+			exmem.eval(time);
 
 			return exmem;
 		});
-
-
 	}
 }

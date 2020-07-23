@@ -10,5 +10,7 @@ class MuxBusSelector<T : Value>(private val source: List<T>, private val address
 	private val words: List<List<T>> = (0 until wordCount).map { source.getWord(it) }
 
 	val wordAddress: MutableBus = bus(addressBusSize)
+
+	@Suppress("UNCHECKED_CAST")
 	val word: MutableBus = mux(wordAddress, words) as MutableBus
 }

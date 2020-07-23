@@ -15,18 +15,11 @@ public class WriteBackStage extends Stage {
 		final var memwb = processor.memwb;
 		final var regFile = processor.registerFile;
 
-
 		//choice data memory and alu --> to write data
 		final var writeData = MuxKt.mux2(memwb.memToReg, memwb.aluData, memwb.memoryData);
 		regFile.regWrite.set(memwb.regWrite);
 		BusKt.set(regFile.writeReg, memwb.rdRegister);
 		BusKt.set(regFile.writeData, writeData);
-
-	}
-
-	@Override
-	public void eval() {
-
 	}
 
 	/**
@@ -38,6 +31,8 @@ public class WriteBackStage extends Stage {
 		final var regFile = processor.registerFile;
 
 		TestKt.testOn(regFile, "init", () -> {
+			final var time = System.currentTimeMillis();
+
 			BusKt.set(MemWbReg.aluData, 4005);
 			BusKt.set(MemWbReg.memoryData, 12044);
 			BusKt.set(MemWbReg.rdRegister, 10); //write in $s9
@@ -45,24 +40,30 @@ public class WriteBackStage extends Stage {
 		});
 
 		TestKt.testOn(regFile, "Don't write anything", () -> {
+			final var time = System.currentTimeMillis();
+
 			MemWbReg.regWrite.set(false);
 			MemWbReg.memToReg.set(false);
-			MemWbReg.eval();
-			regFile.eval();
+			MemWbReg.eval(time);
+			regFile.eval(time);
 		});
 
 		TestKt.testOn(regFile, "write something from memory", () -> {
+			final var time = System.currentTimeMillis();
+
 			MemWbReg.regWrite.set(true);
 			MemWbReg.memToReg.set(true);
-			MemWbReg.eval();
-			regFile.eval();
+			MemWbReg.eval(time);
+			regFile.eval(time);
 		});
 
 		TestKt.testOn(regFile, "write something from aluResult", () -> {
+			final var time = System.currentTimeMillis();
+
 			MemWbReg.regWrite.set(true);
 			MemWbReg.memToReg.set(false);
-			MemWbReg.eval();
-			regFile.eval();
+			MemWbReg.eval(time);
+			regFile.eval(time);
 		});
 
 	}

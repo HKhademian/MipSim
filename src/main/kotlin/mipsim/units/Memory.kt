@@ -16,10 +16,14 @@ const val WORD_SIZE = 4 * BYTE_SIZE
  *  and use `MemBit`.`get` to read from it.
  */
 class MemBit : Element, MutableValue {
+	override val title = "MemBit"
+
 	/** whether to write input to output or nuo */
 	val memWrite = mut(true)
 
 	private var curr = false
+	private var lastEval = 0L
+
 	private val next = mut(false)
 	private val lock = sim.expriment.SimpleLock()
 
@@ -27,11 +31,14 @@ class MemBit : Element, MutableValue {
 		next.set(value)
 
 	override fun get() =
-		false
+		curr
 
-	override fun eval() {
+	override fun eval(time: Long) {
+		if (time <= lastEval)
+			return
 		lock.lock {
-			// next.eval()
+			lastEval = time
+			next.eval(time)
 			// at moment of clock pos-edge, we calculate next value and store it to cache
 			if (memWrite.get())
 				curr = next.get()
@@ -51,9 +58,8 @@ class MemBit : Element, MutableValue {
 class Memory private constructor(private val bits: List<MemBit>) : Eval, List<MemBit> by bits, DebugWriter {
 	internal constructor(bitCount: Int) : this((0 until bitCount).map { MemBit() })
 
-	override fun eval() =
-		(bits as List<Value>).eval()
-
+	override fun eval(time: Long) =
+		bits.eval(time)
 
 	override fun writeDebug(buffer: StringBuffer) {
 		val wordCount = this.wordCount
@@ -98,14 +104,13 @@ fun List<MutableValue>.reset() =
 	forEach { it.reset() }
 
 /** write some words to bus */
-@JvmOverloads
-fun List<MutableValue>.writeWords(words: List<Int>, eval: Boolean = true) =
+fun List<MutableValue>.writeWords(words: List<Int>, time: Long?) =
 	words.asSequence()
 		.map { it.toBus(32) }
 		.forEachIndexed { i, word ->
 			val wordBus = getWord(i)
 			wordBus.set(word)
-			if (eval) wordBus.eval()
+			if (time != null) wordBus.eval(time)
 		}
 
 /** set all `memBit`s memWrite flags to given value */
@@ -124,7 +129,7 @@ internal fun main() {
 
 	repeat(10) {
 		testOn(x, "test") {
-			x.eval()
+			x.eval(System.nanoTime())
 		}
 	}
 }

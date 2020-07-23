@@ -27,7 +27,7 @@ public final class InstructionMemory implements Eval, DebugWriter {
 	 * here we must read pc value and choose words in memory,
 	 * by multiplexer, but it's too complicated (but possible with mux)
 	 */
-	public void eval() {
+	public void eval(final long time) {
 		var pc = BusKt.constant(this.pc); // cache PC value, can ignore (comment) this section
 		var wordIndex = BusKt.toInt(pc);
 		var newInst = MemoryKt.getWord(_memory, wordIndex);
@@ -54,12 +54,13 @@ public final class InstructionMemory implements Eval, DebugWriter {
 		TestKt.testOn(instMem, "beforeInit");
 
 		TestKt.testOn(instMem, "init", () -> {
+			final var time = System.currentTimeMillis();
 			for (int i = 0; i < size; i++) {
 				var word = MemoryKt.getWord(instMem._memory, i);
 				BusKt.set(word, 2 + i * 3);
-				EvalKt.eval(word);
+				EvalKt.eval(word, time);
 			}
-			instMem.eval();
+			instMem.eval(time);
 		});
 
 		TestKt.testOn(instMem, "changePCNoEval", () -> {
@@ -67,8 +68,9 @@ public final class InstructionMemory implements Eval, DebugWriter {
 		});
 
 		TestKt.testOn(instMem, "eval+pcChange", () -> {
+			final var time = System.currentTimeMillis();
 			BusKt.set(instMem.pc, 5);
-			instMem.eval();
+			instMem.eval(time);
 		});
 
 	}

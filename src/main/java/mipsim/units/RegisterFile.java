@@ -39,12 +39,12 @@ public final class RegisterFile implements Eval, DebugWriter {
 	}
 
 	@Override
-	public void eval() {
-		EvalKt.eval(readReg1);
-		EvalKt.eval(readReg2);
-		EvalKt.eval(writeReg);
-		EvalKt.eval(writeData);
-		EvalKt.eval(regWrite);
+	public void eval(final long time) {
+		EvalKt.eval(readReg1, time);
+		EvalKt.eval(readReg2, time);
+		EvalKt.eval(writeReg, time);
+		EvalKt.eval(writeData, time);
+		EvalKt.eval(regWrite, time);
 
 		// cache values, can ignore (comment) this section
 		var readReg1 = BusKt.constant(this.readReg1);
@@ -58,7 +58,7 @@ public final class RegisterFile implements Eval, DebugWriter {
 			if (reg != 0) {
 				var word = MemoryKt.getWord(_memory, reg);
 				BusKt.set(word, writeData);
-				EvalKt.eval(word);
+				EvalKt.eval(word, time);
 			}
 		}
 
