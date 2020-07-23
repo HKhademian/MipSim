@@ -31,12 +31,14 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 
 	//this would be register code that will be write on it,5 bit
 	public final List<MutableValue> rtRegister = BusKt.slice(memory, 68, 73);
-
-
+	public final List<MutableValue> test1 = BusKt.slice(memory, 73, 105);
+	public final List<MutableValue> test2 = BusKt.slice(memory, 105, 137);
+	public final List<MutableValue> test3 = BusKt.slice(memory, 137, 169);
+	public final List<MutableValue> test4 = BusKt.slice(memory, 169, 201);
 	// note --> we used aluOp  in stage execution
 
 	public EXMEM_PipelineRegister() {
-		super(73);
+		super(201);
 	}
 
 	@Override

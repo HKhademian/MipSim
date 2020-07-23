@@ -38,7 +38,7 @@ class MemBit : Eval, MutableValue {
 			return
 		lock.lock {
 			lastEval = time
-			next.eval(time)
+			//next.eval(time)
 			// at moment of clock pos-edge, we calculate next value and store it to cache
 			if (memWrite.get())
 				curr = next.get()
