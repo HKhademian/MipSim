@@ -2,7 +2,6 @@ package mipsim.units
 
 import sim.DebugWriter
 import sim.base.*
-import sim.real.mux2
 
 /// each byte is 8 bit of data
 const val BYTE_SIZE = 8
@@ -19,22 +18,22 @@ class MemBit : Element, MutableValue {
 	/** whether to write input to output or nuo */
 	val memWrite = mut(true)
 
-	private val curr = mut(false)
+	private var curr = false
 	private val next = mut(false)
 
 	override fun set(value: Value) =
 		next.set(value)
 
 	override fun get() =
-		curr.get()
+		curr
 
 	override fun eval() {
 		next.eval()
 		// at moment of clock pos-edge, we calculate next value and store it to cache
-		val currValue = curr.toConst()
-		val nextValue = next.toConst()
-		val writeValue = mux2(memWrite, currValue, nextValue)
-		curr.set(writeValue)
+		val currValue = curr
+		val nextValue = next.get()
+		if (memWrite.get())
+			curr = nextValue
 	}
 
 	override fun toString() =
@@ -114,3 +113,10 @@ fun List<MemBit>.setMemWrite(memWrite: Value) =
 /** set all `memBit`s memWrite flags to given value */
 fun List<MemBit>.setMemWrite(memWrite: Boolean) =
 	this.setMemWrite(memWrite.toValue())
+
+internal fun main() {
+	val x = MemBit()
+	x.set(not(x))
+
+	println("${x.get()}")
+}
