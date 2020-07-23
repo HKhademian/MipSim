@@ -31,47 +31,40 @@ public class WriteBackStage extends Stage {
 	}
 
 	/**
-	 * test by Mehdi Fe
+	 * test in progress by: mehdi
 	 */
-
 	public static void main(final String... args) {
 		final var processor = new Processor();
 		final var MemWbReg = processor.memwb;
 		final var regFile = processor.registerFile;
-		BusKt.set(MemWbReg.aluData, BusKt.toBus(4005));
-		BusKt.set(MemWbReg.memoryData, BusKt.toBus(12044));
-		BusKt.set(MemWbReg.rdRegister, BusKt.toBus(10));//write in $s9
 
+		TestKt.testOn(regFile, "init", () -> {
+			BusKt.set(MemWbReg.aluData, 4005);
+			BusKt.set(MemWbReg.memoryData, 12044);
+			BusKt.set(MemWbReg.rdRegister, 10);//write in $s9
+			processor.wbStage.init();
+		});
 
-		TestKt.testOn(processor.registerFile, "Don't write anything", () -> {
-
+		TestKt.testOn(regFile, "Don't write anything", () -> {
 			MemWbReg.regWrite = ValueKt.mut(false);
 			MemWbReg.memToReg = ValueKt.mut(false);
 			MemWbReg.eval();
 			regFile.eval();
-			processor.wbStage.init();
 		});
 
-
-		TestKt.testOn(processor.registerFile, "write something from memory", () -> {
-
-
-
-
+		TestKt.testOn(regFile, "write something from memory", () -> {
 			MemWbReg.regWrite = ValueKt.mut(true);
 			MemWbReg.memToReg = ValueKt.mut(true);
 			MemWbReg.eval();
 			regFile.eval();
-			processor.wbStage.init();
 		});
-		//todo check it with help of hossain :)
-		TestKt.testOn(processor.registerFile, "write something from aluResult", () -> {
 
+		//todo check it with help of hossain :)
+		TestKt.testOn(regFile, "write something from aluResult", () -> {
 			MemWbReg.regWrite = ValueKt.mut(true);
 			MemWbReg.memToReg = ValueKt.mut(false);
 			MemWbReg.eval();
 			regFile.eval();
-			processor.wbStage.init();
 		});
 
 	}
