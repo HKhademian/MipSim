@@ -58,7 +58,6 @@ public class WriteBackStage extends Stage {
 			regFile.eval();
 		});
 
-		//todo check it with help of hossain :)
 		TestKt.testOn(regFile, "write something from aluResult", () -> {
 			MemWbReg.regWrite.set(true);
 			MemWbReg.memToReg.set(false);
