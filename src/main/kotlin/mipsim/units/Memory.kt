@@ -15,7 +15,7 @@ const val WORD_SIZE = 4 * BYTE_SIZE
  *  to store a value on next clock edge, just use `MemBit`.`set`
  *  and use `MemBit`.`get` to read from it.
  */
-class MemBit : Element, MutableValue {
+class MemBit : Eval, MutableValue {
 	override val title = "MemBit"
 
 	/** whether to write input to output or nuo */
