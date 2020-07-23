@@ -9,18 +9,21 @@ import java.io.File
 
 /** supported commands with this parser */
 private val commands = listOf(
-	Command("ADD", Format.R, "0", "20"),
-	Command("SUB", Format.R, "0", "22"),
 	Command("SLL", Format.R, "0", "0", shamt = true),
 	Command("SRL", Format.R, "0", "2", shamt = true),
-	Command("SLT", Format.R, "0", "2A"),
+	Command("ADD", Format.R, "0", "20"),
+	Command("SUB", Format.R, "0", "22"),
 	Command("AND", Format.R, "0", "24"),
-	Command("OR", Format.R, "8", "25"),
-	Command("ADDI", Format.I, "F"),
-//	Command("LUI", Format.I, "23"),
-	Command("LW", Format.I, "2B"),
-	Command("SW", Format.I, "4"),
-	Command("BEQ", Format.I, "5"),
+	Command("OR", Format.R, "0", "25"),
+	Command("XOR", Format.R, "0", "26"),
+	Command("SLT", Format.R, "0", "2A"),
+	Command("BEQ", Format.I, "4"),
+	Command("BNQ", Format.I, "5"),
+	Command("ADDI", Format.I, "8"),
+	Command("ORI", Format.I, "D"),
+	Command("LUI", Format.I, "F"),
+	Command("LW", Format.I, "23"),
+	Command("SW", Format.I, "2B"),
 	Command("J", Format.J, "2")
 )
 
