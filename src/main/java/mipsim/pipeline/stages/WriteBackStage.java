@@ -16,11 +16,13 @@ public class WriteBackStage extends Stage {
 		final var memwb = processor.memwb;
 		final var regFile = processor.registerFile;
 
+
 		//choice data memory and alu --> to write data
 		final var writeData = MuxKt.mux2(memwb.memToReg, memwb.aluData, memwb.memoryData);
 		regFile.regWrite.set(memwb.regWrite);
 		BusKt.set(regFile.writeReg, memwb.rdRegister);
 		BusKt.set(regFile.writeData, writeData);
+
 	}
 
 	@Override
@@ -36,20 +38,25 @@ public class WriteBackStage extends Stage {
 		final var processor = new Processor();
 		final var MemWbReg = processor.memwb;
 		final var regFile = processor.registerFile;
-		processor.wbStage.init();
+
+
 		TestKt.testOn(processor.registerFile, "Don't write anything", () -> {
 
 			BusKt.set(MemWbReg.aluData, BusKt.toBus(4005));
 			BusKt.set(MemWbReg.memoryData, BusKt.toBus(12044));
 			BusKt.set(MemWbReg.rdRegister, BusKt.toBus(10));//write in $s9
 			MemWbReg.regWrite = ValueKt.mut(false);
-			MemWbReg.memToReg = ValueKt.mut(true);
+			MemWbReg.memToReg = ValueKt.mut(false);
+
 			MemWbReg.eval();
 			regFile.eval();
+			processor.wbStage.init();
 		});
 
 
 		TestKt.testOn(processor.registerFile, "write something from memory", () -> {
+
+
 			BusKt.set(MemWbReg.aluData, BusKt.toBus(4005));
 			BusKt.set(MemWbReg.memoryData, BusKt.toBus(12044));
 			BusKt.set(MemWbReg.rdRegister, BusKt.toBus(10));//write in $s9
@@ -57,6 +64,7 @@ public class WriteBackStage extends Stage {
 			MemWbReg.memToReg = ValueKt.mut(true);
 			MemWbReg.eval();
 			regFile.eval();
+			processor.wbStage.init();
 		});
 
 		TestKt.testOn(processor.registerFile, "write something from aluResult", () -> {
@@ -67,6 +75,7 @@ public class WriteBackStage extends Stage {
 			MemWbReg.memToReg = ValueKt.mut(false);
 			MemWbReg.eval();
 			regFile.eval();
+			processor.wbStage.init();
 		});
 
 	}

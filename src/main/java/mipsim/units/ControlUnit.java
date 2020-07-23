@@ -4,7 +4,7 @@ import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.Value;
 import sim.base.ValueKt;
-
+import static sim.base.ValueKt.mut;
 import java.util.List;
 
 import static sim.gates.GatesKt.*;
@@ -63,14 +63,14 @@ public final class ControlUnit {
 		opcode.get(5).set(false);
 
 
-		var regDst = ValueKt.mut();
-		var ALUsrc = ValueKt.mut();
-		var memToReg = ValueKt.mut();
-		var regWrite = ValueKt.mut();
-		var memRead = ValueKt.mut();
-		var memWrite = ValueKt.mut();
-		var branch = ValueKt.mut();
-		var jump = ValueKt.mut();
+		var regDst = ValueKt.mut(false);
+		var ALUsrc = ValueKt.mut(false);
+		var memToReg = ValueKt.mut(false);
+		var regWrite = ValueKt.mut(false);
+		var memRead = ValueKt.mut(false);
+		var memWrite = ValueKt.mut(false);
+		var branch = ValueKt.mut(false);
+		var jump = ValueKt.mut(false);
 		var aluOp = BusKt.bus(2);
 		ControlUnit.control(opcode,regDst,ALUsrc,memToReg,regWrite,memRead,memWrite,branch,jump,aluOp);
 

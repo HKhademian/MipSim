@@ -71,7 +71,7 @@ public final class HazardDetectionUnit {
 
 		var IDEX_read = ValueKt.mut(true);
 
-		var result = ValueKt.mut();
+		var result = ValueKt.mut(false);
 
 		HazardDetectionUnit.hazardDetectionUnit(IDEX_read,IDEX_regWrite,regRT,regRS,result);
 		System.out.println(result);
