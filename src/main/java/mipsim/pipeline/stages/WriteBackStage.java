@@ -33,21 +33,20 @@ public class WriteBackStage extends Stage {
 	/**
 	 * test by Mehdi Fe
 	 */
-	//todo check it with help of hossain :)  
+
 	public static void main(final String... args) {
 		final var processor = new Processor();
 		final var MemWbReg = processor.memwb;
 		final var regFile = processor.registerFile;
+		BusKt.set(MemWbReg.aluData, BusKt.toBus(4005));
+		BusKt.set(MemWbReg.memoryData, BusKt.toBus(12044));
+		BusKt.set(MemWbReg.rdRegister, BusKt.toBus(10));//write in $s9
 
 
 		TestKt.testOn(processor.registerFile, "Don't write anything", () -> {
 
-			BusKt.set(MemWbReg.aluData, BusKt.toBus(4005));
-			BusKt.set(MemWbReg.memoryData, BusKt.toBus(12044));
-			BusKt.set(MemWbReg.rdRegister, BusKt.toBus(10));//write in $s9
 			MemWbReg.regWrite = ValueKt.mut(false);
 			MemWbReg.memToReg = ValueKt.mut(false);
-
 			MemWbReg.eval();
 			regFile.eval();
 			processor.wbStage.init();
@@ -57,20 +56,17 @@ public class WriteBackStage extends Stage {
 		TestKt.testOn(processor.registerFile, "write something from memory", () -> {
 
 
-			BusKt.set(MemWbReg.aluData, BusKt.toBus(4005));
-			BusKt.set(MemWbReg.memoryData, BusKt.toBus(12044));
-			BusKt.set(MemWbReg.rdRegister, BusKt.toBus(10));//write in $s9
+
+
 			MemWbReg.regWrite = ValueKt.mut(true);
 			MemWbReg.memToReg = ValueKt.mut(true);
 			MemWbReg.eval();
 			regFile.eval();
 			processor.wbStage.init();
 		});
-
+		//todo check it with help of hossain :)
 		TestKt.testOn(processor.registerFile, "write something from aluResult", () -> {
-			BusKt.set(MemWbReg.aluData, BusKt.toBus(4005));
-			BusKt.set(MemWbReg.memoryData, BusKt.toBus(12044));
-			BusKt.set(MemWbReg.rdRegister, BusKt.toBus(10));//write in $s9
+
 			MemWbReg.regWrite = ValueKt.mut(true);
 			MemWbReg.memToReg = ValueKt.mut(false);
 			MemWbReg.eval();
