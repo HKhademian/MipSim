@@ -128,9 +128,9 @@ public final class LogicALU {
 		var input2 = BusKt.toBus(6,32);
 
 		var aluOp = BusKt.bus(4);
-		aluOp.get(0).set(true);
+		aluOp.get(0).set(false);
 		aluOp.get(1).set(true);
-		aluOp.get(2).set(true);
+		aluOp.get(2).set(false);
 		aluOp.get(3).set(false);
 
 		var shiftMa = BusKt.toBus(0,5);
