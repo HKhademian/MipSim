@@ -84,6 +84,7 @@ public final class LogicALU {
 		Compare.com32Bit(input1, input2, E, L, G);
 		BusKt.set(result, (MuxKt.mux2(L, BusKt.toBus(0, 32), BusKt.toBus(1, 32))));
 		//Todo check it friends
+
 	}
 
 
@@ -116,8 +117,8 @@ public final class LogicALU {
 	}
 
 	public static void main(String[] args) {
-		var input1 = BusKt.toBus(5, 32);
-		var input2 = BusKt.toBus(6, 32);
+		var input1 = BusKt.toBus(154, 32);
+		var input2 = BusKt.toBus(520, 32);
 
 		// todo: wrong
 		var aluOp = BusKt.bus(4);
@@ -133,5 +134,8 @@ public final class LogicALU {
 		AluInStage(input1, input2, aluOp, shiftMa, result);
 
 		System.out.println(BusKt.toInt(result));
+
+		setLess(input1,input2,result);
+		System.out.println("set less than: "+BusKt.toInt(result));
 	}
 }

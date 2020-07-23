@@ -10,6 +10,7 @@ import sim.test.TestKt;
 
 import static sim.base.GateKt.or;
 
+
 public class ExecutionStage extends Stage {
 	public ExecutionStage(final Processor processor) {
 		super(processor);
@@ -72,7 +73,7 @@ public class ExecutionStage extends Stage {
 		final var memwb = processor.memwb;
 		processor.idStage.init();
 		processor.exStage.init();
-
+		//..
 		TestKt.test("and", () -> {
 			final var time = System.currentTimeMillis();
 
@@ -92,7 +93,7 @@ public class ExecutionStage extends Stage {
 			exmem.eval(time);
 			return exmem;
 		});
-
+		//..
 		TestKt.test("add", () -> {
 			final var time = System.currentTimeMillis();
 
@@ -111,7 +112,7 @@ public class ExecutionStage extends Stage {
 			exmem.eval(time);
 			return exmem;
 		});
-
+		//..
 		TestKt.test("sub", () -> {
 			final var time = System.currentTimeMillis();
 
@@ -129,7 +130,7 @@ public class ExecutionStage extends Stage {
 			exmem.eval(time);
 			return exmem;
 		});
-
+		//..
 		TestKt.test("or", () -> {
 			final var time = System.currentTimeMillis();
 
@@ -147,7 +148,7 @@ public class ExecutionStage extends Stage {
 			exmem.eval(time);
 			return exmem;
 		});
-
+		//ohh we have some bug
 		TestKt.test("set on less", () -> {
 			final var time = System.currentTimeMillis();
 
@@ -165,7 +166,7 @@ public class ExecutionStage extends Stage {
 			exmem.eval(time);
 			return exmem;
 		});
-
+		//..
 		TestKt.test("set on less", () -> {
 			final var time = System.currentTimeMillis();
 
@@ -183,7 +184,7 @@ public class ExecutionStage extends Stage {
 			exmem.eval(time);
 			return exmem;
 		});
-
+		//..
 		TestKt.test("set on less", () -> {
 			final var time = System.currentTimeMillis();
 
@@ -221,7 +222,7 @@ public class ExecutionStage extends Stage {
 			return exmem;
 		});
 
-
+		//..
 		TestKt.test("forwarding add", () -> {
 			final var time = System.currentTimeMillis();
 
@@ -235,13 +236,14 @@ public class ExecutionStage extends Stage {
 
 			BusKt.set(idex.rtRegister, 6);
 			idex.rsRegister.get(0).set(true);
-			idex.rdRegister.get(0).set(true);
+			BusKt.set(idex.rdRegister,1);
 
 			BusKt.set(idex.shiftMa, 0);
 			BusKt.set(idex.rsData, 5);
 			BusKt.set(idex.rtData, 8);
 			idex.eval(time);
 			exmem.eval(time);
+
 			idex.eval(time);
 			exmem.eval(time);
 
