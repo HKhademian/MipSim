@@ -78,32 +78,32 @@ public class ExecutionStage extends Stage {
 		processor.exStage.init();
 
 		TestKt.test("and", () -> {
-			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
-			BusKt.set(idex.function, BusKt.toBus(0x24, 6));
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x24);
 			idex.aluSrc.set(false);
-			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
-			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
-			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
-			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+			BusKt.set(exmem.rtRegister, 7);
+			BusKt.set(memwb.rdRegister, 7);
+			BusKt.set(idex.rsRegister, 5);
+			BusKt.set(idex.rdRegister, 6);
 
-			BusKt.set(idex.rsData, BusKt.toBus(14, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(14, 32));
+			BusKt.set(idex.rsData, 14);
+			BusKt.set(idex.rtData, 14);
 			idex.eval();
 			exmem.eval();
 			return exmem;
 		});
 
 		TestKt.test("add", () -> {
-			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
-			BusKt.set(idex.function, BusKt.toBus(0x20, 6));
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x20);
 			idex.aluSrc.set(false);
-			BusKt.set(exmem.rtRegister, BusKt.toBus(12, 5));
-			BusKt.set(memwb.rdRegister, BusKt.toBus(13, 5));
-			BusKt.set(idex.rsRegister, BusKt.toBus(15, 5));
-			BusKt.set(idex.rdRegister, BusKt.toBus(16, 5));
-			BusKt.set(idex.shiftMa, BusKt.toBus(0, 5));
-			BusKt.set(idex.rsData, BusKt.toBus(5, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(8, 32));
+			BusKt.set(exmem.rtRegister, 12);
+			BusKt.set(memwb.rdRegister, 13);
+			BusKt.set(idex.rsRegister, 15);
+			BusKt.set(idex.rdRegister, 16);
+			BusKt.set(idex.shiftMa, 0);
+			BusKt.set(idex.rsData, 5);
+			BusKt.set(idex.rtData, 8);
 
 			idex.eval();
 			exmem.eval();
@@ -111,97 +111,97 @@ public class ExecutionStage extends Stage {
 		});
 
 		TestKt.test("sub", () -> {
-			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
-			BusKt.set(idex.function, BusKt.toBus(0x22, 6));
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x22);
 			idex.aluSrc.set(false);
-			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
-			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
-			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
-			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+			BusKt.set(exmem.rtRegister, 7);
+			BusKt.set(memwb.rdRegister, 7);
+			BusKt.set(idex.rsRegister, 5);
+			BusKt.set(idex.rdRegister, 6);
 
-			BusKt.set(idex.rsData, BusKt.toBus(20, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(14, 32));
+			BusKt.set(idex.rsData, 20);
+			BusKt.set(idex.rtData, 14);
 			idex.eval();
 			exmem.eval();
 			return exmem;
 		});
 
 		TestKt.test("or", () -> {
-			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
-			BusKt.set(idex.function, BusKt.toBus(0x25, 6));
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x25);
 			idex.aluSrc.set(false);
-			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
-			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
-			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
-			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+			BusKt.set(exmem.rtRegister, 7);
+			BusKt.set(memwb.rdRegister, 7);
+			BusKt.set(idex.rsRegister, 5);
+			BusKt.set(idex.rdRegister, 6);
 
-			BusKt.set(idex.rsData, BusKt.toBus(16, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(14, 32));
+			BusKt.set(idex.rsData, 16);
+			BusKt.set(idex.rtData, 14);
 			idex.eval();
 			exmem.eval();
 			return exmem;
 		});
 
 		TestKt.test("set on less", () -> {
-			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
-			BusKt.set(idex.function, BusKt.toBus(0x2A, 6));
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x2A);
 			idex.aluSrc.set(false);
-			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
-			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
-			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
-			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+			BusKt.set(exmem.rtRegister, 7);
+			BusKt.set(memwb.rdRegister, 7);
+			BusKt.set(idex.rsRegister, 5);
+			BusKt.set(idex.rdRegister, 6);
 
-			BusKt.set(idex.rsData, BusKt.toBus(16, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(14, 32));
+			BusKt.set(idex.rsData, 16);
+			BusKt.set(idex.rtData, 14);
 			idex.eval();
 			exmem.eval();
 			return exmem;
 		});
 
 		TestKt.test("set on less", () -> {
-			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
-			BusKt.set(idex.function, BusKt.toBus(0x2A, 6));
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x2A);
 			idex.aluSrc.set(false);
-			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
-			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
-			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
-			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+			BusKt.set(exmem.rtRegister, 7);
+			BusKt.set(memwb.rdRegister, 7);
+			BusKt.set(idex.rsRegister, 5);
+			BusKt.set(idex.rdRegister, 6);
 
-			BusKt.set(idex.rsData, BusKt.toBus(16, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(16, 32));
+			BusKt.set(idex.rsData, 16);
+			BusKt.set(idex.rtData, 16);
 			idex.eval();
 			exmem.eval();
 			return exmem;
 		});
 
 		TestKt.test("set on less", () -> {
-			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
-			BusKt.set(idex.function, BusKt.toBus(0x2A, 6));
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x2A);
 			idex.aluSrc.set(false);
-			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
-			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
-			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
-			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+			BusKt.set(exmem.rtRegister, 7);
+			BusKt.set(memwb.rdRegister, 7);
+			BusKt.set(idex.rsRegister, 5);
+			BusKt.set(idex.rdRegister, 6);
 
-			BusKt.set(idex.rsData, BusKt.toBus(18, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(17, 32));
+			BusKt.set(idex.rsData, 18);
+			BusKt.set(idex.rtData, 17);
 			idex.eval();
 			exmem.eval();
 			return exmem;
 		});
 
 		TestKt.test("load word and store word addi", () -> {
-			BusKt.set(idex.aluOp, BusKt.toBus(0, 2));
-			BusKt.set(idex.function, BusKt.toBus(0, 6));
+			BusKt.set(idex.aluOp, 0);
+			BusKt.set(idex.function, 0);
 			idex.aluSrc.set(true);
-			BusKt.set(exmem.rtRegister, BusKt.toBus(7, 5));
-			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
-			BusKt.set(idex.rsRegister, BusKt.toBus(5, 5));
-			BusKt.set(idex.rdRegister, BusKt.toBus(6, 5));
+			BusKt.set(exmem.rtRegister, 7);
+			BusKt.set(memwb.rdRegister, 7);
+			BusKt.set(idex.rsRegister, 5);
+			BusKt.set(idex.rdRegister, 6);
 
-			BusKt.set(idex.rsData, BusKt.toBus(16, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(16, 32));
-			BusKt.set(idex.immediate, BusKt.toBus(2, 32));
+			BusKt.set(idex.rsData, 16);
+			BusKt.set(idex.rtData, 16);
+			BusKt.set(idex.immediate, 2);
 			idex.eval();
 			exmem.eval();
 			return exmem;
@@ -210,21 +210,21 @@ public class ExecutionStage extends Stage {
 
 		TestKt.test("forwarding add", () -> {
 
-			BusKt.set(idex.aluOp, BusKt.toBus(2, 2));
-			BusKt.set(idex.function, BusKt.toBus(0x20, 6));
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x20);
 			idex.aluSrc.set(false);
 			idex.regDst.set(true);
 
 
-			BusKt.set(memwb.rdRegister, BusKt.toBus(7, 5));
+			BusKt.set(memwb.rdRegister, 7);
 
-			BusKt.set(idex.rtRegister, BusKt.toBus(6, 5));
+			BusKt.set(idex.rtRegister, 6);
 			idex.rsRegister.get(0).set(true);
 			idex.rdRegister.get(0).set(true);
 
-			BusKt.set(idex.shiftMa, BusKt.toBus(0, 5));
-			BusKt.set(idex.rsData, BusKt.toBus(5, 32));
-			BusKt.set(idex.rtData, BusKt.toBus(8, 32));
+			BusKt.set(idex.shiftMa, 0);
+			BusKt.set(idex.rsData, 5);
+			BusKt.set(idex.rtData, 8);
 			idex.eval();
 			exmem.eval();
 			idex.eval();
