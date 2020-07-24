@@ -5,6 +5,7 @@ import mipsim.pipeline.registers.IDEX_PipelineRegister;
 import mipsim.pipeline.registers.IFID_PipelineRegister;
 import mipsim.pipeline.registers.MEMWB_PipelineRegister;
 import mipsim.pipeline.stages.*;
+import mipsim.sim.InstructionParserKt;
 import mipsim.units.DataMemory;
 import mipsim.units.InstructionMemory;
 import mipsim.units.RegisterFile;
@@ -109,10 +110,13 @@ public class Processor implements Eval, DebugWriter {
 	@Override
 	public void writeDebug(@NotNull StringBuffer buffer) {
 		final var pc = BusKt.toInt(this.pc);
+		final var instBin = BusKt.toInt(instructionMemory.instruction);
+		final var instStr = InstructionParserKt.parseBinToInstruction(instBin);
+
 		buffer.append(String.format("pc pipe: %04xH\t", pc));
 		buffer.append(String.format("pc inst: %04xH\t", BusKt.toInt(instructionMemory.pc)));
 		buffer.append(String.format("pc ifid: %04xH\n", BusKt.toInt(ifid.pc)));
-		buffer.append(String.format("inst read: %08xH\t", BusKt.toInt(instructionMemory.instruction)));
+		buffer.append(String.format("inst read: %08xH = ' %s '\t", instBin, instStr));
 		buffer.append(String.format("inst ifid: %08xH\n", BusKt.toInt(ifid.instruction)));
 		DebugKt.writeTo(registerFile, buffer);
 	}

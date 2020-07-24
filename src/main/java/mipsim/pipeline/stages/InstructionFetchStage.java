@@ -4,26 +4,17 @@ import mipsim.Processor;
 import mipsim.module.Multiplexer;
 import mipsim.module.TinyModules;
 import sim.base.BusKt;
-import sim.base.EvalKt;
-import sim.base.MutableValue;
-import sim.base.ValueKt;
-import sim.test.TestKt;
 
 import java.util.List;
 
 public class InstructionFetchStage extends Stage {
-	public final List<? extends MutableValue> branchTarget = BusKt.bus(32);
-	public final List<? extends MutableValue> jumpTarget = BusKt.bus(32);
-	public final MutableValue stall = ValueKt.mut(false);
-	public final MutableValue branch = ValueKt.mut(false);
-	public final MutableValue jump = ValueKt.mut(false);
-
 	public InstructionFetchStage(final Processor processor) {
 		super(processor);
 	}
 
 	@Override
 	public void init() {
+		final var idStage = processor.idStage;
 		final var pc = processor.pc;
 		final var ifid = processor.ifid;
 		final var PC = processor.pc_next;
@@ -31,12 +22,10 @@ public class InstructionFetchStage extends Stage {
 		assert IFID != null;
 
 		// new pc that will show next instruction
-		var pc4 = TinyModules.easyAdder(pc, 4);
+		final var pc4 = TinyModules.easyAdder(pc, 4);
 
 		// set next pc
-		Multiplexer.pcChoice(jump, branch, pc4, branchTarget, jumpTarget, PC);
-
-		// todo: watch stall
+		Multiplexer.pcChoice(idStage.stallFlag, idStage.jumpFlag, exStage.branchFlag, pc4, idStage.jumpAddress, exStage.branchAddress, pc, PC);
 
 		//set pc to read data
 		BusKt.set(processor.instructionMemory.pc, pc);
@@ -64,17 +53,17 @@ public class InstructionFetchStage extends Stage {
 //		System.out.println(BusKt.toInt(processor.ifid.instruction));
 
 
-		TestKt.test( "test beq", () -> {
-			final var time = System.currentTimeMillis();
-			var instBin = parseInstructionToBin("beq $s1,$t1,1");
-
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			EvalKt.eval(processor.pc, time);
-			processor.ifid.eval(time);
-			return
-		});
+//		TestKt.test( "test beq", () -> {
+//			final var time = System.currentTimeMillis();
+//			var instBin = parseInstructionToBin("beq $s1,$t1,1");
+//
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			EvalKt.eval(processor.pc, time);
+//			processor.ifid.eval(time);
+//			return
+//		});
 
 //		TestKt.testOn(processor.ifid, "test set less than", () -> {
 //			final var time = System.currentTimeMillis();

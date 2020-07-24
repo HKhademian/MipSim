@@ -24,9 +24,15 @@ public class ExecutionStage extends Stage {
 		super(processor);
 	}
 
+	public List<? extends MutableValue> forwardingEx1 = BusKt.bus(2);
+	public List<? extends MutableValue> forwardingEx2 = BusKt.bus(2);
+	public List<? extends MutableValue> forwardingMem1 = BusKt.bus(2);
+	public List<? extends MutableValue> forwardingMem2 = BusKt.bus(2);
+
 	@Override
 	public void init() {
 		final var ifStage = processor.ifStage;
+		final var wbStage = processor.wbStage;
 		final var idex = processor.idex;
 		final var exmem = processor.exmem;
 		final var memwb = processor.memwb;
@@ -40,19 +46,15 @@ public class ExecutionStage extends Stage {
 
 		//first alu src
 		final var resultOneOfAlu = BusKt.bus(32);
-		final var forwardingEx1 = BusKt.bus(2);
-		final var forwardingMem1 = BusKt.bus(2);
 		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rsRegister, forwardingEx1);
 		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite, memwb.rdRegister, idex.rsRegister, exmem.regWrite, exmem.rtRegister, forwardingMem1);
-		Multiplexer.aluInput(or(forwardingEx1, forwardingMem1), idex.rsData, exmem.aluData, memwb.memoryData, resultOneOfAlu);
+		Multiplexer.aluInput(or(forwardingEx1, forwardingMem1), idex.rsData, exmem.aluData, wbStage.writeData, resultOneOfAlu);
 
 		//second alu  src
 		final var forwardingResult2 = BusKt.bus(32);
-		final var forwardingExe2 = BusKt.bus(2);
-		final var forwardingMem2 = BusKt.bus(2);
-		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rtRegister, forwardingExe2);
-		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite, memwb.rdRegister, idex.rsRegister, exmem.regWrite, exmem.rtRegister, forwardingMem2);
-		Multiplexer.aluInput(or(forwardingExe2, forwardingMem2), idex.rtData, exmem.aluData, memwb.memoryData, forwardingResult2);
+		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rtRegister, forwardingEx2);
+		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite, memwb.rdRegister, idex.rtRegister, exmem.regWrite, exmem.rtRegister, forwardingMem2);
+		Multiplexer.aluInput(or(forwardingEx2, forwardingMem2), idex.rtData, exmem.aluData, wbStage.writeData, forwardingResult2);
 
 		final var resultTwoOfAlu = BusKt.bus(32);
 		Multiplexer.aluSrc(idex.aluSrc, forwardingResult2, idex.immediate, resultTwoOfAlu);

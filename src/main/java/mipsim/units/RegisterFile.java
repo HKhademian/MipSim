@@ -81,7 +81,7 @@ public final class RegisterFile implements Eval, DebugWriter {
 	public void writeDebug(@NotNull final StringBuffer buffer) {
 		for (int i = 0; i < 32; i++) {
 			var value = BusKt.toInt(MemoryKt.getWord(_memory, i));
-			buffer.append(String.format("$%d=%08xH ", i, value));
+			buffer.append(String.format("$%d=%04xH ", i, value));
 		}
 		buffer.append("\n");
 		buffer.append("ReadReg1: ").append(BusKt.toInt(readReg1)).append("\t");

@@ -9,11 +9,13 @@ import java.util.List;
 import static sim.test.TestKt.testOn;
 
 public class Main {
+	final static String NOP = "sll $0, $0, 0";
 	static List<String> instructions = Arrays.asList(
-		"addi $1, $0, 15",
-		"addi $2, $0, 10",
-		"add $3, $1, $2",
-		"or $4, $0, $3"
+		NOP,
+		"addi $1, $31, 15",
+		"addi $2, $30, 10",
+		"add  $3, $2, $1",
+		"or   $4, $0, $3"
 	);
 
 	public static void main(String[] args) {
@@ -22,7 +24,7 @@ public class Main {
 		InstructionParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		for (var i = 0; i < 20; i++) {
+		for (var i = 0; i < 15; i++) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});

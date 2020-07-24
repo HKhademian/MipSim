@@ -2,23 +2,25 @@ package mipsim.pipeline.stages;
 
 import mipsim.Processor;
 import mipsim.module.Multiplexer;
-import mipsim.pipeline.registers.PipelineRegister;
 import mipsim.units.ControlUnit;
 import mipsim.units.HazardDetectionUnit;
-import sim.HelpersKt;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;
 import sim.test.TestKt;
-import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
 
-import java.util.IdentityHashMap;
 import java.util.List;
+
+import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
 
 public class InstructionDecodeStage extends Stage {
 	public InstructionDecodeStage(final Processor processor) {
 		super(processor);
 	}
+
+	public final MutableValue jumpFlag = ValueKt.mut(false);
+	public final MutableValue stallFlag = ValueKt.mut(false);
+	public final List<? extends MutableValue> jumpAddress = BusKt.bus(32);
 
 	@Override
 	public void init() {
@@ -36,7 +38,7 @@ public class InstructionDecodeStage extends Stage {
 
 		// 32 bit instruction,pc 32 bit
 		final var instruction = ifid.instruction;
-		final var PC = ifid.pc;
+		final var pc = ifid.pc;
 
 		//split the instruction
 		final var opcode = BusKt.slice(instruction, 26, 32);
@@ -47,7 +49,7 @@ public class InstructionDecodeStage extends Stage {
 		final var shiftMa = BusKt.slice(instruction, 6, 11);
 		final var func = BusKt.slice(instruction, 0, 6);
 
-		final var jumpAddress = BusKt.slice(instruction, 0, 26);
+		final var jumpAddress26 = BusKt.slice(instruction, 0, 26);
 		final var immediate = BusKt.slice(instruction, 0, 16);
 
 		// all control unit flag would create
@@ -58,19 +60,17 @@ public class InstructionDecodeStage extends Stage {
 		final var memRead = ValueKt.mut(false);
 		final var memWrite = ValueKt.mut(false);
 		final var branch = ValueKt.mut(false);
-		final var jump = ValueKt.mut(false);
 
 		final var aluOp = BusKt.bus(2);
 
 		ControlUnit.control(opcode, regDst, ALUsrc, memToReg, regWrite
-			, memRead, memWrite, branch, jump, aluOp);
+			, memRead, memWrite, branch, jumpFlag, aluOp);
 
 		//this will show if hazard would happen and we need stall
 		final var ID_EX_memRead = idex.memRead;
 		final var ID_EX_registerRt = BusKt.slice(idex.rtRegister, 0, 5);
 		//rt ==  IF_ID_registerRt;
 		//rs ==  IF_ID_registerRs;
-		final var stallFlag = ValueKt.mut(false);
 		HazardDetectionUnit.hazardDetectionUnit(ID_EX_memRead, ID_EX_registerRt, rt, rs, stallFlag);
 
 		final var regWriteFinal = ValueKt.mut(false);
@@ -82,16 +82,11 @@ public class InstructionDecodeStage extends Stage {
 		//register result
 		final var rsData = BusKt.bus(32);
 		final var rtData = BusKt.bus(32);
-		final var immediateValue = HelpersKt.signEx(immediate); // todo: what?
-
-		//this will calculator address of jump and branch
-
 
 		//todo : some one check this  that would not happen a bug
-		final var jumpAddressExtended = BusKt.bus(32);
-		BusKt.set(BusKt.slice(jumpAddressExtended, 0, 26), jumpAddress);//extend jump
-		BusKt.set(jumpAddressExtended, HelpersKt.shift(jumpAddressExtended, 2));//shifted
-		BusKt.set(BusKt.slice(jumpAddressExtended, 28, 32), PC.subList(28, 32));//set the 4 most significant bit
+		BusKt.set(BusKt.slice(jumpAddress, 0, 2), 0);
+		BusKt.set(BusKt.slice(jumpAddress, 2, 28), jumpAddress26);//extend jump
+		BusKt.set(BusKt.slice(jumpAddress, 28, 32), BusKt.slice(pc, 28, 32));//set the 4 most significant bit
 
 		//we will read data from register
 		BusKt.set(REGFILE.readReg1, rs);
@@ -122,22 +117,12 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set((List) IDEX.aluOp, aluOp);
 
 		//set pc for branch
-		BusKt.set((List) IDEX.PC, PC);
+		BusKt.set((List) IDEX.PC, pc);
 		//set func
 		BusKt.set((List) IDEX.function, func);
 
 		//set shift
 		BusKt.set((List) IDEX.shiftMa, shiftMa);
-
-		//set branch and jump
-
-		//todo check it friends
-//		BusKt.set(ifStage.jumpTarget, jumpAddressExtended);
-//
-//		ifStage.jump.set(jump);
-//
-//		//set stall
-//		ifStage.stall.set(stallFlag);
 	}
 
 	/**
@@ -145,7 +130,7 @@ public class InstructionDecodeStage extends Stage {
 	 */
 	public static void main(final String[] args) {
 
-	TestKt.test("test beq", () -> {
+		TestKt.test("test beq", () -> {
 			final var time = System.currentTimeMillis();
 			final var processor = new Processor();
 			final var IFID = processor.ifid.next;
@@ -160,12 +145,11 @@ public class InstructionDecodeStage extends Stage {
 			var instBin = parseInstructionToBin("beq $s1,$t1,1");
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
 		});
-
 
 
 		TestKt.test("test set less than", () -> {
@@ -182,14 +166,14 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
 		});
 
 //
-		TestKt.test( "test shiftR", () -> {
+		TestKt.test("test shiftR", () -> {
 
 			var instBin = parseInstructionToBin("srl $s1,$s3,4");
 			final var time = System.currentTimeMillis();
@@ -204,7 +188,7 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
@@ -227,7 +211,7 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
@@ -235,7 +219,7 @@ public class InstructionDecodeStage extends Stage {
 		});
 
 
-		TestKt.test( "test and", () -> {
+		TestKt.test("test and", () -> {
 			var instBin = parseInstructionToBin("and $s1,$t1,$t2");
 			final var time = System.currentTimeMillis();
 			final var processor = new Processor();
@@ -249,7 +233,7 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
@@ -257,7 +241,7 @@ public class InstructionDecodeStage extends Stage {
 		});
 //
 //
-		TestKt.test( "test or", () -> {
+		TestKt.test("test or", () -> {
 			final var time = System.currentTimeMillis();
 			var instBin = parseInstructionToBin("or $s1,$t1,$t2");
 			final var processor = new Processor();
@@ -271,14 +255,14 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
 		});
 //
 //
-		TestKt.test( "test sub", () -> {
+		TestKt.test("test sub", () -> {
 			final var time = System.currentTimeMillis();
 
 			var instBin = parseInstructionToBin("sub $s1,$t1,$t2");
@@ -293,14 +277,14 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
 		});
 //
 //
-		TestKt.test( "test addi", () -> {
+		TestKt.test("test addi", () -> {
 			final var time = System.currentTimeMillis();
 
 			var instBin = parseInstructionToBin("addi $s1,$zero,5");
@@ -315,36 +299,36 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
 		});
 //
 //
-	TestKt.test( "test add", () -> {
+		TestKt.test("test add", () -> {
 			final var time = System.currentTimeMillis();
 
 			var instBin = parseInstructionToBin("add $s1,$t1,$t2");
-		final var processor = new Processor();
-		final var IFID = processor.ifid.next;
-		final var ifid = processor.ifid;
-		final var IDEX = processor.idex.next;
-		final var idex = processor.idex;
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
 
-		assert IFID != null;
-		assert IDEX != null;
-		processor.init();
-		var inst = BusKt.toBus(instBin);
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
 
-		BusKt.set((List)IFID.instruction, inst);
-		processor.eval(time);
-		processor.eval(time);
-		return IDEX;
-	});
+			BusKt.set((List) IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
 //
 //
-		TestKt.test( "test SW", () -> {
+		TestKt.test("test SW", () -> {
 			final var time = System.currentTimeMillis();
 
 			var instBin = parseInstructionToBin("sw $t1,6($t2)");
@@ -359,13 +343,13 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
 		});
 //
-		TestKt.test( "test LW", () -> {
+		TestKt.test("test LW", () -> {
 			final var time = System.currentTimeMillis();
 
 			var instBin = parseInstructionToBin("lw $t1,5($t2)");
@@ -380,13 +364,13 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;
 		});
 
-		TestKt.test( "Jump ", () -> {
+		TestKt.test("Jump ", () -> {
 			final var time = System.currentTimeMillis();
 
 			var instBin = parseInstructionToBin("j 50");
@@ -401,7 +385,7 @@ public class InstructionDecodeStage extends Stage {
 			processor.init();
 			var inst = BusKt.toBus(instBin);
 
-			BusKt.set((List)IFID.instruction, inst);
+			BusKt.set((List) IFID.instruction, inst);
 			processor.eval(time);
 			processor.eval(time);
 			return IDEX;

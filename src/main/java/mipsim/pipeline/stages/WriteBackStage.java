@@ -14,6 +14,8 @@ public class WriteBackStage extends Stage {
 		super(processor);
 	}
 
+	public final List<? extends MutableValue> writeData = BusKt.bus(32);
+
 	@Override
 	public void init() {
 		final var memwb = processor.memwb;
@@ -24,7 +26,7 @@ public class WriteBackStage extends Stage {
 		assert REGFILE != null;
 
 		//choice data memory and alu --> to write data
-		final var writeData = MuxKt.mux2(MEMWB.memToReg, memwb.aluData, memwb.memoryData);
+		BusKt.set(writeData, MuxKt.mux2(MEMWB.memToReg, memwb.aluData, memwb.memoryData));
 
 		// todo: check regFile
 		REGFILE.regWrite.set(memwb.regWrite);
@@ -38,16 +40,7 @@ public class WriteBackStage extends Stage {
 	public static void main(final String... args) {
 
 
-
-
-
-
-
-
-
-
-
-		TestKt.test( "Don't write anything", () -> {
+		TestKt.test("Don't write anything", () -> {
 			final var time = System.currentTimeMillis();
 			final var processor = new Processor();
 			final var memwb = processor.memwb;
@@ -64,11 +57,11 @@ public class WriteBackStage extends Stage {
 			((MutableValue) MEMWB.memToReg).set(false);
 
 			processor.eval(time);
-			processor.eval(time+1);
-			return  regFile;
+			processor.eval(time + 1);
+			return regFile;
 		});
 
-		TestKt.test( "write something from memory", () -> {
+		TestKt.test("write something from memory", () -> {
 			final var time = System.currentTimeMillis();
 			final var processor = new Processor();
 			final var memwb = processor.memwb;
@@ -85,11 +78,11 @@ public class WriteBackStage extends Stage {
 			((MutableValue) MEMWB.memToReg).set(true);
 
 			processor.eval(time);
-			processor.eval(time+1);
-			return  regFile;
+			processor.eval(time + 1);
+			return regFile;
 		});
 
-		TestKt.test( "write alu data", () -> {
+		TestKt.test("write alu data", () -> {
 			final var time = System.currentTimeMillis();
 			final var processor = new Processor();
 			final var memwb = processor.memwb;
@@ -106,8 +99,8 @@ public class WriteBackStage extends Stage {
 			((MutableValue) MEMWB.memToReg).set(false);
 
 			processor.eval(time);
-			processor.eval(time+1);
-			return  regFile;
+			processor.eval(time + 1);
+			return regFile;
 		});
 
 
