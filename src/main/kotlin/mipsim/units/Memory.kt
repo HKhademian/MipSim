@@ -25,7 +25,7 @@ private class MemBit : Eval, MutableValue {
 	private var lastEval = 0L
 
 	private val next = mut(false)
-	private val lock = sim.expriment.SimpleLock()
+	// private val lock = sim.expriment.SimpleLock()
 
 	override fun set(value: Value) =
 		next.set(value)
@@ -34,15 +34,8 @@ private class MemBit : Eval, MutableValue {
 		curr
 
 	override fun eval(time: Long) {
-		if (time <= lastEval)
-			return
-		lock.lock {
-			lastEval = time
-			//next.eval(time)
-			// at moment of clock pos-edge, we calculate next value and store it to cache
-			if (memWrite.get())
-				curr = next.get()
-		}
+		if (memWrite.get())
+			curr = next.get()
 	}
 
 	override fun toString() =
