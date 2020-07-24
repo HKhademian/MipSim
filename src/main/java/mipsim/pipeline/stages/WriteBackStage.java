@@ -13,13 +13,14 @@ public class WriteBackStage extends Stage {
 	@Override
 	public void init() {
 		final var memwb = processor.memwb;
+		final var MEMWB = processor.memwb_next;
 		final var regFile = processor.registerFile;
-
+		final var REGFILE = processor.registerFile_next;
 		//choice data memory and alu --> to write data
-		final var writeData = MuxKt.mux2(memwb.memToReg, memwb.aluData, memwb.memoryData);
-		regFile.regWrite.set(memwb.regWrite);
-		BusKt.set(regFile.writeReg, memwb.rdRegister);
-		BusKt.set(regFile.writeData, writeData);
+		final var writeData = MuxKt.mux2(MEMWB.memToReg, memwb.aluData, memwb.memoryData);
+		REGFILE.regWrite.set(wb.regWrite);
+		BusKt.set(REGFILE.writeReg, memwb.rdRegister);
+		BusKt.set(REGFILE.writeData, writeData);
 	}
 
 	/**

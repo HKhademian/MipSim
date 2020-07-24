@@ -11,20 +11,23 @@ public class MemoryStage extends Stage {
 	@Override
 	public void init() {
 		final var exmem = processor.exmem;
+		final var ExMEM = processor.exmem_next;
 		final var memwb = processor.memwb;
+		final var MEMWB = processor.memwb_next;
 		final var dataMem = processor.dataMemory;
+		final var DATAMEM = processor.dataMemory;_
 
 		// write next pipeline register
-		BusKt.set(memwb.WB, exmem.WB);
-		BusKt.set(memwb.aluData, exmem.aluData);
-		BusKt.set(memwb.rdRegister, exmem.rtRegister);
+		BusKt.set(MEMWB.WB, exmem.WB);
+		BusKt.set(MEMWB.aluData, exmem.aluData);
+		BusKt.set(MEMWB.rdRegister, exmem.rtRegister);
 
 
 		//read and write data in to the memory
-		BusKt.set(dataMem.address, exmem.aluData);
-		BusKt.set(dataMem.writeData, exmem.writeMem);
-		BusKt.set(dataMem.memWrite, exmem.memWrite);
-		BusKt.set(dataMem.memRead, exmem.memRead);
-		BusKt.set(memwb.memoryData, dataMem.readData);
+		BusKt.set(DATAMEM.address, exmem.aluData);
+		BusKt.set(DATAMEM.writeData, exmem.writeMem);
+		BusKt.set(DATAMEM.memWrite, exmem.memWrite);
+		BusKt.set(DATAMEM.memRead, exmem.memRead);
+		BusKt.set(MEMWB.memoryData, dataMem.readData);
 	}
 }

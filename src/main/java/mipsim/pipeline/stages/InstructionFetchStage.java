@@ -27,7 +27,10 @@ public class InstructionFetchStage extends Stage {
 	@Override
 	public void init() {
 		final var pc = processor.pc;
+
 		final var ifid = processor.ifid;
+
+		final var IFID = processor.ifid_next;
 
 
 		// new pc that will show next instruction
@@ -42,8 +45,8 @@ public class InstructionFetchStage extends Stage {
 		BusKt.set(processor.instructionMemory.pc, pc);
 
 		//set pc and instruction
-		BusKt.set(ifid.pc, pc4);
-		BusKt.set(ifid.instruction, processor.instructionMemory.instruction);
+		BusKt.set(IFID.pc, pc4);
+		BusKt.set(IFID.instruction, processor.instructionMemory.instruction);
 	}
 
 	/**
