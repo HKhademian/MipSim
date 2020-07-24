@@ -20,8 +20,10 @@ public class ExecutionStage extends Stage {
 	public void init() {
 		final var idex = processor.idex;
 		final var exmem = processor.exmem;
-		final var EXMEM = exmem.next;
+		final var EXMEM = processor.exmem.next;
 		final var memwb = processor.memwb;
+
+		assert EXMEM != null;
 
 		//alu control unit
 		var aluOp = BusKt.bus(4);
@@ -52,8 +54,8 @@ public class ExecutionStage extends Stage {
 		LogicALU.AluInStage(resultOneOfAlu, resultTwoOfAlu, aluOp, idex.shiftMa, aluData);
 		BusKt.set(EXMEM.test1, resultOneOfAlu);
 		BusKt.set(EXMEM.test2, resultTwoOfAlu);
-		BusKt.set(EXMEM.test3, aluData);
-		BusKt.set(EXMEM.test4, aluData);
+		BusKt.set(EXMEM.test3, forwardingEx1);
+		BusKt.set(EXMEM.test4, forwardingExe2);
 		BusKt.set(EXMEM.aluData, aluData);
 
 
@@ -276,32 +278,39 @@ public class ExecutionStage extends Stage {
 			final var idex = processor.idex;
 			final var exmem = processor.exmem;
 			final var memwb = processor.memwb;
+
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+
 			processor.init();
 
+			BusKt.set(IDEX.aluOp, 2);
+			BusKt.set(IDEX.function, 0x20);
+			IDEX.aluSrc.set(false);
+			IDEX.regDst.set(true);
 
-			BusKt.set(idex.aluOp, 2);
-			BusKt.set(idex.function, 0x20);
-			idex.aluSrc.set(false);
-			idex.regDst.set(true);
+			BusKt.set(MEMWB.rdRegister, 7);
 
-			BusKt.set(memwb.rdRegister, 7);
+			BusKt.set(IDEX.regWrite, true);
 
-			BusKt.set(idex.regWrite, true);
+			BusKt.set(IDEX.rtRegister, 6);
+			IDEX.rsRegister.get(0).set(true);
+			BusKt.set(IDEX.rdRegister, 1);
 
-			BusKt.set(idex.rtRegister, 6);
-			idex.rsRegister.get(0).set(true);
-			BusKt.set(idex.rdRegister, 1);
-
-			BusKt.set(idex.shiftMa, 0);
-			BusKt.set(idex.rsData, 5);
-			BusKt.set(idex.rtData, 8);
+			BusKt.set(IDEX.shiftMa, 0);
+			BusKt.set(IDEX.rsData, 5);
+			BusKt.set(IDEX.rtData, 8);
 
 			idex.eval(time);
 
 			exmem.eval(time);
 
 
-			//idex.eval(time + 1);
+			// idex.eval(time + 1);
 
 			exmem.eval(time + 1);
 
