@@ -6,7 +6,6 @@ import mipsim.module.Multiplexer;
 import mipsim.units.AluControlUnit;
 import mipsim.units.ForwardingUnit;
 import sim.base.BusKt;
-import sim.expriment.Bus;
 import sim.test.TestKt;
 
 import static sim.base.GateKt.or;
@@ -54,7 +53,7 @@ public class ExecutionStage extends Stage {
 		BusKt.set(exmem.test2,resultTwoOfAlu);
 		BusKt.set(exmem.test3,aluData);
 		BusKt.set(exmem.test4,aluData);
-		BusKt.set(exmem.aluData, aluData);
+		BusKt.set(exmem.tmpAluData, aluData);
 
 
 		//dt register

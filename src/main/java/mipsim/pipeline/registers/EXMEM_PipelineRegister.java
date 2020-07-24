@@ -3,10 +3,9 @@ package mipsim.pipeline.registers;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
+import sim.base.Value;
 
 import java.util.List;
-
-import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
 
 public final class EXMEM_PipelineRegister extends PipelineRegister {
 	public final List<? extends MutableValue> WB = BusKt.slice(memory, 0, 2);
@@ -17,7 +16,9 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 	public final MutableValue memRead = MEM.get(0);
 	public final MutableValue memWrite = MEM.get(1);
 
-	public final List<? extends MutableValue> aluData = BusKt.slice(memory, 4, 36);
+	public final List<? extends Value> aluData = BusKt.bus(32);
+	public final List<? extends MutableValue> tmpAluData = BusKt.bus(32);
+
 	public final List<? extends MutableValue> writeMem = BusKt.slice(memory, 36, 68);
 
 	public final List<? extends MutableValue> rtRegister = BusKt.slice(memory, 68, 73);
@@ -28,6 +29,12 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 
 	public EXMEM_PipelineRegister() {
 		super(201);
+	}
+
+	@Override
+	public void eval(final long time) {
+		super.eval(time);
+		BusKt.set((List) aluData, BusKt.constant(tmpAluData));
 	}
 
 	@Override
