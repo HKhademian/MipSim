@@ -2,15 +2,14 @@ package mipsim.pipeline.stages;
 
 import mipsim.Processor;
 import mipsim.module.Multiplexer;
-import mipsim.module.TinyModules;
 import mipsim.units.ControlUnit;
 import mipsim.units.HazardDetectionUnit;
 import sim.HelpersKt;
 import sim.base.BusKt;
+import sim.base.MutableValue;
 import sim.base.ValueKt;
-import sim.test.TestKt;
 
-import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
+import java.util.List;
 
 public class InstructionDecodeStage extends Stage {
 	public InstructionDecodeStage(final Processor processor) {
@@ -19,16 +18,17 @@ public class InstructionDecodeStage extends Stage {
 
 	@Override
 	public void init() {
+		final var ifStage = processor.ifStage; //todo check we need to change ifStage
 		//help for coding
 		final var idex = processor.idex;
-		final var IDEX = idex.next;
 		final var ifid = processor.ifid;
 		final var regFile = processor.registerFile;
-		final var REGFILE = regFile;
-		//todo check we need to change ifStage
-		final var ifStage = processor.ifStage;
-		assert IDEX != null;
 
+		final var IDEX = idex.next;
+		final var REGFILE = regFile;
+
+		assert IDEX != null;
+		assert REGFILE != null;
 
 		// 32 bit instruction,pc 32 bit
 		final var instruction = ifid.instruction;
@@ -73,16 +73,14 @@ public class InstructionDecodeStage extends Stage {
 		final var memWriteFinal = ValueKt.mut(false);
 
 		Multiplexer.hazardDetection(stallFlag, regWrite, memWrite, regWriteFinal, memWriteFinal);
-		//todo debuge
-
+		//todo debug
 
 		//register result
 		final var rsData = BusKt.bus(32);
 		final var rtData = BusKt.bus(32);
-		final var immediateValue = HelpersKt.signEx(immediate);
+		final var immediateValue = HelpersKt.signEx(immediate); // todo: what?
 
 		//this will calculator address of jump and branch
-
 
 
 		//todo : some one check this  that would not happen a bug
@@ -91,7 +89,6 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set(jumpAddressExtended, HelpersKt.shift(jumpAddressExtended, 2));//shifted
 		BusKt.set(BusKt.slice(jumpAddressExtended, 28, 32), PC.subList(28, 32));//set the 4 most significant bit
 
-
 		//we will read data from register
 		BusKt.set(REGFILE.readReg1, rs);
 		BusKt.set(rsData, regFile.readData1);
@@ -99,52 +96,44 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set(REGFILE.readReg2, rt);
 		BusKt.set(rtData, regFile.readData2);
 
-
 		//here we set the pipeline
 
-
 		//set register value
-		BusKt.set(IDEX.rsData, rsData);
-		BusKt.set(IDEX.rtData, rtData);
-		BusKt.set(IDEX.immediate, immediate);
+		BusKt.set((List) IDEX.rsData, rsData);
+		BusKt.set((List) IDEX.rtData, rtData);
+		BusKt.set((List) IDEX.immediate, immediate);
 
 		//set register number
-		BusKt.set(IDEX.rtRegister, rt);
-		BusKt.set(IDEX.rdRegister, rd);
-		BusKt.set(IDEX.rsRegister, rs);
+		BusKt.set((List) IDEX.rtRegister, rt);
+		BusKt.set((List) IDEX.rdRegister, rd);
+		BusKt.set((List) IDEX.rsRegister, rs);
 		//setFlag
-		IDEX.regDst.set(regDst);
-		IDEX.memToReg.set(memToReg);
-		IDEX.regWrite.set(regWriteFinal);
-		IDEX.memRead.set(memRead);
-		IDEX.memWrite.set(memWriteFinal);
-		IDEX.aluSrc.set(ALUsrc);
-		BusKt.set(IDEX.aluOp, aluOp);
-		IDEX.branch.set(branch);
+		BusKt.set((MutableValue) IDEX.regDst, regDst);
+		BusKt.set((MutableValue) IDEX.memToReg, memToReg);
+		BusKt.set((MutableValue) IDEX.regWrite, regWriteFinal);
+		BusKt.set((MutableValue) IDEX.memRead, memRead);
+		BusKt.set((MutableValue) IDEX.memWrite, memWriteFinal);
+		BusKt.set((MutableValue) IDEX.aluSrc, ALUsrc);
+		BusKt.set((List) IDEX.aluOp, aluOp);
+		BusKt.set((List) IDEX.branch, branch);
 
 		//set pc for branch
-		BusKt.set(IDEX.PC,PC);
+		BusKt.set((List) IDEX.PC, PC);
 		//set func
-		BusKt.set(IDEX.function, func);
+		BusKt.set((List) IDEX.function, func);
 
 		//set shift
-		BusKt.set(IDEX.shiftMa, shiftMa);
+		BusKt.set((List) IDEX.shiftMa, shiftMa);
 
 		//set branch and jump
 
 		//todo check it friends
 		BusKt.set(ifStage.jumpTarget, jumpAddressExtended);
 
-
 		ifStage.jump.set(jump);
-
-
-
 
 		//set stall
 		ifStage.stall.set(stallFlag);
-
-
 	}
 
 	/**
@@ -158,146 +147,147 @@ public class InstructionDecodeStage extends Stage {
 		System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
 		System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
 
-
-		TestKt.testOn(processor.idex, "test beq", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("beq $s1,$t1,1");
-			var inst = BusKt.toBus(instBin);
-			System.out.println(BusKt.toInt(inst));
-			//todo it must be check again
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval(time);
-
-			processor.idex.eval(time);
-			processor.ifStage.eval(time);
-			System.out.println("\n branchTarget: " + processor.ifStage.branchTarget);
-
-		});
-
-
-		//todo we have some bug in beq or branch
-		TestKt.testOn(processor.idex, "test set less than", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("slt $s2,$t7,$5");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval(time);
-		});
-
-
-		TestKt.testOn(processor.idex, "test shiftR", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("srl $s1,$s3,4");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval(time);
-		});
-
-
-		TestKt.testOn(processor.idex, "test shiftL", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("sll $s1,$t1,6");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval(time);
-		});
-
-
-		TestKt.testOn(processor.idex, "test and", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("and $s1,$t1,$t2");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval(time);
-		});
-
-
-		TestKt.testOn(processor.idex, "test or", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("or $s1,$t1,$t2");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval(time);
-		});
-
-
-		TestKt.testOn(processor.idex, "test sub", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("sub $s1,$t1,$t2");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval(time);
-		});
-
-
-		TestKt.testOn(processor.idex, "test addi", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("addi $s1,$zero,5");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval(time);
-		});
-
-
-		TestKt.testOn(processor.idex, "test add", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("add $s1,$t1,$t2");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval(time);
-		});
-
-
-		TestKt.testOn(processor.idex, "test SW", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("sw $t1,6($t2)");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval(time);
-		});
-
-		TestKt.testOn(processor.idex, "test LW", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("lw $t1,5($t2)");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.idex.eval(time);
-		});
-
-		TestKt.testOn(processor.idex, "Jump ", () -> {
-			final var time = System.currentTimeMillis();
-
-			var instBin = parseInstructionToBin("j 50");
-			var inst = BusKt.toBus(instBin);
-			BusKt.set(processor.ifid.instruction, inst);
-			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.ifid.eval(time);
-			processor.ifStage.eval(time);
-			processor.idex.eval(time);
-			System.out.println("jump: " + processor.ifStage.jumpTarget);
-			//todo why it's jump don't be update
-		});
+// fixme: plz
+//
+//		TestKt.testOn(processor.idex, "test beq", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("beq $s1,$t1,1");
+//			var inst = BusKt.toBus(instBin);
+//			System.out.println(BusKt.toInt(inst));
+//			//todo it must be check again
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.ifid.eval(time);
+//
+//			processor.idex.eval(time);
+//			processor.ifStage.eval(time);
+//			System.out.println("\n branchTarget: " + processor.ifStage.branchTarget);
+//
+//		});
+//
+//
+//		//todo we have some bug in beq or branch
+//		TestKt.testOn(processor.idex, "test set less than", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("slt $s2,$t7,$5");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.idex.eval(time);
+//		});
+//
+//
+//		TestKt.testOn(processor.idex, "test shiftR", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("srl $s1,$s3,4");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.ifid.eval(time);
+//		});
+//
+//
+//		TestKt.testOn(processor.idex, "test shiftL", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("sll $s1,$t1,6");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.idex.eval(time);
+//		});
+//
+//
+//		TestKt.testOn(processor.idex, "test and", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("and $s1,$t1,$t2");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.idex.eval(time);
+//		});
+//
+//
+//		TestKt.testOn(processor.idex, "test or", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("or $s1,$t1,$t2");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.idex.eval(time);
+//		});
+//
+//
+//		TestKt.testOn(processor.idex, "test sub", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("sub $s1,$t1,$t2");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.idex.eval(time);
+//		});
+//
+//
+//		TestKt.testOn(processor.idex, "test addi", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("addi $s1,$zero,5");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.ifid.eval(time);
+//		});
+//
+//
+//		TestKt.testOn(processor.idex, "test add", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("add $s1,$t1,$t2");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.idex.eval(time);
+//		});
+//
+//
+//		TestKt.testOn(processor.idex, "test SW", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("sw $t1,6($t2)");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.idex.eval(time);
+//		});
+//
+//		TestKt.testOn(processor.idex, "test LW", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("lw $t1,5($t2)");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.idex.eval(time);
+//		});
+//
+//		TestKt.testOn(processor.idex, "Jump ", () -> {
+//			final var time = System.currentTimeMillis();
+//
+//			var instBin = parseInstructionToBin("j 50");
+//			var inst = BusKt.toBus(instBin);
+//			BusKt.set(processor.ifid.instruction, inst);
+//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+//			processor.ifid.eval(time);
+//			processor.ifStage.eval(time);
+//			processor.idex.eval(time);
+//			System.out.println("jump: " + processor.ifStage.jumpTarget);
+//			//todo why it's jump don't be update
+//		});
 	}
 }

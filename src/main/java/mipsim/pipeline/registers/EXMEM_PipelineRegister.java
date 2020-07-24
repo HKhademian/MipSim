@@ -22,11 +22,6 @@ public final class EXMEM_PipelineRegister extends PipelineRegister<EXMEM_Pipelin
 
 	public final List<? extends Value> rtRegister = BusKt.slice(memory, 68, 73);
 
-	public final List<? extends Value> test1 = BusKt.slice(memory, 73, 105);
-	public final List<? extends Value> test2 = BusKt.slice(memory, 105, 137);
-	public final List<? extends Value> test3 = BusKt.slice(memory, 137, 169);
-	public final List<? extends Value> test4 = BusKt.slice(memory, 169, 201);
-
 	private EXMEM_PipelineRegister(final Processor processor, final EXMEM_PipelineRegister next) {
 		super(processor, 201, next);
 	}
