@@ -7,7 +7,7 @@ import mipsim.units.HazardDetectionUnit;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;
-import sim.test.TestKt;
+import sim.tool.TestKt;
 
 import java.util.List;
 

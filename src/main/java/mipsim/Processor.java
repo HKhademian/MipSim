@@ -10,9 +10,9 @@ import mipsim.units.DataMemory;
 import mipsim.units.InstructionMemory;
 import mipsim.units.RegisterFile;
 import org.jetbrains.annotations.NotNull;
-import sim.DebugKt;
-import sim.DebugWriter;
 import sim.base.*;
+import sim.tool.DebugKt;
+import sim.tool.DebugWriter;
 
 import java.util.List;
 

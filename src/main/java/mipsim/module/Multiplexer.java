@@ -32,7 +32,7 @@ public final class Multiplexer {
 		List<? extends Value> MEM_WB,
 		List<? extends MutableValue> result
 	) {
-		BusKt.set(result, MuxKt.mux(forwarding, regSource, MEM_WB, EXE_MEM, ZERO_BUS));
+		BusKt.set(result, mux(forwarding, regSource, MEM_WB, EXE_MEM, ZERO_BUS));
 	}
 
 
@@ -49,7 +49,7 @@ public final class Multiplexer {
 		List<? extends Value> rd,
 		List<? extends MutableValue> result
 	) {
-		BusKt.set(result, MuxKt.mux2(regDst,rt , rd));
+		BusKt.set(result, mux2(regDst, rt, rd));
 	}
 
 
@@ -66,7 +66,7 @@ public final class Multiplexer {
 		List<? extends Value> immediate,
 		List<? extends MutableValue> result
 	) {
-		BusKt.set(result, MuxKt.mux2(aluSrc, register, immediate));
+		BusKt.set(result, mux2(aluSrc, register, immediate));
 	}
 
 
@@ -84,8 +84,8 @@ public final class Multiplexer {
 		MutableValue regWriteResult,
 		MutableValue memWriteResult
 	) {
-		regWriteResult.set(MuxKt.mux2(hazardDetection, regWrite, Value.ZERO));
-		memWriteResult.set(MuxKt.mux2(hazardDetection, memWrite, Value.ZERO));
+		regWriteResult.set(mux2(hazardDetection, regWrite, Value.ZERO));
+		memWriteResult.set(mux2(hazardDetection, memWrite, Value.ZERO));
 	}
 
 
@@ -111,7 +111,7 @@ public final class Multiplexer {
 		List<? extends MutableValue> PCSelect
 	) {
 		var muxRes = mux4(jumpFlag, branchFlag, pc4, jump, branch, branch);
-		var muxFinal = mux2(stallFlag,muxRes,pc);
+		var muxFinal = mux2(stallFlag, muxRes, pc);
 		BusKt.set(PCSelect, muxFinal);//I put pc for 11 of select
 	}
 
@@ -129,7 +129,7 @@ public final class Multiplexer {
 		List<? extends Value> aluResult,
 		List<? extends MutableValue> register
 	) {
-		BusKt.set(register, MuxKt.mux2(memToReg, aluResult, memoryResult));
+		BusKt.set(register, mux2(memToReg, aluResult, memoryResult));
 	}
 
 

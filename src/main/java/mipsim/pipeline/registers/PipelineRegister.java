@@ -3,9 +3,9 @@ package mipsim.pipeline.registers;
 import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sim.DebugWriter;
 import sim.base.Eval;
 import sim.base.MutableValue;
+import sim.tool.DebugWriter;
 
 import java.util.List;
 

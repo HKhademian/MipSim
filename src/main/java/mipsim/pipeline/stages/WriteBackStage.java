@@ -3,8 +3,8 @@ package mipsim.pipeline.stages;
 import mipsim.Processor;
 import sim.base.BusKt;
 import sim.base.MutableValue;
-import sim.real.MuxKt;
-import sim.test.TestKt;
+import sim.complex.MuxKt;
+import sim.tool.TestKt;
 
 import java.util.List;
 

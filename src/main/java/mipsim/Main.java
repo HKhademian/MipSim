@@ -1,12 +1,12 @@
 package mipsim;
 
 import mipsim.sim.InstructionParserKt;
-import sim.DebugKt;
+import sim.tool.DebugKt;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static sim.test.TestKt.testOn;
+import static sim.tool.TestKt.testOn;
 
 public class Main {
 	final static String NOP = "sll $0, $0, 0";

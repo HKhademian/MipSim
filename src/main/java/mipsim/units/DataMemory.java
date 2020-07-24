@@ -6,7 +6,7 @@ import java.util.List;
 
 import static sim.base.BusKt.EMPTY_BUS;
 import static sim.base.BusKt.ZERO_BUS;
-import static sim.real.MuxKt.mux2;
+import static sim.complex.MuxKt.mux2;
 
 public final class DataMemory implements Eval {
 	public final List<? extends MutableValue> _memory;

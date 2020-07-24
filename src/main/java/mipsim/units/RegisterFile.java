@@ -1,12 +1,9 @@
 package mipsim.units;
 
-import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
-import sim.DebugKt;
-import sim.DebugWriter;
+import sim.tool.DebugWriter;
 import sim.base.*;
-import sim.complex.MuxKt;
-import sim.test.TestKt;
+import sim.tool.TestKt;
 
 import java.util.List;
 

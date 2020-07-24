@@ -4,7 +4,7 @@ import mipsim.Processor
 import sim.base.bus
 import sim.base.eval
 import sim.base.set
-import sim.test.test
+import sim.tool.test
 
 internal fun main() {
 	val sim = Processor()

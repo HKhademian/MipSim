@@ -6,11 +6,11 @@ import mipsim.module.Multiplexer;
 import mipsim.module.TinyModules;
 import mipsim.units.AluControlUnit;
 import mipsim.units.ForwardingUnit;
-import sim.HelpersKt;
+import sim.base.MathKt;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;
-import sim.test.TestKt;
+import sim.tool.TestKt;
 
 import java.util.List;
 
@@ -71,7 +71,7 @@ public class ExecutionStage extends Stage {
 
 
 		//set branch
-		final var shiftAddress = HelpersKt.shift(idex.immediate, 2);
+		final var shiftAddress = MathKt.shift(idex.immediate, 2);
 
 		TinyModules.easyAdder(idex.PC, shiftAddress, branchAddress);
 

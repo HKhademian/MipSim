@@ -1,8 +1,8 @@
 package mipsim.units
 
-import sim.DebugWriter
+import sim.tool.DebugWriter
 import sim.base.*
-import sim.test.testOn
+import sim.tool.testOn
 
 /// each byte is 8 bit of data
 const val BYTE_SIZE = 8
@@ -25,7 +25,7 @@ private class MemBit : Eval, MutableValue {
 	private var lastEval = 0L
 
 	private val next = mut(false)
-	// private val lock = sim.expriment.SimpleLock()
+	// private val lock = sim.test.SimpleLock()
 
 	override fun set(value: Value) =
 		next.set(value)
