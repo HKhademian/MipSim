@@ -1,12 +1,17 @@
 package mipsim.units;
 
+import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
+import sim.DebugKt;
 import sim.DebugWriter;
 import sim.base.*;
+import sim.complex.MuxKt;
+import sim.test.TestKt;
 
 import java.util.List;
 
 import static sim.base.BusKt.ZERO_BUS;
+import static sim.base.BusKt.bus;
 
 public final class RegisterFile implements Eval, DebugWriter {
 	public final List<? extends MutableValue> _memory;
@@ -90,5 +95,48 @@ public final class RegisterFile implements Eval, DebugWriter {
 
 	public static void main(final String... args) {
 
+
+		TestKt.test("all register with value of a number",()->{
+			final var registerFile = new RegisterFile(null);
+			var save = BusKt.toBus(0,32);
+			for (int i = 31; i >= 0; i --)
+			{
+				var temp = MemoryKt.getWord(registerFile._memory,i);
+				BusKt.set(temp,(long)Math.pow(2,i)+BusKt.toInt(save));
+				EvalKt.eval(temp,System.nanoTime());
+				save = BusKt.toBus(BusKt.toInt(temp),32);
+			}
+
+			return registerFile;
+		});
+
+
+		TestKt.test("swap",()->{
+			final var registerFile = new RegisterFile(null);
+			var save = BusKt.bus(32);
+
+
+			BusKt.set(MemoryKt.getWord(registerFile._memory,3),5);
+
+			BusKt.set(MemoryKt.getWord(registerFile._memory,7),9);
+			EvalKt.eval(MemoryKt.getWord(registerFile._memory,3),System.nanoTime());
+			EvalKt.eval(MemoryKt.getWord(registerFile._memory,7),System.nanoTime());
+
+			var A  = MemoryKt.getWord(registerFile._memory,3);
+			var B =  MemoryKt.getWord(registerFile._memory,7);
+			BusKt.set(save,BusKt.toBus(BusKt.toInt(A),32));
+			BusKt.set(A,BusKt.toBus(BusKt.toInt(B),32));
+			BusKt.set(B,BusKt.toBus(BusKt.toInt(save),32));
+			EvalKt.eval(A,System.nanoTime()*2);
+			EvalKt.eval(B,System.nanoTime()*2);
+			return registerFile;
+		});
+
+
+
+
+
 	}
+
+
 }
