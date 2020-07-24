@@ -1,5 +1,6 @@
 package mipsim.pipeline.registers;
 
+import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
@@ -49,12 +50,12 @@ public final class IDEX_PipelineRegister extends PipelineRegister<IDEX_PipelineR
 	//this will be shiftMa for alu the number of bit that would be shifted ,5 bit
 	public final List<? extends MutableValue> shiftMa = BusKt.slice(memory, 125, 130);
 
-	private IDEX_PipelineRegister(final IDEX_PipelineRegister next) {
-		super(130, next);
+	private IDEX_PipelineRegister(final Processor processor, final IDEX_PipelineRegister next) {
+		super(processor, 130, next);
 	}
 
-	public IDEX_PipelineRegister() {
-		this(new IDEX_PipelineRegister(null));
+	public IDEX_PipelineRegister(final Processor processor) {
+		this(processor, new IDEX_PipelineRegister(processor, null));
 	}
 
 	@Override

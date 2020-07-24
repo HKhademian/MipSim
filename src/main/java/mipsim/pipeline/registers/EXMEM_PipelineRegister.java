@@ -1,9 +1,9 @@
 package mipsim.pipeline.registers;
 
+import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
-import sim.base.Value;
 
 import java.util.List;
 
@@ -27,12 +27,12 @@ public final class EXMEM_PipelineRegister extends PipelineRegister<EXMEM_Pipelin
 	public final List<? extends MutableValue> test3 = BusKt.slice(memory, 137, 169);
 	public final List<? extends MutableValue> test4 = BusKt.slice(memory, 169, 201);
 
-	private EXMEM_PipelineRegister(final EXMEM_PipelineRegister next) {
-		super(201, next);
+	private EXMEM_PipelineRegister(final Processor processor, final EXMEM_PipelineRegister next) {
+		super(processor, 201, next);
 	}
 
-	public EXMEM_PipelineRegister() {
-		this(new EXMEM_PipelineRegister(null));
+	public EXMEM_PipelineRegister(final Processor processor) {
+		this(processor, new EXMEM_PipelineRegister(processor, null));
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package mipsim.pipeline.registers;
 
+import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
@@ -13,12 +14,12 @@ public final class IFID_PipelineRegister extends PipelineRegister<IFID_PipelineR
 
 	public final List<? extends MutableValue> instruction = BusKt.slice(memory, 32, 64);
 
-	private IFID_PipelineRegister(final IFID_PipelineRegister next) {
-		super(65, next);
+	private IFID_PipelineRegister(final Processor processor, final IFID_PipelineRegister next) {
+		super(processor, 65, next);
 	}
 
-	public IFID_PipelineRegister() {
-		this(new IFID_PipelineRegister(null));
+	public IFID_PipelineRegister(final Processor processor) {
+		this(processor, new IFID_PipelineRegister(processor, null));
 	}
 
 	@Override

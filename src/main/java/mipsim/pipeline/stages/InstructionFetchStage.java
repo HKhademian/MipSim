@@ -27,11 +27,9 @@ public class InstructionFetchStage extends Stage {
 	@Override
 	public void init() {
 		final var pc = processor.pc;
-
 		final var ifid = processor.ifid;
-
-		final var IFID = processor.ifid_next;
-
+		final var IFID = processor.ifid.next;
+		assert IFID != null;
 
 		// new pc that will show next instruction
 		var pc4 = TinyModules.easyAdder(pc, 4);

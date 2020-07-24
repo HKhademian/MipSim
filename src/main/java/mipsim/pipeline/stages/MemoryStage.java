@@ -11,11 +11,13 @@ public class MemoryStage extends Stage {
 	@Override
 	public void init() {
 		final var exmem = processor.exmem;
-		final var ExMEM = processor.exmem_next;
+		final var ExMEM = processor.exmem.next;
 		final var memwb = processor.memwb;
-		final var MEMWB = processor.memwb_next;
+		final var MEMWB = processor.memwb.next;
 		final var dataMem = processor.dataMemory;
-		final var DATAMEM = processor.dataMemory;_
+		final var DATAMEM = processor.dataMemory;
+
+
 
 		// write next pipeline register
 		BusKt.set(MEMWB.WB, exmem.WB);

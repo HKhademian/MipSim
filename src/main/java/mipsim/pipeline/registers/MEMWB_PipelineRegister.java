@@ -1,5 +1,6 @@
 package mipsim.pipeline.registers;
 
+import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
@@ -27,12 +28,12 @@ public final class MEMWB_PipelineRegister extends PipelineRegister<MEMWB_Pipelin
 	public final List<? extends MutableValue> rdRegister = BusKt.slice(memory, 66, 71);
 
 
-	private MEMWB_PipelineRegister(final MEMWB_PipelineRegister next) {
-		super(71, next);
+	private MEMWB_PipelineRegister(final Processor processor, final MEMWB_PipelineRegister next) {
+		super(processor, 71, next);
 	}
 
-	public MEMWB_PipelineRegister() {
-		this(new MEMWB_PipelineRegister(null));
+	public MEMWB_PipelineRegister(final Processor processor) {
+		this(processor, new MEMWB_PipelineRegister(processor, null));
 	}
 
 	public void writeDebug(@NotNull StringBuffer buffer) {

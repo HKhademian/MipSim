@@ -305,15 +305,11 @@ public class ExecutionStage extends Stage {
 			BusKt.set(IDEX.rsData, 5);
 			BusKt.set(IDEX.rtData, 8);
 
-			idex.eval(time);
+			processor.eval(time);
 
-			exmem.eval(time);
+			processor.eval(time + 1);
 
-
-			// idex.eval(time + 1);
-
-			exmem.eval(time + 1);
-
+			processor.eval(time + 2);
 
 			return exmem;
 		});
