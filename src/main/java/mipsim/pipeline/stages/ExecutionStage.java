@@ -3,11 +3,16 @@ package mipsim.pipeline.stages;
 import mipsim.Processor;
 import mipsim.module.LogicALU;
 import mipsim.module.Multiplexer;
+import mipsim.module.TinyModules;
 import mipsim.units.AluControlUnit;
 import mipsim.units.ForwardingUnit;
+import sim.HelpersKt;
 import sim.base.BusKt;
+import sim.base.ValueKt;
+import sim.complex.MuxKt;
 import sim.test.TestKt;
 
+import static sim.base.GateKt.and;
 import static sim.base.GateKt.or;
 
 
@@ -24,6 +29,7 @@ public class ExecutionStage extends Stage {
 		final var memwb = processor.memwb;
 
 		assert EXMEM != null;
+		final var ifStage = processor.ifStage;
 
 		//alu control unit
 		var aluOp = BusKt.bus(4);
@@ -50,13 +56,26 @@ public class ExecutionStage extends Stage {
 		Multiplexer.aluSrc(idex.aluSrc, forwardingResult2, idex.immediate, resultTwoOfAlu);
 
 		//alu result
+		var zero = ValueKt.mut(false);
 		var aluData = BusKt.bus(32);
-		LogicALU.AluInStage(resultOneOfAlu, resultTwoOfAlu, aluOp, idex.shiftMa, aluData);
+		LogicALU.AluInStage(resultOneOfAlu, resultTwoOfAlu, aluOp, idex.shiftMa, aluData,zero);
 		BusKt.set(EXMEM.test1, resultOneOfAlu);
 		BusKt.set(EXMEM.test2, resultTwoOfAlu);
 		BusKt.set(EXMEM.test3, forwardingEx1);
 		BusKt.set(EXMEM.test4, forwardingExe2);
 		BusKt.set(EXMEM.aluData, aluData);
+
+
+		//set branch
+		var branchAddress = HelpersKt.shift(idex.immediate, 2);
+		var finalBranch = BusKt.bus(32);
+		TinyModules.easyAdder(idex.PC, branchAddress, finalBranch);
+
+		var branch = ValueKt.mut(false);
+		branch.set(and(idex.branch,zero));
+
+		ifStage.branch.set(branch);
+		BusKt.set(ifStage.branchTarget, finalBranch);
 
 
 		//dt register

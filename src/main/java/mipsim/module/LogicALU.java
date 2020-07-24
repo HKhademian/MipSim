@@ -12,7 +12,7 @@ import sim.real.AdderKt;
 import java.util.List;
 
 import static sim.base.GateKt.*;
-
+import static mipsim.module.TinyModules.isEqual;
 //tested by ramin
 public final class LogicALU {
 	public static void thirtyTwoBitOr(
@@ -93,7 +93,8 @@ public final class LogicALU {
 		List<? extends Value> input2,
 		List<? extends Value> aluOp,
 		List<? extends Value> shiftMa,
-		List<? extends MutableValue> result
+		List<? extends MutableValue> result,
+		MutableValue zero
 	) {
 		var resAdd = BusKt.bus(32);
 		var resSub = BusKt.bus(32);
@@ -113,11 +114,13 @@ public final class LogicALU {
 		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
 		setLess(input1, input2, resSetLes);
 
+		zero.set(isEqual(input1,input2));
+
 		Multiplexer.aluResult(aluOp, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
 	}
 
 	public static void main(String[] args) {
-		var input1 = BusKt.toBus(154, 32);
+		var input1 = BusKt.toBus(521, 32);
 		var input2 = BusKt.toBus(520, 32);
 
 		// todo: wrong
@@ -130,12 +133,12 @@ public final class LogicALU {
 		var shiftMa = BusKt.toBus(0, 5);
 
 		var result = BusKt.bus(32);
-
-		AluInStage(input1, input2, aluOp, shiftMa, result);
+		var zero = ValueKt.mut(false);
+		AluInStage(input1, input2, aluOp, shiftMa, result,zero);
 
 		System.out.println(BusKt.toInt(result));
 
 		setLess(input1,input2,result);
-		System.out.println("set less than: "+BusKt.toInt(result));
+		System.out.println("zero "+zero);
 	}
 }

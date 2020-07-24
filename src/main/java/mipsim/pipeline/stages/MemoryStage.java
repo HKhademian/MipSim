@@ -16,7 +16,8 @@ public class MemoryStage extends Stage {
 		final var MEMWB = processor.memwb.next;
 		final var dataMem = processor.dataMemory;
 		final var DATAMEM = processor.dataMemory;
-
+		assert ExMEM != null;
+		assert MEMWB != null;
 
 
 		// write next pipeline register

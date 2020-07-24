@@ -25,7 +25,10 @@ public class InstructionDecodeStage extends Stage {
 		final var ifid = processor.ifid;
 		final var regFile = processor.registerFile;
 		final var REGFILE = regFile;
+		//todo check we need to change ifStage
 		final var ifStage = processor.ifStage;
+		assert IDEX != null;
+
 
 		// 32 bit instruction,pc 32 bit
 		final var instruction = ifid.instruction;
@@ -80,9 +83,7 @@ public class InstructionDecodeStage extends Stage {
 
 		//this will calculator address of jump and branch
 
-		final var branchAddress = HelpersKt.shift(immediateValue, 2);
-		final var finalBranch = BusKt.bus(32);
-		TinyModules.easyAdder(PC, branchAddress, finalBranch);
+
 
 		//todo : some one check this  that would not happen a bug
 		final var jumpAddressExtended = BusKt.bus(32);
@@ -119,8 +120,10 @@ public class InstructionDecodeStage extends Stage {
 		IDEX.memWrite.set(memWriteFinal);
 		IDEX.aluSrc.set(ALUsrc);
 		BusKt.set(IDEX.aluOp, aluOp);
+		IDEX.branch.set(branch);
 
-
+		//set pc for branch
+		BusKt.set(IDEX.PC,PC);
 		//set func
 		BusKt.set(IDEX.function, func);
 
@@ -128,13 +131,14 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set(IDEX.shiftMa, shiftMa);
 
 		//set branch and jump
-		BusKt.set(ifStage.branchTarget, finalBranch);
+
 		//todo check it friends
 		BusKt.set(ifStage.jumpTarget, jumpAddressExtended);
 
 
 		ifStage.jump.set(jump);
-		ifStage.branch.set(branch);
+
+
 
 
 		//set stall

@@ -23,35 +23,38 @@ public final class IDEX_PipelineRegister extends PipelineRegister<IDEX_PipelineR
 	public final MutableValue memWrite = MEM.get(1);
 
 	//EX
-	public final List<? extends MutableValue> EX = BusKt.slice(memory, 4, 8);
+	public final List<? extends MutableValue> EX = BusKt.slice(memory, 4, 9);
 	public final MutableValue aluSrc = EX.get(0);
 	public final MutableValue regDst = EX.get(1);
-	public final List<? extends MutableValue> aluOp = BusKt.slice(EX, 2, 4);//this would be 2 bit
+	public final MutableValue branch = EX.get(2);
+	public final List<? extends MutableValue> aluOp = BusKt.slice(EX, 3, 5);//this would be 2 bit
 	// note --> we used branch jump  in stage decode
 
 
 	//function 6 bit
-	public final List<? extends MutableValue> function = BusKt.slice(memory, 8, 14);
+	public final List<? extends MutableValue> function = BusKt.slice(memory, 9, 15);
 
 
 	//this will be out put of register --> we use mux before of rt with aluSrc to select right value;32 bit
-	public final List<? extends MutableValue> rsData = BusKt.slice(memory, 14, 46);
-	public final List<? extends MutableValue> rtData = BusKt.slice(memory, 46, 78);
+	public final List<? extends MutableValue> rsData = BusKt.slice(memory, 15, 47);
+	public final List<? extends MutableValue> rtData = BusKt.slice(memory, 47, 79);
 
 	//this is shift and sign extend of 16 bit of immediate value,32 bit
-	public final List<? extends MutableValue> immediate = BusKt.slice(memory, 78, 110);
+	public final List<? extends MutableValue> immediate = BusKt.slice(memory, 79, 111);
 
 	//there would be another mux after to chose right destination with rgDst,5 bit
-	public final List<? extends MutableValue> rsRegister = BusKt.slice(memory, 110, 115);
-	public final List<? extends MutableValue> rdRegister = BusKt.slice(memory, 115, 120);
-	public final List<? extends MutableValue> rtRegister = BusKt.slice(memory, 120, 125);
+	public final List<? extends MutableValue> rsRegister = BusKt.slice(memory, 111, 116);
+	public final List<? extends MutableValue> rdRegister = BusKt.slice(memory, 116, 121);
+	public final List<? extends MutableValue> rtRegister = BusKt.slice(memory, 121, 126);
 
 
 	//this will be shiftMa for alu the number of bit that would be shifted ,5 bit
-	public final List<? extends MutableValue> shiftMa = BusKt.slice(memory, 125, 130);
+	public final List<? extends MutableValue> shiftMa = BusKt.slice(memory, 126, 131);
 
-	private IDEX_PipelineRegister(final Processor processor, final IDEX_PipelineRegister next) {
-		super(processor, 130, next);
+	public final List<? extends MutableValue> PC = BusKt.slice(memory, 131, 163);
+
+	private IDEX_PipelineRegister(final Processor processor,final IDEX_PipelineRegister next) {
+		super(processor,130, next);
 	}
 
 	public IDEX_PipelineRegister(final Processor processor) {
@@ -75,6 +78,7 @@ public final class IDEX_PipelineRegister extends PipelineRegister<IDEX_PipelineR
 		var WbBin = BusKt.toInt(this.WB);
 		var memToReg = ValueKt.toInt(this.memToReg);
 		var regDst = ValueKt.toInt(this.regDst);
+		var branch = ValueKt.toInt(this.branch);
 		var regWrite = ValueKt.toInt(this.regWrite);
 		var aluSrc = ValueKt.toInt(this.aluSrc);
 		var memWrite = ValueKt.toInt(this.memWrite);
@@ -100,6 +104,7 @@ public final class IDEX_PipelineRegister extends PipelineRegister<IDEX_PipelineR
 
 			.append(String.format("memToReg: %d\t", memToReg))
 			.append(String.format("regDst: %d\t", regDst))
+			.append(String.format("branch: %d\t", branch))
 			.append(String.format("regWrite: %d\t", regWrite))
 			.append(String.format("memRead: %d\t", memRead))
 			.append(String.format("aluSrc: %d\t", aluSrc))
