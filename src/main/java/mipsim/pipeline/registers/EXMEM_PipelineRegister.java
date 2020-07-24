@@ -7,7 +7,7 @@ import sim.base.Value;
 
 import java.util.List;
 
-public final class EXMEM_PipelineRegister extends PipelineRegister {
+public final class EXMEM_PipelineRegister extends PipelineRegister<EXMEM_PipelineRegister> {
 	public final List<? extends MutableValue> WB = BusKt.slice(memory, 0, 2);
 	public final MutableValue memToReg = WB.get(0);
 	public final MutableValue regWrite = WB.get(1);
@@ -27,8 +27,12 @@ public final class EXMEM_PipelineRegister extends PipelineRegister {
 	public final List<? extends MutableValue> test3 = BusKt.slice(memory, 137, 169);
 	public final List<? extends MutableValue> test4 = BusKt.slice(memory, 169, 201);
 
+	private EXMEM_PipelineRegister(final EXMEM_PipelineRegister next) {
+		super(201, next);
+	}
+
 	public EXMEM_PipelineRegister() {
-		super(201);
+		this(new EXMEM_PipelineRegister());
 	}
 
 	@Override

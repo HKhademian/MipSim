@@ -8,7 +8,7 @@ import java.util.List;
 
 import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
 
-public final class MEMWB_PipelineRegister extends PipelineRegister {
+public final class MEMWB_PipelineRegister extends PipelineRegister<MEMWB_PipelineRegister> {
 
 	//all control flag will be passed to pipeline
 
@@ -27,8 +27,12 @@ public final class MEMWB_PipelineRegister extends PipelineRegister {
 	public final List<? extends MutableValue> rdRegister = BusKt.slice(memory, 66, 71);
 
 
+	private MEMWB_PipelineRegister(final MEMWB_PipelineRegister next) {
+		super(71, next);
+	}
+
 	public MEMWB_PipelineRegister() {
-		super(71);
+		this(new MEMWB_PipelineRegister(null));
 	}
 
 	public void writeDebug(@NotNull StringBuffer buffer) {

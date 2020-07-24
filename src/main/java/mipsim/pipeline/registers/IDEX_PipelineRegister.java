@@ -7,7 +7,7 @@ import sim.base.ValueKt;
 
 import java.util.List;
 
-public final class IDEX_PipelineRegister extends PipelineRegister {
+public final class IDEX_PipelineRegister extends PipelineRegister<IDEX_PipelineRegister> {
 
 	//all control flag will be passed to pipeline
 
@@ -49,11 +49,13 @@ public final class IDEX_PipelineRegister extends PipelineRegister {
 	//this will be shiftMa for alu the number of bit that would be shifted ,5 bit
 	public final List<? extends MutableValue> shiftMa = BusKt.slice(memory, 125, 130);
 
-
-	public IDEX_PipelineRegister() {
-		super(130);
+	private IDEX_PipelineRegister(final IDEX_PipelineRegister next) {
+		super(130, next);
 	}
 
+	public IDEX_PipelineRegister() {
+		this(new IDEX_PipelineRegister());
+	}
 
 	@Override
 	public void writeDebug(@NotNull StringBuffer buffer) {

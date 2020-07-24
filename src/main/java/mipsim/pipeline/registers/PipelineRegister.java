@@ -1,10 +1,10 @@
 package mipsim.pipeline.registers;
 
-import mipsim.units.MemoryKt;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import sim.DebugWriter;
+import sim.base.BusKt;
 import sim.base.Eval;
-import sim.base.EvalKt;
 import sim.base.MutableValue;
 
 import java.util.List;
@@ -12,16 +12,26 @@ import java.util.List;
 /**
  * all pipeline registers use this
  */
-public abstract class PipelineRegister implements Eval, DebugWriter {
+public abstract class PipelineRegister<T extends PipelineRegister<T>> implements Eval, DebugWriter {
+	public final boolean isTemp;
+
+	@Nullable
+	protected final PipelineRegister<T> next;
+
+	@NotNull
 	protected final List<? extends MutableValue> memory;
 
-	protected PipelineRegister(int bitSize) {
-		memory = MemoryKt.createMemory(bitSize);
+	protected PipelineRegister(final int bitSize, @Nullable final PipelineRegister<T> next) {
+		this.memory = BusKt.bus(bitSize);
+		this.next = next;
+		this.isTemp = next == null;
 	}
 
 	@Override
 	public void eval(final long time) {
-		EvalKt.eval(memory, time);
+		if (next != null) {
+			BusKt.set(this.memory, BusKt.constant(next.memory));
+		}
 	}
 
 	@Override
