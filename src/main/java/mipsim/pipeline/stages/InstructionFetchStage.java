@@ -4,8 +4,10 @@ import mipsim.Processor;
 import mipsim.module.Multiplexer;
 import mipsim.module.TinyModules;
 import sim.base.BusKt;
+import sim.base.EvalKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;
+import sim.test.TestKt;
 
 import java.util.List;
 
@@ -50,30 +52,30 @@ public class InstructionFetchStage extends Stage {
 	public static void main(final String... args) {
 // fixme plz
 //
-//		final var processor = new Processor();
-////		BusKt.set(processor.ifid.instruction, BusKt.toBus(2004l, 32));
-////
-////		BusKt.set(processor.pc, BusKt.toBus(8, 32));
-////
-////		processor.pc.eval();
-////		System.out.println(BusKt.toInt(processor.pc));
-////		processor.ifid.eval();
-////		System.out.println(BusKt.toInt(processor.ifid.pc));
-////		System.out.println(BusKt.toInt(processor.ifid.instruction));
+		final var processor = new Processor();
+//		BusKt.set(processor.ifid.instruction, BusKt.toBus(2004l, 32));
 //
+//		BusKt.set(processor.pc, BusKt.toBus(8, 32));
 //
-//		TestKt.testOn(processor.ifid, "test beq", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("beq $s1,$t1,1");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			EvalKt.eval(processor.pc, time);
-//			processor.ifid.eval(time);
-//
-//		});
-//
+//		processor.pc.eval();
+//		System.out.println(BusKt.toInt(processor.pc));
+//		processor.ifid.eval();
+//		System.out.println(BusKt.toInt(processor.ifid.pc));
+//		System.out.println(BusKt.toInt(processor.ifid.instruction));
+
+
+		TestKt.test( "test beq", () -> {
+			final var time = System.currentTimeMillis();
+			var instBin = parseInstructionToBin("beq $s1,$t1,1");
+
+			var inst = BusKt.toBus(instBin);
+			BusKt.set(processor.ifid.instruction, inst);
+			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
+			EvalKt.eval(processor.pc, time);
+			processor.ifid.eval(time);
+			return
+		});
+
 //		TestKt.testOn(processor.ifid, "test set less than", () -> {
 //			final var time = System.currentTimeMillis();
 //
