@@ -15,6 +15,7 @@ public class InstructionFetchStage extends Stage {
 	@Override
 	public void init() {
 		final var idStage = processor.idStage;
+		final var exStage = processor.exStage;
 		final var pc = processor.pc;
 		final var ifid = processor.ifid;
 		final var PC = processor.pc_next;

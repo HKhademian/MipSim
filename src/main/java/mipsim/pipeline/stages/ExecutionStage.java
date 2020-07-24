@@ -20,6 +20,10 @@ import static sim.base.GateKt.or;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class ExecutionStage extends Stage {
+
+	public final MutableValue branchFlag = ValueKt.mut(false);
+	public final List<? extends MutableValue> branchAddress = BusKt.bus(32);
+
 	public ExecutionStage(final Processor processor) {
 		super(processor);
 	}
@@ -67,15 +71,15 @@ public class ExecutionStage extends Stage {
 
 
 		//set branch
-		final var branchAddress = HelpersKt.shift(idex.immediate, 2);
-		final var finalBranch = BusKt.bus(32);
-		TinyModules.easyAdder(idex.PC, branchAddress, finalBranch);
+		final var shiftAddress = HelpersKt.shift(idex.immediate, 2);
 
-		final var branch = ValueKt.mut(false);
-		branch.set(and(idex.branch, zero));
+		TinyModules.easyAdder(idex.PC, shiftAddress, branchAddress);
 
-		ifStage.branch.set(branch);
-		BusKt.set(ifStage.branchTarget, finalBranch);
+
+		branchFlag.set(and(idex.branch, zero));
+
+
+
 
 
 		//dt register

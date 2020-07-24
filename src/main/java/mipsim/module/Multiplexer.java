@@ -8,8 +8,7 @@ import sim.complex.MuxKt;
 import java.util.List;
 
 import static sim.base.BusKt.ZERO_BUS;
-import static sim.complex.MuxKt.mux;
-import static sim.complex.MuxKt.mux4;
+import static sim.complex.MuxKt.*;
 
 public final class Multiplexer {
 	private Multiplexer() {
@@ -102,15 +101,18 @@ public final class Multiplexer {
 	 * (branchFlag jumpFlag) 11 --> because branch and jump will both happen in ID stage this is an absolute bug
 	 */
 	public static void pcChoice(
+		Value stallFlag,
 		Value jumpFlag,
 		Value branchFlag,
-		List<? extends Value> PC,
+		List<? extends Value> pc,
 		List<? extends Value> jump,
 		List<? extends Value> branch,
+		List<? extends Value> pc4,
 		List<? extends MutableValue> PCSelect
 	) {
-		var muxRes = mux4(jumpFlag, branchFlag, PC, jump, branch, PC);
-		BusKt.set(PCSelect, muxRes);//I put pc for 11 of select
+		var muxRes = mux4(jumpFlag, branchFlag, pc4, jump, branch, branch);
+		var muxFinal = mux2(stallFlag,muxRes,pc);
+		BusKt.set(PCSelect, muxFinal);//I put pc for 11 of select
 	}
 
 
