@@ -46,8 +46,7 @@ private class MemBit : Eval, MutableValue {
 	}
 
 	override fun toString() =
-		//"$curr <- $next"
-		(if (curr) "1" else "0").toString()
+		(if (curr) "1" else "0") + " <- [$next]"
 }
 
 /**
