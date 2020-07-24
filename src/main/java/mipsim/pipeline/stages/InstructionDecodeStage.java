@@ -8,7 +8,10 @@ import sim.HelpersKt;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;
+import sim.test.TestKt;
+import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
 
+import java.util.IdentityHashMap;
 import java.util.List;
 
 public class InstructionDecodeStage extends Stage {
@@ -18,7 +21,7 @@ public class InstructionDecodeStage extends Stage {
 
 	@Override
 	public void init() {
-		final var ifStage = processor.ifStage; //todo check we need to change ifStage
+		//final var ifStage = processor.ifStage; //todo check we need to change ifStage
 		//help for coding
 		final var idex = processor.idex;
 		final var ifid = processor.ifid;
@@ -128,166 +131,279 @@ public class InstructionDecodeStage extends Stage {
 		//set branch and jump
 
 		//todo check it friends
-		BusKt.set(ifStage.jumpTarget, jumpAddressExtended);
-
-		ifStage.jump.set(jump);
-
-		//set stall
-		ifStage.stall.set(stallFlag);
+//		BusKt.set(ifStage.jumpTarget, jumpAddressExtended);
+//
+//		ifStage.jump.set(jump);
+//
+//		//set stall
+//		ifStage.stall.set(stallFlag);
 	}
 
 	/**
 	 * test in progress by: mehdi
 	 */
 	public static void main(final String[] args) {
+
+	TestKt.test("test beq", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+
+			var instBin = parseInstructionToBin("beq $s1,$t1,1");
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
+
+
+
+		TestKt.test("test set less than", () -> {
+			var instBin = parseInstructionToBin("slt $s2,$t7,$5");
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
+
+//
+		TestKt.test( "test shiftR", () -> {
+
+			var instBin = parseInstructionToBin("srl $s1,$s3,4");
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+
+		});
+
+//
+		TestKt.test("test shiftL", () -> {
+
+			var instBin = parseInstructionToBin("sll $s1,$t1,6");
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+
+		});
+
+
+		TestKt.test( "test and", () -> {
+			var instBin = parseInstructionToBin("and $s1,$t1,$t2");
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+
+		});
+//
+//
+		TestKt.test( "test or", () -> {
+			final var time = System.currentTimeMillis();
+			var instBin = parseInstructionToBin("or $s1,$t1,$t2");
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
+//
+//
+		TestKt.test( "test sub", () -> {
+			final var time = System.currentTimeMillis();
+
+			var instBin = parseInstructionToBin("sub $s1,$t1,$t2");
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
+//
+//
+		TestKt.test( "test addi", () -> {
+			final var time = System.currentTimeMillis();
+
+			var instBin = parseInstructionToBin("addi $s1,$zero,5");
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
+//
+//
+	TestKt.test( "test add", () -> {
+			final var time = System.currentTimeMillis();
+
+			var instBin = parseInstructionToBin("add $s1,$t1,$t2");
 		final var processor = new Processor();
-		final var idStage = processor.idStage;
-		idStage.init();
+		final var IFID = processor.ifid.next;
+		final var ifid = processor.ifid;
+		final var IDEX = processor.idex.next;
+		final var idex = processor.idex;
 
-		System.out.println("instruction before =" + BusKt.toInt(processor.ifid.instruction));
-		System.out.println("pc before =" + BusKt.toInt(processor.ifid.pc));
+		assert IFID != null;
+		assert IDEX != null;
+		processor.init();
+		var inst = BusKt.toBus(instBin);
 
-// fixme: plz
-//
-//		TestKt.testOn(processor.idex, "test beq", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("beq $s1,$t1,1");
-//			var inst = BusKt.toBus(instBin);
-//			System.out.println(BusKt.toInt(inst));
-//			//todo it must be check again
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.ifid.eval(time);
-//
-//			processor.idex.eval(time);
-//			processor.ifStage.eval(time);
-//			System.out.println("\n branchTarget: " + processor.ifStage.branchTarget);
-//
-//		});
+		BusKt.set((List)IFID.instruction, inst);
+		processor.eval(time);
+		processor.eval(time);
+		return IDEX;
+	});
 //
 //
-//		//todo we have some bug in beq or branch
-//		TestKt.testOn(processor.idex, "test set less than", () -> {
-//			final var time = System.currentTimeMillis();
+		TestKt.test( "test SW", () -> {
+			final var time = System.currentTimeMillis();
+
+			var instBin = parseInstructionToBin("sw $t1,6($t2)");
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
 //
-//			var instBin = parseInstructionToBin("slt $s2,$t7,$5");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.idex.eval(time);
-//		});
-//
-//
-//		TestKt.testOn(processor.idex, "test shiftR", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("srl $s1,$s3,4");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.ifid.eval(time);
-//		});
-//
-//
-//		TestKt.testOn(processor.idex, "test shiftL", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("sll $s1,$t1,6");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.idex.eval(time);
-//		});
-//
-//
-//		TestKt.testOn(processor.idex, "test and", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("and $s1,$t1,$t2");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.idex.eval(time);
-//		});
-//
-//
-//		TestKt.testOn(processor.idex, "test or", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("or $s1,$t1,$t2");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.idex.eval(time);
-//		});
-//
-//
-//		TestKt.testOn(processor.idex, "test sub", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("sub $s1,$t1,$t2");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.idex.eval(time);
-//		});
-//
-//
-//		TestKt.testOn(processor.idex, "test addi", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("addi $s1,$zero,5");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.ifid.eval(time);
-//		});
-//
-//
-//		TestKt.testOn(processor.idex, "test add", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("add $s1,$t1,$t2");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.idex.eval(time);
-//		});
-//
-//
-//		TestKt.testOn(processor.idex, "test SW", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("sw $t1,6($t2)");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.idex.eval(time);
-//		});
-//
-//		TestKt.testOn(processor.idex, "test LW", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("lw $t1,5($t2)");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.idex.eval(time);
-//		});
-//
-//		TestKt.testOn(processor.idex, "Jump ", () -> {
-//			final var time = System.currentTimeMillis();
-//
-//			var instBin = parseInstructionToBin("j 50");
-//			var inst = BusKt.toBus(instBin);
-//			BusKt.set(processor.ifid.instruction, inst);
-//			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-//			processor.ifid.eval(time);
-//			processor.ifStage.eval(time);
-//			processor.idex.eval(time);
-//			System.out.println("jump: " + processor.ifStage.jumpTarget);
-//			//todo why it's jump don't be update
-//		});
+		TestKt.test( "test LW", () -> {
+			final var time = System.currentTimeMillis();
+
+			var instBin = parseInstructionToBin("lw $t1,5($t2)");
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
+
+		TestKt.test( "Jump ", () -> {
+			final var time = System.currentTimeMillis();
+
+			var instBin = parseInstructionToBin("j 50");
+			final var processor = new Processor();
+			final var IFID = processor.ifid.next;
+			final var ifid = processor.ifid;
+			final var IDEX = processor.idex.next;
+			final var idex = processor.idex;
+
+			assert IFID != null;
+			assert IDEX != null;
+			processor.init();
+			var inst = BusKt.toBus(instBin);
+
+			BusKt.set((List)IFID.instruction, inst);
+			processor.eval(time);
+			processor.eval(time);
+			return IDEX;
+		});
 	}
 }
