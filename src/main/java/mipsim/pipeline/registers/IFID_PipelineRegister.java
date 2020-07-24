@@ -4,15 +4,16 @@ import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
 import sim.base.MutableValue;
+import sim.base.Value;
 
 import java.util.List;
 
 import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
 
 public final class IFID_PipelineRegister extends PipelineRegister<IFID_PipelineRegister> {
-	public final List<? extends MutableValue> pc = BusKt.slice(memory, 0, 32);//this will be 32 bit for the branch and jump
+	public final List<? extends Value> pc = BusKt.slice(memory, 0, 32);//this will be 32 bit for the branch and jump
 
-	public final List<? extends MutableValue> instruction = BusKt.slice(memory, 32, 64);
+	public final List<? extends Value> instruction = BusKt.slice(memory, 32, 64);
 
 	private IFID_PipelineRegister(final Processor processor, final IFID_PipelineRegister next) {
 		super(processor, 65, next);

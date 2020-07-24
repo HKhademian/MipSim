@@ -3,29 +3,29 @@ package mipsim.pipeline.registers;
 import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
-import sim.base.MutableValue;
+import sim.base.Value;
 
 import java.util.List;
 
 public final class EXMEM_PipelineRegister extends PipelineRegister<EXMEM_PipelineRegister> {
-	public final List<? extends MutableValue> WB = BusKt.slice(memory, 0, 2);
-	public final MutableValue memToReg = WB.get(0);
-	public final MutableValue regWrite = WB.get(1);
+	public final List<? extends Value> WB = BusKt.slice(memory, 0, 2);
+	public final Value memToReg = WB.get(0);
+	public final Value regWrite = WB.get(1);
 
-	public final List<? extends MutableValue> MEM = BusKt.slice(memory, 2, 4);
-	public final MutableValue memRead = MEM.get(0);
-	public final MutableValue memWrite = MEM.get(1);
+	public final List<? extends Value> MEM = BusKt.slice(memory, 2, 4);
+	public final Value memRead = MEM.get(0);
+	public final Value memWrite = MEM.get(1);
 
-	public final List<? extends MutableValue> aluData = BusKt.slice(memory, 4, 36);
+	public final List<? extends Value> aluData = BusKt.slice(memory, 4, 36);
 
-	public final List<? extends MutableValue> writeMem = BusKt.slice(memory, 36, 68);
+	public final List<? extends Value> writeMem = BusKt.slice(memory, 36, 68);
 
-	public final List<? extends MutableValue> rtRegister = BusKt.slice(memory, 68, 73);
+	public final List<? extends Value> rtRegister = BusKt.slice(memory, 68, 73);
 
-	public final List<? extends MutableValue> test1 = BusKt.slice(memory, 73, 105);
-	public final List<? extends MutableValue> test2 = BusKt.slice(memory, 105, 137);
-	public final List<? extends MutableValue> test3 = BusKt.slice(memory, 137, 169);
-	public final List<? extends MutableValue> test4 = BusKt.slice(memory, 169, 201);
+	public final List<? extends Value> test1 = BusKt.slice(memory, 73, 105);
+	public final List<? extends Value> test2 = BusKt.slice(memory, 105, 137);
+	public final List<? extends Value> test3 = BusKt.slice(memory, 137, 169);
+	public final List<? extends Value> test4 = BusKt.slice(memory, 169, 201);
 
 	private EXMEM_PipelineRegister(final Processor processor, final EXMEM_PipelineRegister next) {
 		super(processor, 201, next);
@@ -37,14 +37,14 @@ public final class EXMEM_PipelineRegister extends PipelineRegister<EXMEM_Pipelin
 
 	@Override
 	public void writeDebug(@NotNull StringBuffer buffer) {
-		var memToReg = this.memToReg.get();
-		var regWrite = this.regWrite.get();
-		var memRead = this.memRead.get();
-		var memWrite = this.memWrite.get();
+		final var memToReg = this.memToReg.get();
+		final var regWrite = this.regWrite.get();
+		final var memRead = this.memRead.get();
+		final var memWrite = this.memWrite.get();
 
-		var aluData = BusKt.toInt(this.aluData);
-		var writeMem = BusKt.toInt(this.writeMem);
-		var rtRegister = BusKt.toInt(this.rtRegister);
+		final var aluData = BusKt.toInt(this.aluData);
+		final var writeMem = BusKt.toInt(this.writeMem);
+		final var rtRegister = BusKt.toInt(this.rtRegister);
 
 		buffer
 			.append("memory to register: ").append(memToReg)
