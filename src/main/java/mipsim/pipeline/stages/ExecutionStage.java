@@ -28,7 +28,7 @@ public class ExecutionStage extends Stage {
 		final var EXMEM = processor.exmem.next;
 		final var memwb = processor.memwb;
 
-		assert EXMEM != null;
+
 		final var ifStage = processor.ifStage;
 
 		//alu control unit
@@ -94,202 +94,242 @@ public class ExecutionStage extends Stage {
 
 
 	public static void main(String[] args) {
-		//..
-//		TestKt.test("and", () -> {
-//			final var time = System.currentTimeMillis();
-//			final var processor = new Processor();
-//			final var idex = processor.idex;
-//			final var exmem = processor.exmem;
-//			final var memwb = processor.memwb;
-//			processor.init();
-//
-//			BusKt.set(idex.aluOp, 2);
-//			BusKt.set(idex.function, 0x24);
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister, 7);
-//			BusKt.set(memwb.rdRegister, 7);
-//			BusKt.set(idex.rsRegister, 5);
-//			BusKt.set(idex.rdRegister, 6);
-//
-//			BusKt.set(idex.rsData, 14);
-//			BusKt.set(idex.rtData, 14);
-//			idex.eval(time);
-//			exmem.eval(time);
-//			idex.eval(time);
-//			exmem.eval(time);
-//			return exmem;
-//		});
-//		//..
-//		TestKt.test("add", () -> {
-//			final var time = System.currentTimeMillis();
-//			final var processor = new Processor();
-//			final var idex = processor.idex;
-//			final var exmem = processor.exmem;
-//			final var memwb = processor.memwb;
-//			processor.init();
-//
-//			BusKt.set(idex.aluOp, 2);
-//			BusKt.set(idex.function, 0x20);
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister, 12);
-//			BusKt.set(memwb.rdRegister, 13);
-//			BusKt.set(idex.rsRegister, 15);
-//			BusKt.set(idex.rdRegister, 16);
-//			BusKt.set(idex.shiftMa, 0);
-//			BusKt.set(idex.rsData, 5);
-//			BusKt.set(idex.rtData, 8);
-//
-//			idex.eval(time);
-//			exmem.eval(time);
-//			return exmem;
-//		});
-//		//..
-//		TestKt.test("sub", () -> {
-//			final var time = System.currentTimeMillis();
-//			final var processor = new Processor();
-//			final var idex = processor.idex;
-//			final var exmem = processor.exmem;
-//			final var memwb = processor.memwb;
-//			processor.init();
-//
-//
-//			BusKt.set(idex.aluOp, 2);
-//			BusKt.set(idex.function, 0x22);
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister, 7);
-//			BusKt.set(memwb.rdRegister, 7);
-//			BusKt.set(idex.rsRegister, 5);
-//			BusKt.set(idex.rdRegister, 6);
-//
-//			BusKt.set(idex.rsData, 20);
-//			BusKt.set(idex.rtData, 14);
-//			idex.eval(time);
-//			exmem.eval(time);
-//			return exmem;
-//		});
-//		//..
-//		TestKt.test("or", () -> {
-//			final var time = System.currentTimeMillis();
-//			final var processor = new Processor();
-//			final var idex = processor.idex;
-//			final var exmem = processor.exmem;
-//			final var memwb = processor.memwb;
-//			processor.init();
-//
-//
-//			BusKt.set(idex.aluOp, 2);
-//			BusKt.set(idex.function, 0x25);
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister, 7);
-//			BusKt.set(memwb.rdRegister, 7);
-//			BusKt.set(idex.rsRegister, 5);
-//			BusKt.set(idex.rdRegister, 6);
-//
-//			BusKt.set(idex.rsData, 16);
-//			BusKt.set(idex.rtData, 14);
-//			idex.eval(time);
-//			exmem.eval(time);
-//			return exmem;
-//		});
-//		//ohh we have some bug
-//		TestKt.test("set on less", () -> {
-//			final var time = System.currentTimeMillis();
-//			final var processor = new Processor();
-//			final var idex = processor.idex;
-//			final var exmem = processor.exmem;
-//			final var memwb = processor.memwb;
-//			processor.init();
-//
-//
-//			BusKt.set(idex.aluOp, 2);
-//			BusKt.set(idex.function, 0x2A);
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister, 7);
-//			BusKt.set(memwb.rdRegister, 7);
-//			BusKt.set(idex.rsRegister, 5);
-//			BusKt.set(idex.rdRegister, 6);
-//
-//			BusKt.set(idex.rsData, 16);
-//			BusKt.set(idex.rtData, 14);
-//			idex.eval(time);
-//			exmem.eval(time);
-//			return exmem;
-//		});
-//		//..
-//		TestKt.test("set on less", () -> {
-//			final var time = System.currentTimeMillis();
-//			final var processor = new Processor();
-//			final var idex = processor.idex;
-//			final var exmem = processor.exmem;
-//			final var memwb = processor.memwb;
-//			processor.init();
-//
-//
-//			BusKt.set(idex.aluOp, 2);
-//			BusKt.set(idex.function, 0x2A);
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister, 7);
-//			BusKt.set(memwb.rdRegister, 7);
-//			BusKt.set(idex.rsRegister, 5);
-//			BusKt.set(idex.rdRegister, 6);
-//
-//			BusKt.set(idex.rsData, 16);
-//			BusKt.set(idex.rtData, 16);
-//			idex.eval(time);
-//			exmem.eval(time);
-//			return exmem;
-//		});
-//		//..
-//		TestKt.test("set on less", () -> {
-//			final var time = System.currentTimeMillis();
-//			final var processor = new Processor();
-//			final var idex = processor.idex;
-//			final var exmem = processor.exmem;
-//			final var memwb = processor.memwb;
-//			processor.init();
-//
-//
-//			BusKt.set(idex.aluOp, 2);
-//			BusKt.set(idex.function, 0x2A);
-//			idex.aluSrc.set(false);
-//			BusKt.set(exmem.rtRegister, 7);
-//			BusKt.set(memwb.rdRegister, 7);
-//			BusKt.set(idex.rsRegister, 5);
-//			BusKt.set(idex.rdRegister, 6);
-//
-//			BusKt.set(idex.rsData, 18);
-//			BusKt.set(idex.rtData, 17);
-//			idex.eval(time);
-//			exmem.eval(time);
-//			return exmem;
-//		});
-//
-//		TestKt.test("load word and store word addi", () -> {
-//			final var time = System.currentTimeMillis();
-//			final var processor = new Processor();
-//			final var idex = processor.idex;
-//			final var exmem = processor.exmem;
-//			final var memwb = processor.memwb;
-//			processor.init();
-//
-//
-//			BusKt.set(idex.aluOp, 0);
-//			BusKt.set(idex.function, 0);
-//			idex.aluSrc.set(true);
-//			BusKt.set(exmem.rtRegister, 7);
-//			BusKt.set(memwb.rdRegister, 7);
-//			BusKt.set(idex.rsRegister, 5);
-//			BusKt.set(idex.rdRegister, 6);
-//
-//			BusKt.set(idex.rsData, 16);
-//			BusKt.set(idex.rtData, 16);
-//			BusKt.set(idex.immediate, 2);
-//			idex.eval(time);
-//			exmem.eval(time);
-//			return exmem;
-//		});
 
+		TestKt.test("and", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+			processor.init();
+
+			BusKt.set(idex.next.aluOp, 2);
+			BusKt.set(idex.next.function, 0x24);
+			idex.next.aluSrc.set(false);
+			BusKt.set(exmem.next.rtRegister, 7);
+			BusKt.set(memwb.next.rdRegister, 7);
+			BusKt.set(idex.next.rsRegister, 5);
+			BusKt.set(idex.next.rdRegister, 6);
+
+			BusKt.set(idex.next.rsData, 14);
+			BusKt.set(idex.next.rtData, 14);
+			processor.eval(time);
+			return exmem;
+		});
 		//..
+		TestKt.test("add", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+			processor.init();
+
+			BusKt.set(idex.next.aluOp, 2);
+			BusKt.set(idex.next.function, 0x20);
+			idex.next.aluSrc.set(false);
+			BusKt.set(exmem.next.rtRegister, 12);
+			BusKt.set(memwb.next.rdRegister, 13);
+			BusKt.set(idex.next.rsRegister, 15);
+			BusKt.set(idex.next.rdRegister, 16);
+			BusKt.set(idex.next.shiftMa, 0);
+			BusKt.set(idex.next.rsData, 5);
+			BusKt.set(idex.next.rtData, 8);
+
+			processor.eval(time);
+			return exmem;
+		});
+		//..
+		TestKt.test("sub", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+			processor.init();
+
+
+			BusKt.set(idex.next.aluOp, 2);
+			BusKt.set(idex.next.function, 0x22);
+			idex.next.aluSrc.set(false);
+			BusKt.set(exmem.next.rtRegister, 7);
+			BusKt.set(memwb.next.rdRegister, 7);
+			BusKt.set(idex.next.rsRegister, 5);
+			BusKt.set(idex.next.rdRegister, 6);
+
+			BusKt.set(idex.next.rsData, 20);
+			BusKt.set(idex.next.rtData, 14);
+			processor.eval(time);
+			return exmem;
+		});
+		//..
+		TestKt.test("or", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+			processor.init();
+
+
+			BusKt.set(idex.next.aluOp, 2);
+			BusKt.set(idex.next.function, 0x25);
+			idex.next.aluSrc.set(false);
+			BusKt.set(exmem.next.rtRegister, 7);
+			BusKt.set(memwb.next.rdRegister, 7);
+			BusKt.set(idex.next.rsRegister, 5);
+			BusKt.set(idex.next.rdRegister, 6);
+
+			BusKt.set(idex.next.rsData, 16);
+			BusKt.set(idex.next.rtData, 14);
+			processor.eval(time);
+			return exmem;
+		});
+		//ohh we have some bug
+		TestKt.test("set on less", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+			processor.init();
+
+
+			BusKt.set(idex.aluOp, 2);
+			BusKt.set(idex.function, 0x2A);
+			idex.aluSrc.set(false);
+			BusKt.set(exmem.next.rtRegister, 7);
+			BusKt.set(memwb.next.rdRegister, 7);
+			BusKt.set(idex.next.rsRegister, 5);
+			BusKt.set(idex.next.rdRegister, 6);
+
+			BusKt.set(idex.next.rsData, 16);
+			BusKt.set(idex.next.rtData, 14);
+			processor.eval(time);
+			return exmem;
+		});
+		//..
+		TestKt.test("set on less", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+			processor.init();
+
+
+			BusKt.set(idex.next.aluOp, 2);
+			BusKt.set(idex.next.function, 0x2A);
+			idex.next.aluSrc.set(false);
+			BusKt.set(exmem.next.rtRegister, 7);
+			BusKt.set(memwb.next.rdRegister, 7);
+			BusKt.set(idex.next.rsRegister, 5);
+			BusKt.set(idex.next.rdRegister, 6);
+
+			BusKt.set(idex.next.rsData, 16);
+			BusKt.set(idex.next.rtData, 16);
+			processor.eval(time);
+			return exmem;
+		});
+		//..
+		TestKt.test("set on less", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+			processor.init();
+
+
+			BusKt.set(idex.next.aluOp, 2);
+			BusKt.set(idex.next.function, 0x2A);
+			idex.next.aluSrc.set(false);
+			BusKt.set(exmem.next.rtRegister, 7);
+			BusKt.set(memwb.next.rdRegister, 7);
+			BusKt.set(idex.next.rsRegister, 5);
+			BusKt.set(idex.next.rdRegister, 6);
+
+			BusKt.set(idex.next.rsData, 18);
+			BusKt.set(idex.next.rtData, 17);
+			processor.eval(time);
+			return exmem;
+		});
+
+		TestKt.test("load word and store word addi", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var idex = processor.idex;
+			final var exmem = processor.exmem;
+			final var memwb = processor.memwb;
+			final var IDEX = processor.idex.next;
+			final var EXMEM = processor.exmem.next;
+			final var MEMWB = processor.memwb.next;
+			assert IDEX != null;
+			assert EXMEM != null;
+			assert MEMWB != null;
+			processor.init();
+
+
+			BusKt.set(idex.next.aluOp, 0);
+			BusKt.set(idex.next.function, 0);
+			idex.next.aluSrc.set(true);
+			BusKt.set(exmem.next.rtRegister, 7);
+			BusKt.set(memwb.next.rdRegister, 7);
+			BusKt.set(idex.next.rsRegister, 5);
+			BusKt.set(idex.next.rdRegister, 6);
+
+			BusKt.set(idex.next.rsData, 16);
+			BusKt.set(idex.next.rtData, 16);
+			BusKt.set(idex.next.immediate, 2);
+			processor.eval(time);
+			return exmem;
+		});
+
+
 
 		TestKt.test("forwarding add", () -> {
 			final var time = System.currentTimeMillis();
