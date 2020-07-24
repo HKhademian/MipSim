@@ -114,8 +114,8 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set((MutableValue) IDEX.memRead, memRead);
 		BusKt.set((MutableValue) IDEX.memWrite, memWriteFinal);
 		BusKt.set((MutableValue) IDEX.aluSrc, ALUsrc);
+		BusKt.set((MutableValue) IDEX.branch, branch);
 		BusKt.set((List) IDEX.aluOp, aluOp);
-		BusKt.set((List) IDEX.branch, branch);
 
 		//set pc for branch
 		BusKt.set((List) IDEX.PC, PC);

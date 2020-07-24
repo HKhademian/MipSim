@@ -8,11 +8,14 @@ import mipsim.pipeline.stages.*;
 import mipsim.units.DataMemory;
 import mipsim.units.InstructionMemory;
 import mipsim.units.RegisterFile;
+import org.jetbrains.annotations.NotNull;
+import sim.DebugKt;
+import sim.DebugWriter;
 import sim.base.*;
 
 import java.util.List;
 
-public class Processor implements Eval {
+public class Processor implements Eval, DebugWriter {
 	private List<? extends MutableValue> currentState = BusKt.bus(0);
 	private List<? extends MutableValue> nextState = BusKt.bus(0);
 
@@ -43,8 +46,8 @@ public class Processor implements Eval {
 		pc = alloc(32, false);
 		pc_next = alloc(32, true);
 
-		instructionMemory = new InstructionMemory(clock, 128);
-		dataMemory = new DataMemory(clock, 128);
+		instructionMemory = new InstructionMemory(clock, 32);
+		dataMemory = new DataMemory(clock, 16);
 		registerFile = new RegisterFile(clock);
 
 		ifStage = new InstructionFetchStage(this);
@@ -80,6 +83,7 @@ public class Processor implements Eval {
 
 	@Override
 	public void eval(final long time) {
+		registerFile.eval(time);
 		BusKt.set(currentState, BusKt.constant(nextState));
 
 //		// we have two `eval`s per clock cycle
@@ -98,6 +102,15 @@ public class Processor implements Eval {
 //		EvalKt.eval(exStage, time);
 //		EvalKt.eval(memStage, time);
 //		EvalKt.eval(wbStage, time);
+	}
+
+	@Override
+	public void writeDebug(@NotNull StringBuffer buffer) {
+		final var pc = BusKt.toInt(this.pc);
+		buffer.append(String.format("pipe pc: %04xH\n", pc));
+		buffer.append(String.format("inst pc: %04xH\n", BusKt.toInt(instructionMemory.pc)));
+		buffer.append(String.format("inst read: %08xH\n", BusKt.toInt(instructionMemory.instruction)));
+		DebugKt.writeTo(registerFile, buffer);
 	}
 
 	public static void main(String[] args) {
