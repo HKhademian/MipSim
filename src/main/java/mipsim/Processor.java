@@ -52,16 +52,6 @@ public class Processor implements Eval {
 		memwb = new MEMWB_PipelineRegister();
 	}
 
-	public void run() {
-		//test
-		var PC = BusKt.bus(32);
-		var ber = BusKt.bus(32);
-		var jp = BusKt.bus(32);
-		var select = BusKt.bus(2);
-
-
-	}
-
 	public void init() {
 		// pc.init()
 		ifStage.init();
