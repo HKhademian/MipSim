@@ -36,47 +36,80 @@ public class WriteBackStage extends Stage {
 	 * test in progress by: mehdi
 	 */
 	public static void main(final String... args) {
-		final var processor = new Processor();
-		final var memwb = processor.memwb;
-		final var regFile = processor.registerFile;
-		final var MEMWB = processor.memwb.next;
-		final var REGFILE = processor.registerFile;
-		assert MEMWB != null;
-		assert REGFILE != null;
 
-		TestKt.testOn(regFile, "init", () -> {
+
+
+
+
+
+
+
+
+
+
+		TestKt.test( "Don't write anything", () -> {
+			final var time = System.currentTimeMillis();
+			final var processor = new Processor();
+			final var memwb = processor.memwb;
+			final var regFile = processor.registerFile;
+			final var MEMWB = processor.memwb.next;
+			final var REGFILE = processor.registerFile;
+			assert MEMWB != null;
+			assert REGFILE != null;
+			processor.init();
 			BusKt.set((List) MEMWB.aluData, 4005);
 			BusKt.set((List) MEMWB.memoryData, 12044);
 			BusKt.set((List) MEMWB.rdRegister, 10); //write in $s9
-			processor.wbStage.init();
-		});
-
-		TestKt.testOn(regFile, "Don't write anything", () -> {
-			final var time = System.currentTimeMillis();
-
 			((MutableValue) MEMWB.regWrite).set(false);
 			((MutableValue) MEMWB.memToReg).set(false);
-			memwb.eval(time);
-			regFile.eval(time);
+
+			processor.eval(time);
+			processor.eval(time+1);
+			return  regFile;
 		});
 
-		TestKt.testOn(regFile, "write something from memory", () -> {
+		TestKt.test( "write something from memory", () -> {
 			final var time = System.currentTimeMillis();
-
+			final var processor = new Processor();
+			final var memwb = processor.memwb;
+			final var regFile = processor.registerFile;
+			final var MEMWB = processor.memwb.next;
+			final var REGFILE = processor.registerFile;
+			assert MEMWB != null;
+			assert REGFILE != null;
+			processor.init();
+			BusKt.set((List) MEMWB.aluData, 4005);
+			BusKt.set((List) MEMWB.memoryData, 12044);
+			BusKt.set((List) MEMWB.rdRegister, 10); //write in $s9
 			((MutableValue) MEMWB.regWrite).set(true);
 			((MutableValue) MEMWB.memToReg).set(true);
-			memwb.eval(time);
-			regFile.eval(time);
+
+			processor.eval(time);
+			processor.eval(time+1);
+			return  regFile;
 		});
 
-		TestKt.testOn(regFile, "write something from aluResult", () -> {
+		TestKt.test( "write alu data", () -> {
 			final var time = System.currentTimeMillis();
-
+			final var processor = new Processor();
+			final var memwb = processor.memwb;
+			final var regFile = processor.registerFile;
+			final var MEMWB = processor.memwb.next;
+			final var REGFILE = processor.registerFile;
+			assert MEMWB != null;
+			assert REGFILE != null;
+			processor.init();
+			BusKt.set((List) MEMWB.aluData, 4005);
+			BusKt.set((List) MEMWB.memoryData, 12044);
+			BusKt.set((List) MEMWB.rdRegister, 10); //write in $s9
 			((MutableValue) MEMWB.regWrite).set(true);
 			((MutableValue) MEMWB.memToReg).set(false);
-			memwb.eval(time);
-			regFile.eval(time);
+
+			processor.eval(time);
+			processor.eval(time+1);
+			return  regFile;
 		});
+
 
 	}
 }
