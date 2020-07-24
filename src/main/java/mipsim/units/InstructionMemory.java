@@ -28,10 +28,11 @@ public final class InstructionMemory implements Eval, DebugWriter {
 	 * by multiplexer, but it's too complicated (but possible with mux)
 	 */
 	public void eval(final long time) {
-		var pc = BusKt.constant(this.pc); // cache PC value, can ignore (comment) this section
-		var wordIndex = BusKt.toInt(pc);
-		var newInst = MemoryKt.getWord(_memory, wordIndex);
-		BusKt.set(instructionBus, newInst);
+		final var pc = BusKt.constant(this.pc); // cache PC value, can ignore (comment) this section
+		final var wordIndex = BusKt.toInt(pc) >> 2;
+		final var newInst = MemoryKt.getWord(_memory, wordIndex);
+		final var constInst = BusKt.constant(newInst);
+		BusKt.set(instructionBus, constInst);
 	}
 
 	@Override

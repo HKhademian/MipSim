@@ -84,6 +84,8 @@ public class Processor implements Eval, DebugWriter {
 	@Override
 	public void eval(final long time) {
 		registerFile.eval(time);
+		instructionMemory.eval(time);
+		dataMemory.eval(time);
 		BusKt.set(currentState, BusKt.constant(nextState));
 
 //		// we have two `eval`s per clock cycle
@@ -107,7 +109,7 @@ public class Processor implements Eval, DebugWriter {
 	@Override
 	public void writeDebug(@NotNull StringBuffer buffer) {
 		final var pc = BusKt.toInt(this.pc);
-		buffer.append(String.format("pipe pc: %04xH\n", pc));
+		buffer.append(String.format("pipe pc: %04xH\t", pc));
 		buffer.append(String.format("inst pc: %04xH\n", BusKt.toInt(instructionMemory.pc)));
 		buffer.append(String.format("inst read: %08xH\n", BusKt.toInt(instructionMemory.instruction)));
 		DebugKt.writeTo(registerFile, buffer);
