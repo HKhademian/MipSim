@@ -20,13 +20,16 @@ public class InstructionDecodeStage extends Stage {
 	@Override
 	public void init() {
 		//help for coding
-		final var ID_EX = processor.idex;
-		final var IF_ID = processor.ifid;
-		final var REG_FILE = processor.registerFile;
-		final var IF_STAGE = processor.ifStage;
+		final var idex = processor.idex;
+		final var IDEX = idex.idex_next;
+		final var ifid = processor.ifid;
+		final var regFile = processor.registerFile;
+		final var REGFILE = regFile.registerFile_next;
+		final var ifStage = processor.ifStage;
+
 		// 32 bit instruction,pc 32 bit
-		final var instruction = IF_ID.instruction;
-		final var PC = IF_ID.pc;
+		final var instruction = ifid.instruction;
+		final var PC = ifid.pc;
 
 		//split the instruction
 		final var opcode = BusKt.slice(instruction, 26, 32);
@@ -56,8 +59,8 @@ public class InstructionDecodeStage extends Stage {
 			, memRead, memWrite, branch, jump, aluOp);
 
 		//this will show if hazard would happen and we need stall
-		final var ID_EX_memRead = ID_EX.memRead;
-		final var ID_EX_registerRt = BusKt.slice(ID_EX.rtRegister, 0, 5);
+		final var ID_EX_memRead = idex.memRead;
+		final var ID_EX_registerRt = BusKt.slice(idex.rtRegister, 0, 5);
 		//rt ==  IF_ID_registerRt;
 		//rs ==  IF_ID_registerRs;
 		final var stallFlag = ValueKt.mut(false);
@@ -81,61 +84,61 @@ public class InstructionDecodeStage extends Stage {
 		final var finalBranch = BusKt.bus(32);
 		TinyModules.easyAdder(PC, branchAddress, finalBranch);
 
-
+		//todo : some one check this  that would not happen a bug
 		final var jumpAddressExtended = BusKt.bus(32);
-		BusKt.set(jumpAddressExtended.subList(0, 26), jumpAddress);//extend jump
+		BusKt.set(BusKt.slice(jumpAddressExtended,0,26), jumpAddress);//extend jump
 		BusKt.set(jumpAddressExtended, HelpersKt.shift(jumpAddressExtended, 2));//shifted
-		BusKt.set(jumpAddressExtended.subList(28, 32), PC.subList(28, 32));//set the 4 most significant bit
+		BusKt.set(BusKt.slice(jumpAddressExtended,28,32), PC.subList(28, 32));//set the 4 most significant bit
 
 
 		//we will read data from register
-		BusKt.set(REG_FILE.readReg1, rs);
-		BusKt.set(rsData, REG_FILE.readData1);
+		BusKt.set(REGFILE.readReg1, rs);
+		BusKt.set(rsData, regFile.readData1);
 
-		BusKt.set(REG_FILE.readReg2, rt);
-		BusKt.set(rtData, REG_FILE.readData2);
+		BusKt.set(REGFILE.readReg2, rt);
+		BusKt.set(rtData, regFile.readData2);
 
 
 		//here we set the pipeline
 
 
 		//set register value
-		BusKt.set(ID_EX.rsData, rsData);
-		BusKt.set(ID_EX.rtData, rtData);
-		BusKt.set(ID_EX.immediate, immediate);
+		BusKt.set(IDEX.rsData, rsData);
+		BusKt.set(IDEX.rtData, rtData);
+		BusKt.set(IDEX.immediate, immediate);
 
 		//set register number
-		BusKt.set(ID_EX.rtRegister, rt);
-		BusKt.set(ID_EX.rdRegister, rd);
-		BusKt.set(ID_EX.rsRegister, rs);
+		BusKt.set(IDEX.rtRegister, rt);
+		BusKt.set(IDEX.rdRegister, rd);
+		BusKt.set(IDEX.rsRegister, rs);
 		//setFlag
-		ID_EX.regDst.set(regDst);
-		ID_EX.memToReg.set(memToReg);
-		ID_EX.regWrite.set(regWriteFinal);
-		ID_EX.memRead.set(memRead);
-		ID_EX.memWrite.set(memWriteFinal);
-		ID_EX.aluSrc.set(ALUsrc);
-		BusKt.set(ID_EX.aluOp, aluOp);
+		IDEX.regDst.set(regDst);
+		IDEX.memToReg.set(memToReg);
+		IDEX.regWrite.set(regWriteFinal);
+		IDEX.memRead.set(memRead);
+		IDEX.memWrite.set(memWriteFinal);
+		IDEX.aluSrc.set(ALUsrc);
+		BusKt.set(IDEX.aluOp, aluOp);
 
 
 		//set func
-		BusKt.set(ID_EX.function, func);
+		BusKt.set(IDEX.function, func);
 
 		//set shift
-		BusKt.set(ID_EX.shiftMa, shiftMa);
+		BusKt.set(IDEX.shiftMa, shiftMa);
 
 		//set branch and jump
-		BusKt.set(IF_STAGE.branchTarget.subList(0, 26), finalBranch);
+		BusKt.set(ifStage.branchTarget, finalBranch);
 		//todo check it friends
-		BusKt.set(IF_STAGE.jumpTarget, jumpAddressExtended);
+		BusKt.set(ifStage.jumpTarget, jumpAddressExtended);
 
 
-		IF_STAGE.jump.set(jump);
-		IF_STAGE.branch.set(branch);
+		ifStage.jump.set(jump);
+		ifStage.branch.set(branch);
 
 
 		//set stall
-		IF_STAGE.stall.set(stallFlag);
+		ifStage.stall.set(stallFlag);
 
 
 	}
