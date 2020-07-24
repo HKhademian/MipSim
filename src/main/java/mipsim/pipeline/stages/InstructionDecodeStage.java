@@ -2,6 +2,7 @@ package mipsim.pipeline.stages;
 
 import mipsim.Processor;
 import mipsim.module.Multiplexer;
+import mipsim.pipeline.registers.PipelineRegister;
 import mipsim.units.ControlUnit;
 import mipsim.units.HazardDetectionUnit;
 import sim.HelpersKt;
