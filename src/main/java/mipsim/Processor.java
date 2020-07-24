@@ -109,9 +109,11 @@ public class Processor implements Eval, DebugWriter {
 	@Override
 	public void writeDebug(@NotNull StringBuffer buffer) {
 		final var pc = BusKt.toInt(this.pc);
-		buffer.append(String.format("pipe pc: %04xH\t", pc));
-		buffer.append(String.format("inst pc: %04xH\n", BusKt.toInt(instructionMemory.pc)));
-		buffer.append(String.format("inst read: %08xH\n", BusKt.toInt(instructionMemory.instruction)));
+		buffer.append(String.format("pc pipe: %04xH\t", pc));
+		buffer.append(String.format("pc inst: %04xH\t", BusKt.toInt(instructionMemory.pc)));
+		buffer.append(String.format("pc ifid: %04xH\n", BusKt.toInt(ifid.pc)));
+		buffer.append(String.format("inst read: %08xH\t", BusKt.toInt(instructionMemory.instruction)));
+		buffer.append(String.format("inst ifid: %08xH\n", BusKt.toInt(ifid.instruction)));
 		DebugKt.writeTo(registerFile, buffer);
 	}
 
