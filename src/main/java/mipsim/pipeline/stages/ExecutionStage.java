@@ -20,7 +20,7 @@ public class ExecutionStage extends Stage {
 	public void init() {
 		final var idex = processor.idex;
 		final var exmem = processor.exmem;
-		final var EXMEM = exmem.exmem_next;
+		final var EXMEM = exmem.next;
 		final var memwb = processor.memwb;
 
 		//alu control unit
@@ -34,7 +34,7 @@ public class ExecutionStage extends Stage {
 		ForwardingUnit.forwardingUnitEXHazard(exmem.regWrite, exmem.rtRegister, idex.rsRegister, forwardingEx1);
 		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite, memwb.rdRegister, idex.rsRegister, exmem.regWrite, exmem.rtRegister, forwardingMem1);
 		Multiplexer.aluInput(or(forwardingEx1, forwardingMem1), idex.rsData, exmem.aluData, memwb.memoryData, resultOneOfAlu);
-		BusKt.set(EXMEM.test2,or(forwardingEx1, forwardingMem1));
+		BusKt.set(EXMEM.test2, or(forwardingEx1, forwardingMem1));
 
 		//second alu  src
 		var forwardingResult2 = BusKt.bus(32);
@@ -50,11 +50,11 @@ public class ExecutionStage extends Stage {
 		//alu result
 		var aluData = BusKt.bus(32);
 		LogicALU.AluInStage(resultOneOfAlu, resultTwoOfAlu, aluOp, idex.shiftMa, aluData);
-		BusKt.set(EXMEM.test1,resultOneOfAlu);
-		BusKt.set(EXMEM.test2,resultTwoOfAlu);
-		BusKt.set(EXMEM.test3,aluData);
-		BusKt.set(EXMEM.test4,aluData);
-		BusKt.set(EXMEM.tmpAluData, aluData);
+		BusKt.set(EXMEM.test1, resultOneOfAlu);
+		BusKt.set(EXMEM.test2, resultTwoOfAlu);
+		BusKt.set(EXMEM.test3, aluData);
+		BusKt.set(EXMEM.test4, aluData);
+		BusKt.set(EXMEM.aluData, aluData);
 
 
 		//dt register
@@ -277,7 +277,6 @@ public class ExecutionStage extends Stage {
 			final var exmem = processor.exmem;
 			final var memwb = processor.memwb;
 			processor.init();
-
 
 
 			BusKt.set(idex.aluOp, 2);

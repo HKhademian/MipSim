@@ -54,7 +54,7 @@ public final class IDEX_PipelineRegister extends PipelineRegister<IDEX_PipelineR
 	}
 
 	public IDEX_PipelineRegister() {
-		this(new IDEX_PipelineRegister());
+		this(new IDEX_PipelineRegister(null));
 	}
 
 	@Override

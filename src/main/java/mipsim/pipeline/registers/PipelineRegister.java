@@ -16,12 +16,12 @@ public abstract class PipelineRegister<T extends PipelineRegister<T>> implements
 	public final boolean isTemp;
 
 	@Nullable
-	protected final PipelineRegister<T> next;
+	public final T next;
 
 	@NotNull
 	protected final List<? extends MutableValue> memory;
 
-	protected PipelineRegister(final int bitSize, @Nullable final PipelineRegister<T> next) {
+	protected PipelineRegister(final int bitSize, @Nullable final T next) {
 		this.memory = BusKt.bus(bitSize);
 		this.next = next;
 		this.isTemp = next == null;
