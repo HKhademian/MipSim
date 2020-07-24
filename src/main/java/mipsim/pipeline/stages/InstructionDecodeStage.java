@@ -21,10 +21,10 @@ public class InstructionDecodeStage extends Stage {
 	public void init() {
 		//help for coding
 		final var idex = processor.idex;
-		final var IDEX = idex.idex_next;
+		final var IDEX = idex.next;
 		final var ifid = processor.ifid;
 		final var regFile = processor.registerFile;
-		final var REGFILE = regFile.registerFile_next;
+		final var REGFILE = regFile;
 		final var ifStage = processor.ifStage;
 
 		// 32 bit instruction,pc 32 bit
@@ -86,9 +86,9 @@ public class InstructionDecodeStage extends Stage {
 
 		//todo : some one check this  that would not happen a bug
 		final var jumpAddressExtended = BusKt.bus(32);
-		BusKt.set(BusKt.slice(jumpAddressExtended,0,26), jumpAddress);//extend jump
+		BusKt.set(BusKt.slice(jumpAddressExtended, 0, 26), jumpAddress);//extend jump
 		BusKt.set(jumpAddressExtended, HelpersKt.shift(jumpAddressExtended, 2));//shifted
-		BusKt.set(BusKt.slice(jumpAddressExtended,28,32), PC.subList(28, 32));//set the 4 most significant bit
+		BusKt.set(BusKt.slice(jumpAddressExtended, 28, 32), PC.subList(28, 32));//set the 4 most significant bit
 
 
 		//we will read data from register
