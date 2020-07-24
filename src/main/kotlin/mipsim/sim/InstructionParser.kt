@@ -8,7 +8,7 @@ import sim.base.MutableValue
 import java.io.File
 
 /** supported commands with this parser */
-private val commands = listOf(
+val commands = listOf(
 	Command("SLL", Format.R, "0", "0", shamt = true),
 	Command("SRL", Format.R, "0", "2", shamt = true),
 	Command("ADD", Format.R, "0", "20"),
@@ -28,7 +28,7 @@ private val commands = listOf(
 )
 
 /** registerName to real number equivalent */
-private val registers: Map<String, Int> = mutableMapOf<String, Int>().also { regs ->
+val registers: Map<String, Int> = mutableMapOf<String, Int>().also { regs ->
 	// special keys
 	regs["\$zero"] = 0
 	regs["\$at"] = 1
@@ -47,12 +47,12 @@ private val registers: Map<String, Int> = mutableMapOf<String, Int>().also { reg
 }
 
 /** parse string to register number */
-private fun parseRegister(text: String): Int {
+fun parseRegister(text: String): Int {
 	return registers[text.toLowerCase()] ?: throw RuntimeException("Register '$text' is not valid.")
 }
 
 /** parse string to eq constant limited to `size` number of bits */
-private fun parseConstant(text: String, size: Int): Int {
+fun parseConstant(text: String, size: Int): Int {
 	val value = text.toIntOrNull() ?: throw RuntimeException("Constant '$text' is not valid.")
 	return value and ((1 shl size) - 1)
 }
@@ -68,7 +68,7 @@ private fun splitAddress(rsAndOffset: String): List<String> {
 }
 
 
-private enum class Format {
+enum class Format {
 	R {
 		override fun parseInstructionToBin(command: Command, inst: List<String>): Int {
 			if (inst.size != 4) throw Exception("Bad R-format instruction")
@@ -185,7 +185,7 @@ private enum class Format {
 	abstract fun parseBinToInstruction(command: Command, binary: Int): String
 }
 
-private class Command(val name: String, val format: Format, val opCode: Int, val func: Int = 0, val shamt: Boolean = false) {
+class Command(val name: String, val format: Format, val opCode: Int, val func: Int = 0, val shamt: Boolean = false) {
 	constructor(name: String, format: Format, opCode: String = "", func: String = "", shamt: Boolean = false) :
 		this(name, format, opCode.toInt(16), func.toIntOrNull(16) ?: 0, shamt)
 }
