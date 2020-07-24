@@ -2,9 +2,9 @@ package mipsim.sim
 
 import mipsim.Processor
 import mipsim.units.InstructionMemory
-import mipsim.units.Memory
 import mipsim.units.reset
 import mipsim.units.writeWords
+import sim.base.MutableValue
 import java.io.File
 
 /** supported commands with this parser */
@@ -191,11 +191,8 @@ private class Command(val name: String, val format: Format, val opCode: Int, val
 }
 
 /** load instructions from a file and write to memory */
-fun Memory.loadInstructions(instructionFile: File) =
+fun List<MutableValue>.loadInstructions(instructionFile: File) =
 	loadInstructions(instructionFile.readLines())
-
-//fun Simulator.loadInstructions(instructions: String) =
-//	loadInstructions(instructions.lines())
 
 /** parse instructions and write to instructionMemory */
 fun Processor.loadInstructions(instructionLines: List<String>) =
@@ -206,7 +203,7 @@ fun InstructionMemory.loadInstructions(instructionLines: List<String>) =
 	_memory.loadInstructions(instructionLines)
 
 /** parse instructions and write to instructionMemory */
-fun Memory.loadInstructions(instructionLines: List<String>) {
+fun List<MutableValue>.loadInstructions(instructionLines: List<String>) {
 	val instructions = instructionLines.map { parseInstructionToBin(it) }.map { listOf(it, 0, 0) }.flatten() // convert to int
 	val memory = this
 	val time = System.currentTimeMillis()

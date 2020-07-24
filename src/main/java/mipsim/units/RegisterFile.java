@@ -9,19 +9,17 @@ import java.util.List;
 import static sim.base.BusKt.ZERO_BUS;
 
 public final class RegisterFile implements Eval, DebugWriter {
-	public final Memory _memory;
-	private final List<MutableValue> readData1Bus = BusKt.bus(32);
-	private final List<MutableValue> readData2Bus = BusKt.bus(32);
+	public final List<? extends MutableValue> _memory;
+	private final List<? extends MutableValue> readData1Bus = BusKt.bus(32);
+	private final List<? extends MutableValue> readData2Bus = BusKt.bus(32);
 
-	public final List<MutableValue> readReg1 = BusKt.bus(5);
-	public final List<MutableValue> readReg2 = BusKt.bus(5);
-	public final List<MutableValue> writeReg = BusKt.bus(5);
-	public final List<MutableValue> writeData = BusKt.bus(32);
+	public final List<? extends MutableValue> readReg1 = BusKt.bus(5);
+	public final List<? extends MutableValue> readReg2 = BusKt.bus(5);
+	public final List<? extends MutableValue> writeReg = BusKt.bus(5);
+	public final List<? extends MutableValue> writeData = BusKt.bus(32);
 	public final MutableValue regWrite = ValueKt.mut(false);
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public final List<Value> readData1 = (List) readData1Bus;
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public final List<Value> readData2 = (List) readData2Bus;
+	public final List<? extends Value> readData1 = readData1Bus;
+	public final List<? extends Value> readData2 = readData2Bus;
 
 	public RegisterFile(final Value clock) {
 		_memory = MemoryKt.createWords(32);
@@ -33,8 +31,7 @@ public final class RegisterFile implements Eval, DebugWriter {
 		BusKt.set(writeData, ZERO_BUS);
 
 		// set $0 non-writable
-		// noinspection unchecked,rawtypes
-		var regZero = (List<MemBit>) (List) MemoryKt.getWord(_memory, 0);
+		var regZero = MemoryKt.getWord(_memory, 0);
 		MemoryKt.setMemWrite(regZero, false);
 	}
 

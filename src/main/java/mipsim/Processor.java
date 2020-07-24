@@ -5,12 +5,17 @@ import mipsim.pipeline.registers.IDEX_PipelineRegister;
 import mipsim.pipeline.registers.IFID_PipelineRegister;
 import mipsim.pipeline.registers.MEMWB_PipelineRegister;
 import mipsim.pipeline.stages.*;
-import mipsim.units.*;
+import mipsim.units.DataMemory;
+import mipsim.units.InstructionMemory;
+import mipsim.units.MemoryKt;
+import mipsim.units.RegisterFile;
 import sim.base.*;
+
+import java.util.List;
 
 public class Processor implements Eval {
 	public final Value clock;
-	public final Memory pc;
+	public final List<? extends MutableValue> pc;
 	public final InstructionMemory instructionMemory;
 	public final DataMemory dataMemory;
 	public final RegisterFile registerFile;
@@ -81,16 +86,16 @@ public class Processor implements Eval {
 		// TODO: we must investigate to realize  which one is correct
 		// plz do not remove this comment, to keep eye one the results
 
-		pc.eval(time);
-		ifStage.eval(time);
-		ifid.eval(time);
-		idStage.eval(time);
-		idex.eval(time);
-		exStage.eval(time);
-		exmem.eval(time);
-		memStage.eval(time);
-		memwb.eval(time);
-		wbStage.eval(time);
+		EvalKt.eval(pc, time);
+		EvalKt.eval(ifStage, time);
+		EvalKt.eval(ifid, time);
+		EvalKt.eval(idStage, time);
+		EvalKt.eval(idex, time);
+		EvalKt.eval(exStage, time);
+		EvalKt.eval(exmem, time);
+		EvalKt.eval(memStage, time);
+		EvalKt.eval(memwb, time);
+		EvalKt.eval(wbStage, time);
 	}
 
 	public static void main(String[] args) {

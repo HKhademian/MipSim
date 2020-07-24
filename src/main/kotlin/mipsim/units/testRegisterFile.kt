@@ -2,6 +2,7 @@ package mipsim.units
 
 import mipsim.Processor
 import sim.base.bus
+import sim.base.eval
 import sim.base.set
 import sim.test.test
 

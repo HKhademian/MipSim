@@ -1,6 +1,7 @@
 package mipsim;
 
 import mipsim.sim.InstructionParserKt;
+import sim.base.EvalKt;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Main {
 		testOn(null, "clock 1", () -> {
 			final var time = System.nanoTime();
 
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifStage.eval(time);
 			processor.ifid.eval(time);
 		});

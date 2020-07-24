@@ -4,6 +4,7 @@ import mipsim.Processor;
 import mipsim.module.Multiplexer;
 import mipsim.module.TinyModules;
 import sim.base.BusKt;
+import sim.base.EvalKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;
 import sim.test.TestKt;
@@ -69,7 +70,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 
 		});
@@ -81,7 +82,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -101,7 +102,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -112,7 +113,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -124,7 +125,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -136,7 +137,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -148,7 +149,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -160,7 +161,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -172,7 +173,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -183,7 +184,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 
@@ -194,7 +195,7 @@ public class InstructionFetchStage extends Stage {
 			var inst = BusKt.toBus(instBin);
 			BusKt.set(processor.ifid.instruction, inst);
 			BusKt.set(processor.ifid.pc, BusKt.toBus(20, 32));
-			processor.pc.eval(time);
+			EvalKt.eval(processor.pc, time);
 			processor.ifid.eval(time);
 		});
 

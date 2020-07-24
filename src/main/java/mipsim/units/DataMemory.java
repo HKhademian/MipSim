@@ -9,14 +9,14 @@ import static sim.base.BusKt.ZERO_BUS;
 import static sim.real.MuxKt.mux2;
 
 public final class DataMemory implements Eval {
-	public final Memory _memory;
-	private final List<MutableValue> readDataBus = BusKt.bus(32);
+	public final List<? extends MutableValue> _memory;
+	private final List<? extends MutableValue> readDataBus = BusKt.bus(32);
 
-	public final List<MutableValue> address = BusKt.bus(5);
-	public final List<MutableValue> writeData = BusKt.bus(32);
+	public final List<? extends MutableValue> address = BusKt.bus(5);
+	public final List<? extends MutableValue> writeData = BusKt.bus(32);
 	public final MutableValue memWrite = ValueKt.mut(false);
 	public final MutableValue memRead = ValueKt.mut(false);
-	public final List<Value> readData = (List) readDataBus;
+	public final List<? extends Value> readData = readDataBus;
 
 	public DataMemory(final Value clock, int wordSize) {
 		_memory = MemoryKt.createWords(wordSize);

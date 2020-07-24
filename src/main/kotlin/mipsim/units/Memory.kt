@@ -15,7 +15,7 @@ const val WORD_SIZE = 4 * BYTE_SIZE
  *  to store a value on next clock edge, just use `MemBit`.`set`
  *  and use `MemBit`.`get` to read from it.
  */
-class MemBit : Eval, MutableValue {
+private class MemBit : Eval, MutableValue {
 	override val title = "MemBit"
 
 	/** whether to write input to output or nuo */
@@ -47,7 +47,7 @@ class MemBit : Eval, MutableValue {
 
 	override fun toString() =
 		//"$curr <- $next"
-		curr.toString()
+		(if (curr) "1" else "0").toString()
 }
 
 /**
@@ -55,7 +55,7 @@ class MemBit : Eval, MutableValue {
  *  InstructionMemory and DataMemory is not a simple memory,
  *  but they use memory to stores data
  */
-class Memory private constructor(private val bits: List<MemBit>) : Eval, List<MemBit> by bits, DebugWriter {
+private class Memory private constructor(private val bits: List<MemBit>) : Eval, List<MemBit> by bits, DebugWriter {
 	internal constructor(bitCount: Int) : this((0 until bitCount).map { MemBit() })
 
 	override fun eval(time: Long) =
@@ -81,7 +81,7 @@ inline val List<Value>.wordCount: Int get() = this.bitCount / WORD_SIZE
 fun <T : Value> List<T>.getByte(i: Int): List<T> = this.subList(BYTE_SIZE * i, BYTE_SIZE * i + BYTE_SIZE)
 fun <T : Value> List<T>.getWord(i: Int): List<T> = this.subList(WORD_SIZE * i, WORD_SIZE * i + WORD_SIZE)
 
-fun createMemory(n: Int = 1) = Memory(n)
+fun createMemory(n: Int = 1): List<MutableValue> = Memory(n)
 fun createBytes(n: Int = 1) = createMemory(n * BYTE_SIZE)
 fun createWords(n: Int = 1) = createMemory(n * WORD_SIZE)
 
@@ -114,11 +114,11 @@ fun List<MutableValue>.writeWords(words: List<Int>, time: Long?) =
 		}
 
 /** set all `memBit`s memWrite flags to given value */
-fun List<MemBit>.setMemWrite(memWrite: Value) =
-	this.forEach { it.memWrite.set(memWrite) }
+fun List<MutableValue>.setMemWrite(memWrite: Value) =
+	this.forEach { (it as MemBit).memWrite.set(memWrite) }
 
 /** set all `memBit`s memWrite flags to given value */
-fun List<MemBit>.setMemWrite(memWrite: Boolean) =
+fun List<MutableValue>.setMemWrite(memWrite: Boolean) =
 	this.setMemWrite(memWrite.toValue())
 
 internal fun main() {
