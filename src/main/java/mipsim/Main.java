@@ -12,17 +12,17 @@ public class Main {
 	static List<String> instructions = Arrays.asList(
 		"addi $1, $0, 15",
 		"addi $2, $0, 10",
-		"add $3, $t1, $t2",
+		"add $3, $1, $2",
 		"or $4, $0, $3"
 	);
 
 	public static void main(String[] args) {
 		final var processor = new Processor();
 		processor.init();
-		InstructionParserKt.loadInstructions(processor, instructions);
+		InstructionParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		for (var i = 0; i < 10; i++) {
+		for (var i = 0; i < 20; i++) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});

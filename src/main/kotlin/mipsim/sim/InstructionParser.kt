@@ -191,20 +191,20 @@ class Command(val name: String, val format: Format, val opCode: Int, val func: I
 }
 
 /** load instructions from a file and write to memory */
-fun List<MutableValue>.loadInstructions(instructionFile: File) =
-	loadInstructions(instructionFile.readLines())
+fun List<MutableValue>.loadInstructions(instructionFile: File, nop: Boolean = false) =
+	loadInstructions(instructionFile.readLines(), nop)
 
 /** parse instructions and write to instructionMemory */
-fun Processor.loadInstructions(instructionLines: List<String>) =
-	instructionMemory.loadInstructions(instructionLines)
+fun Processor.loadInstructions(instructionLines: List<String>, nop: Boolean = false) =
+	instructionMemory.loadInstructions(instructionLines, nop)
 
 /** parse instructions and write to instructionMemory */
-fun InstructionMemory.loadInstructions(instructionLines: List<String>) =
-	_memory.loadInstructions(instructionLines)
+fun InstructionMemory.loadInstructions(instructionLines: List<String>, nop: Boolean = false) =
+	_memory.loadInstructions(instructionLines, nop)
 
 /** parse instructions and write to instructionMemory */
-fun List<MutableValue>.loadInstructions(instructionLines: List<String>) {
-	val instructions = instructionLines.map { parseInstructionToBin(it) }.map { listOf(it/*, 0, 0*/) }.flatten() // convert to int
+fun List<MutableValue>.loadInstructions(instructionLines: List<String>, nop: Boolean = false) {
+	val instructions = instructionLines.map { parseInstructionToBin(it) }.let { l -> if (!nop) l else l.map { listOf(it, 0, 0) }.flatten() } // convert to int
 	val memory = this
 	val time = System.currentTimeMillis()
 	memory.reset()
