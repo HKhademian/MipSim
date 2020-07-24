@@ -7,7 +7,6 @@ import mipsim.pipeline.registers.MEMWB_PipelineRegister;
 import mipsim.pipeline.stages.*;
 import mipsim.units.DataMemory;
 import mipsim.units.InstructionMemory;
-import mipsim.units.MemoryKt;
 import mipsim.units.RegisterFile;
 import sim.base.*;
 
@@ -17,8 +16,8 @@ public class Processor implements Eval {
 	private List<? extends MutableValue> currentState = BusKt.bus(0);
 	private List<? extends MutableValue> nextState = BusKt.bus(0);
 
+
 	public final Value clock;
-	public final List<? extends MutableValue> pc;
 	public final InstructionMemory instructionMemory;
 	public final DataMemory dataMemory;
 	public final RegisterFile registerFile;
@@ -30,7 +29,9 @@ public class Processor implements Eval {
 	public final MemoryStage memStage;
 	public final WriteBackStage wbStage;
 
-	//register pipelines
+	// pipeline state
+	public final List<? extends Value> pc;
+	public final List<? extends MutableValue> pc_next;
 	public final IFID_PipelineRegister ifid;
 	public final IDEX_PipelineRegister idex;
 	public final EXMEM_PipelineRegister exmem;
@@ -38,7 +39,10 @@ public class Processor implements Eval {
 
 	public Processor() {
 		clock = ValueKt.mut(false);
-		pc = MemoryKt.createWords(1);
+
+		pc = alloc(32, false);
+		pc_next = alloc(32, true);
+
 		instructionMemory = new InstructionMemory(clock, 128);
 		dataMemory = new DataMemory(clock, 128);
 		registerFile = new RegisterFile(clock);
@@ -89,15 +93,10 @@ public class Processor implements Eval {
 //		// TODO: we must investigate to realize  which one is correct
 //		// plz do not remove this comment, to keep eye one the results
 //
-//		EvalKt.eval(pc, time);
 //		EvalKt.eval(ifStage, time);
-//		EvalKt.eval(ifid, time);
 //		EvalKt.eval(idStage, time);
-//		EvalKt.eval(idex, time);
 //		EvalKt.eval(exStage, time);
-//		EvalKt.eval(exmem, time);
 //		EvalKt.eval(memStage, time);
-//		EvalKt.eval(memwb, time);
 //		EvalKt.eval(wbStage, time);
 	}
 
