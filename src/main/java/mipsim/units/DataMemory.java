@@ -25,12 +25,6 @@ public final class DataMemory implements Eval {
 
 	@Override
 	public void eval(final long time) {
-		EvalKt.eval(address, time);
-		EvalKt.eval(writeData, time);
-		EvalKt.eval(memWrite, time);
-		EvalKt.eval(memRead, time);
-		EvalKt.eval(readData, time);
-
 		// cache values, can ignore (comment) this section
 		var address = BusKt.constant(this.address);
 		var writeData = BusKt.constant(this.writeData);

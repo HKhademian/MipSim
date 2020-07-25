@@ -7,7 +7,7 @@ import sim.tool.TestKt;
 
 import java.util.List;
 
-import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
+import static mipsim.sim.ParserKt.parseBinToInstruction;
 
 /**
  * TODO: create multiplexer flavor

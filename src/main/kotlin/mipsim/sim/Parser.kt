@@ -7,6 +7,9 @@ import mipsim.units.writeWords
 import sim.base.MutableValue
 import java.io.File
 
+const val NOP = "sll $0, $0, 0"
+val NOP_BIN = parseInstructionToBin(NOP)
+
 /** supported commands with this parser */
 val commands = listOf(
 	Command("SLL", Format.R, "0", "0", shamt = true),
@@ -70,7 +73,7 @@ private fun splitAddress(rsAndOffset: String): List<String> {
 
 enum class Format {
 	R {
-		override fun parseInstructionToBin(command: Command, inst: List<String>): Int {
+		override fun parseInstructionToBin(command: Command, inst: List<String>, nop: Boolean): List<Int> {
 			if (inst.size != 4) throw Exception("Bad R-format instruction")
 			var res = (command.opCode shl 26)
 			res = res or command.func
@@ -84,7 +87,7 @@ enum class Format {
 				(parseRegister(inst[3]) shl 16) // rt
 			}
 
-			return res
+			return listOf(res)
 		}
 
 		override fun parseBinToInstruction(command: Command, binary: Int): String {
@@ -107,8 +110,9 @@ enum class Format {
 	},
 
 	I {
-		override fun parseInstructionToBin(command: Command, inst: List<String>): Int {
+		override fun parseInstructionToBin(command: Command, inst: List<String>, nop: Boolean): List<Int> {
 			var res = (command.opCode shl 26)
+			val branch = inst[0] in listOf("BEQ", "BNE")
 
 			if (inst[0] in listOf("LW", "SW", "LUI")) {
 				if (inst.size != 3) throw RuntimeException("Bad I-format instruction: " + inst[0])
@@ -122,14 +126,17 @@ enum class Format {
 				}
 			} else {
 				if (inst.size != 4) throw RuntimeException("Bad I-format instruction: " + inst[0])
-				val rs = if (inst[0] in listOf("BEQ", "BNE")) 1 else 2
+				val rs = if (branch) 1 else 2
 				val rt = (rs - 1 xor 1) + 1
 				res = res or (parseRegister(inst[rs]) shl 21) //rs
 				res = res or (parseRegister(inst[rt]) shl 16) //rt
 				res = res or parseConstant(inst[3], 16)   //address or constant
 			}
 
-			return res
+			return if (nop && branch)
+				listOf(res, NOP_BIN, NOP_BIN)
+			else
+				listOf(res)
 		}
 
 		override fun parseBinToInstruction(command: Command, binary: Int): String {
@@ -164,12 +171,15 @@ enum class Format {
 	},
 
 	J {
-		override fun parseInstructionToBin(command: Command, inst: List<String>): Int {
+		override fun parseInstructionToBin(command: Command, inst: List<String>, nop: Boolean): List<Int> {
 			if (inst.size != 2) throw RuntimeException("Bad J-format instruction")
 			var res = (command.opCode shl 26)
 			res = res or parseConstant(inst[1], 26) //address
 
-			return res
+			return if (nop)
+				listOf(res, NOP_BIN, NOP_BIN)
+			else
+				listOf(res)
 		}
 
 		override fun parseBinToInstruction(command: Command, binary: Int): String {
@@ -179,7 +189,7 @@ enum class Format {
 	};
 
 	/** parse a command to int eq */
-	abstract fun parseInstructionToBin(command: Command, inst: List<String>): Int
+	abstract fun parseInstructionToBin(command: Command, inst: List<String>, nop: Boolean): List<Int>
 
 	/** parse a binary number to eq. instruction */
 	abstract fun parseBinToInstruction(command: Command, binary: Int): String
@@ -204,19 +214,22 @@ fun InstructionMemory.loadInstructions(instructionLines: List<String>, nop: Bool
 
 /** parse instructions and write to instructionMemory */
 fun List<MutableValue>.loadInstructions(instructionLines: List<String>, nop: Boolean = false) {
-	val instructions = instructionLines.map { parseInstructionToBin(it) }.let { l -> if (!nop) l else l.map { listOf(it, 0, 0) }.flatten() } // convert to int
+	val instructions = instructionLines.map { parseInstructionToBin(it, nop) }.flatten() // convert to int
 	val memory = this
 	val time = System.currentTimeMillis()
 	memory.reset()
 	memory.writeWords(instructions, time)
 }
 
-fun parseInstructionToBin(instruction: String): Int {
+
+fun parseInstructionToBin(instruction: String): Int = parseInstructionToBin(instruction, false).first()
+
+fun parseInstructionToBin(instruction: String, nop: Boolean): List<Int> {
 	val inst = instruction.toUpperCase().trim().split(",", " ").filterNot { it.isBlank() }
 	val commandStr = inst[0]
 	val command = commands.find { it.name.toUpperCase() == commandStr } ?: throw RuntimeException("unsupported command")
 	val format = command.format
-	return format.parseInstructionToBin(command, inst)
+	return format.parseInstructionToBin(command, inst, nop)
 }
 
 fun parseBinToInstruction(binaryInstruction: Int): String {

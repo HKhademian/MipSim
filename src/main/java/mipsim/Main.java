@@ -1,6 +1,6 @@
 package mipsim;
 
-import mipsim.sim.InstructionParserKt;
+import mipsim.sim.ParserKt;
 import sim.tool.DebugKt;
 
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class Main {
 	public static void main(String[] args) {
 		final var processor = new Processor();
 		processor.init();
-		InstructionParserKt.loadInstructions(processor, instructions, false);
+		ParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
 		for (var i = 0; i < 20; i++) {

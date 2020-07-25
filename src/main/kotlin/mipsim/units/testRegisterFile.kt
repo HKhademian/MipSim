@@ -4,7 +4,7 @@ import mipsim.Processor
 import sim.base.bus
 import sim.base.eval
 import sim.base.set
-import sim.tool.test
+import sim.tool.testOn
 
 internal fun main() {
 	val sim = Processor()
@@ -16,16 +16,12 @@ internal fun main() {
 	val writeReg = bus(5)
 	val writeData = bus(32)
 
-	test("init") {
-		val time = System.currentTimeMillis()
+	testOn(regFile, "init") {
 		(0 until 32).forEach { mem.getWord(it).set(it * 3 + 1) }
-		mem.eval(time)
-		regFile
+		mem.eval(System.nanoTime())
 	}
 
-	test("noEvalTest") {
-		//val time = System.currentTimeMillis()
-
+	testOn(regFile, "noEvalTest") {
 		writeData.set(74)
 		readReg.set(1)
 		writeReg.set(1)
@@ -33,51 +29,34 @@ internal fun main() {
 		regFile.readReg1.set(readReg)
 		regFile.writeReg.set(writeReg)
 		regFile.writeData.set(writeData)
-
-		regFile
 	}
 
-	test("afterEval") {
+	testOn(regFile, "afterEval") {
 		val time = System.currentTimeMillis()
 		regFile.eval(time)
-
-		regFile
 	}
 
-	test("setRegWrite") {
-		val time = System.currentTimeMillis()
+	testOn(regFile, "setRegWrite") {
 		regFile.regWrite.set(true)
-		regFile.eval(time)
-
-		regFile
+		regFile.eval(System.nanoTime())
 	}
 
-	test("noRegWrite") {
-		val time = System.currentTimeMillis()
+	testOn(regFile, "noRegWrite") {
 		writeData.set(12)
 		regFile.regWrite.set(false)
-		regFile.eval(time)
-
-		regFile
+		regFile.eval(System.nanoTime())
 	}
 
-	test("readOtherReg") {
-		val time = System.currentTimeMillis()
+	testOn(regFile, "readOtherReg") {
 		readReg.set(3)
-		regFile.eval(time)
-
-		regFile
+		regFile.eval(System.nanoTime())
 	}
 
-
-	test("writeOnZero") {
-		val time = System.currentTimeMillis()
+	testOn(regFile, "writeOnZero") {
 		regFile.regWrite.set(true)
 		regFile.writeReg.set(0)
 		regFile.writeData.set(74)
-		regFile.eval(time)
-
-		regFile
+		regFile.eval(System.nanoTime())
 	}
 
 }

@@ -5,7 +5,7 @@ import mipsim.pipeline.registers.IDEX_PipelineRegister;
 import mipsim.pipeline.registers.IFID_PipelineRegister;
 import mipsim.pipeline.registers.MEMWB_PipelineRegister;
 import mipsim.pipeline.stages.*;
-import mipsim.sim.InstructionParserKt;
+import mipsim.sim.ParserKt;
 import mipsim.units.DataMemory;
 import mipsim.units.InstructionMemory;
 import mipsim.units.RegisterFile;
@@ -87,7 +87,13 @@ public class Processor implements Eval, DebugWriter {
 		registerFile.eval(time);
 		instructionMemory.eval(time);
 		dataMemory.eval(time);
-		BusKt.set(currentState, BusKt.constant(nextState));
+
+		final var snapshotState = BusKt.constant(nextState);
+		if (idStage.stallFlag.get()) {
+			BusKt.set(currentState, BusKt.constant(nextState));
+		} else {
+			BusKt.set(currentState, snapshotState);
+		}
 
 //		// we have two `eval`s per clock cycle
 //		((MutableValue) clock).toggle();
@@ -111,7 +117,7 @@ public class Processor implements Eval, DebugWriter {
 	public void writeDebug(@NotNull StringBuffer buffer) {
 		final var pc = BusKt.toInt(this.pc);
 		final var instBin = BusKt.toInt(instructionMemory.instruction);
-		final var instStr = InstructionParserKt.parseBinToInstruction(instBin);
+		final var instStr = ParserKt.parseBinToInstruction(instBin);
 
 		buffer.append(String.format("pc pipe: %04xH\t", pc));
 		buffer.append(String.format("pc inst: %04xH\t", BusKt.toInt(instructionMemory.pc)));

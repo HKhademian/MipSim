@@ -3,12 +3,11 @@ package mipsim.pipeline.registers;
 import mipsim.Processor;
 import org.jetbrains.annotations.NotNull;
 import sim.base.BusKt;
-import sim.base.MutableValue;
 import sim.base.Value;
 
 import java.util.List;
 
-import static mipsim.sim.InstructionParserKt.parseBinToInstruction;
+import static mipsim.sim.ParserKt.parseBinToInstruction;
 
 public final class IFID_PipelineRegister extends PipelineRegister<IFID_PipelineRegister> {
 	public final List<? extends Value> pc = BusKt.slice(memory, 0, 32);//this will be 32 bit for the branch and jump

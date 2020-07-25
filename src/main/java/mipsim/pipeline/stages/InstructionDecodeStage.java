@@ -11,7 +11,7 @@ import sim.tool.TestKt;
 
 import java.util.List;
 
-import static mipsim.sim.InstructionParserKt.parseInstructionToBin;
+import static mipsim.sim.ParserKt.parseInstructionToBin;
 
 public class InstructionDecodeStage extends Stage {
 	public InstructionDecodeStage(final Processor processor) {
