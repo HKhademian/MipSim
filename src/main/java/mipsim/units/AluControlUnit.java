@@ -3,7 +3,11 @@ package mipsim.units;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.base.Value;
+import sim.base.ValueKt;
+import sim.complex.DecoderKt;
 
+
+import java.util.Base64;
 import java.util.List;
 
 import static sim.base.GateKt.*;
@@ -55,16 +59,48 @@ public final class AluControlUnit {
 		aluControlInput.get(3).set(false);
 	}
 
+	public static void aluControlUnitPlus(
+		List<? extends Value> aluOp,
+		List<? extends Value> func,
+		MutableValue jumpReg,
+		List<? extends MutableValue> aluControlInput){
+		var aluOpDecode = DecoderKt.dec(Value.ONE,aluOp);//00 add 01 and 10 r type 11 or
+		var funcDecoder = DecoderKt.dec(Value.ONE,func);
+
+		aluControlInput.get(0).set(or(aluOpDecode.get(3)
+			,and(aluOpDecode.get(2)
+				,or(funcDecoder.get(37),funcDecoder.get(38),funcDecoder.get(2),funcDecoder.get(42)))));//ori,or xor slr slt
+
+		aluControlInput.get(1).set(or(aluOpDecode.get(0)
+			,and(aluOpDecode.get(2)
+				,or(funcDecoder.get(32),funcDecoder.get(34),funcDecoder.get(38),funcDecoder.get(42)))));//addi,add  sub xor slt
+
+		aluControlInput.get(2).set(and(aluOpDecode.get(2)
+			,or(funcDecoder.get(0),funcDecoder.get(2),funcDecoder.get(34),funcDecoder.get(42))));//sll slr sub slt
+
+		aluControlInput.get(3).set(funcDecoder.get(39));//nor
+
+		jumpReg.set(funcDecoder.get(8));
+
+		/**
+		 * and 0000 ,or 0001,add 0010,
+		 * xor 0011 ,sll 0100,slr 0101
+		 * sub 0110 ,slt 0111,nor 1000
+		 */
+
+	}
+
 
 	/**
 	 * test in progress by: @ramin
 	 */
 	public static void main(String[] args) {
-		var aluO = BusKt.toBus(1, 2);
-		var func = BusKt.toBus(1, 6);
+		var aluO = BusKt.toBus(2, 2);
+		var func = BusKt.toBus(8, 6);
 		var aluControlInput = BusKt.bus(4);
-		AluControlUnit.aluControlUnit(aluO, func, aluControlInput);
-		System.out.println(aluControlInput.get(3) + "" + aluControlInput.get(2) + "" + aluControlInput.get(1) + "" + aluControlInput.get(0));
+		var jumpReg = ValueKt.mut(false);
+		AluControlUnit.aluControlUnitPlus(aluO, func,jumpReg, aluControlInput);
+		System.out.println(aluControlInput.get(3) + "" + aluControlInput.get(2) + "" + aluControlInput.get(1) + "" + aluControlInput.get(0)+"        jmp "+jumpReg);
 
 	}
 }
