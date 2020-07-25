@@ -3,35 +3,20 @@ package mipsim;
 import mipsim.sim.ParserKt;
 import sim.tool.DebugKt;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.File;
+import java.util.Scanner;
 
-import static mipsim.sim.ParserKt.NOP;
 import static sim.tool.TestKt.testOn;
 
 public class Main {
-	static List<String> instructions = Arrays.asList(
-		NOP,
-		"addi $1, $0, 74",
-		"addi $t0, $0, 4",
-		NOP,
-		NOP,
-		"sll $12, $1, 30",
-		"sw $1, 0($t0)",
-		NOP,
-		NOP,
-		NOP,
-		"lw  $6, 0($t0)",
-		"or   $4, $0, $3",
-		NOP,
-		"addi $8, $6, 15",
-		NOP
-	);
-
 	public static void main(String[] args) {
+		System.out.println("Please enter mips inst file to run:");
+		final var fileName = new Scanner(System.in).nextLine();
+		final var file = new File(fileName);
+
 		final var processor = new Processor();
 		processor.init();
-		ParserKt.loadInstructions(processor, instructions, false);
+		ParserKt.loadInstructions(processor.instructionMemory._memory, file, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
 		for (var i = 0; i < 20; i++) {
