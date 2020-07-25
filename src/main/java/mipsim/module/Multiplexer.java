@@ -1,13 +1,12 @@
 package mipsim.module;
 
-import sim.base.BusKt;
-import sim.base.MutableValue;
-import sim.base.Value;
+import sim.base.*;
 import sim.complex.MuxKt;
 
 import java.util.List;
 
 import static sim.base.BusKt.ZERO_BUS;
+import static sim.base.GateKt.*;
 import static sim.complex.MuxKt.*;
 
 public final class Multiplexer {
@@ -54,19 +53,54 @@ public final class Multiplexer {
 
 
 	/**
-	 * we use this mux after pipeline ID/EX
-	 * important --> before adding data hazard it happen in next stage but now it happen before of it
-	 * aluSrc is only one bit but other have 32 bit
-	 * aluSrc 0 --> result = register
-	 * aluSrc 1 --> result = immediate
+	 * we use this mux for select jump or branch in ex
+	 * if its Jr so we must accept rs so jump flag must be one
+	 * and we set flag of jump either it is branch or jump
+	 * remember that you must add pc +4 + immediate to create branch never forgot that
+	 *
 	 */
-	public static void readDataFor2Selector(
-		Value aluSrc,
-		List<? extends Value> register,
+	public static void selectBranchPlus(
+		Value branch,
+		Value zero,
+		Value bne,
+		Value jump,
+		List<? extends Value> branchAddress,
+		List<? extends Value> rs,
+		MutableValue flagJump,
+		List<? extends MutableValue> result
+	) {
+
+		flagJump.set(or(jump,and(branch,xor(bne,zero))));
+		BusKt.set(result,MuxKt.mux2(jump,branchAddress,MathKt.shift(rs,2)));
+
+	}
+
+	/**
+	 * this function added for sui lui
+	 * for 16 bit shift if flag is on
+	 *
+	 *
+	 *
+	 */
+
+	public static void shiftImi16(
+		Value shift16,
 		List<? extends Value> immediate,
 		List<? extends MutableValue> result
 	) {
-		BusKt.set(result, mux2(aluSrc, register, immediate));
+
+		BusKt.set(result,MuxKt.mux2(shift16,immediate, MathKt.shift(immediate, 16)));
+
+	}
+
+	public static void changeR_type(
+		Value jump,
+		Value write,
+		MutableValue result
+	) {
+
+		result.set(MuxKt.mux2(jump,write,Value.ZERO));
+
 	}
 
 
@@ -125,8 +159,8 @@ public final class Multiplexer {
 	 */
 	public static void writeBackValue(
 		Value memToReg,
-		List<? extends Value> memoryResult,
 		List<? extends Value> aluResult,
+		List<? extends Value> memoryResult,
 		List<? extends MutableValue> register
 	) {
 		BusKt.set(register, mux2(memToReg, aluResult, memoryResult));
@@ -140,12 +174,12 @@ public final class Multiplexer {
 	 * aluControlInput = 0000 --> result = and
 	 * aluControlInput = 0001 --> result = or
 	 * aluControlInput = 0010 --> result = add
-	 * aluControlInput = 0011 --> there is not such thing in aluControlInput
+	 * aluControlInput = 0011 --> xor
 	 * aluControlInput = 0100 --> result = shift left
 	 * aluControlInput = 0101 --> result = shift right
 	 * aluControlInput = 0110 --> result = sub
 	 * aluControlInput = 0111 --> result = set on less than
-	 * there  is not any aluControlInput which it's most significant is 1
+	 * aluControlInput = 1000 --> result = nor
 	 */
 	public static void aluResult(
 		List<? extends Value> aluControlInput,
@@ -164,6 +198,25 @@ public final class Multiplexer {
 		BusKt.set(result, muxResult);
 	}
 
+	public static void aluResultPlus(
+		List<? extends Value> aluControlInput,
+		List<? extends Value> add,
+		List<? extends Value> sub,
+		List<? extends Value> and,
+		List<? extends Value> or,
+		List<? extends Value> nor,
+		List<? extends Value> xor,
+		List<? extends Value> setOnLessThan,
+		List<? extends Value> shiftLogicalLeft,
+		List<? extends Value> shiftLogicalRight,
+		List<? extends MutableValue> result
+	) {
+		var muxResult = mux(aluControlInput, and, or, add, xor, shiftLogicalLeft, shiftLogicalRight, sub, setOnLessThan,
+			nor, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS, ZERO_BUS);
+
+		BusKt.set(result, muxResult);
+	}
+
 	public static void aluSrc(
 		Value aluSrc,
 		List<? extends Value> rtReg,
@@ -172,4 +225,29 @@ public final class Multiplexer {
 	) {
 		BusKt.set(res, MuxKt.mux2(aluSrc, rtReg, imm));
 	}
+
+	public static void main(String[] args) {
+
+//		var branch = ValueKt.mut(true);
+//		var zero = ValueKt.mut(false);
+//		var bne = ValueKt.mut(true);
+//		var jump = ValueKt.mut(false);
+//		var branchAddress = BusKt.toBus(100,32);
+//		var jumpAddress = BusKt.toBus(200,32);
+//		var flagJump = ValueKt.mut(false);;
+//		var result = BusKt.bus(32);
+//
+//
+//		selectBranchPlus(branch,zero,bne,jump,branchAddress,jumpAddress,flagJump,result);
+//		System.out.println(BusKt.toInt(result)+"          "+flagJump);
+
+//		var immediate = BusKt.toBus(1,32);
+//		var shift16 = ValueKt.mut(false);
+//		var save = BusKt.bus(32);
+//		Multiplexer.shiftImi16(shift16,immediate,save);
+//		System.out.println(BusKt.toInt(save));
+
+	}
+
+
 }

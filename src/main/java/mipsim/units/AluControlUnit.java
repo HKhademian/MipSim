@@ -78,9 +78,9 @@ public final class AluControlUnit {
 		aluControlInput.get(2).set(and(aluOpDecode.get(2)
 			,or(funcDecoder.get(0),funcDecoder.get(2),funcDecoder.get(34),funcDecoder.get(42))));//sll slr sub slt
 
-		aluControlInput.get(3).set(funcDecoder.get(39));//nor
+		aluControlInput.get(3).set(and(aluOpDecode.get(2),funcDecoder.get(39)));//nor
 
-		jumpReg.set(funcDecoder.get(8));
+		jumpReg.set(and(aluOpDecode.get(2),funcDecoder.get(8)));
 
 		/**
 		 * and 0000 ,or 0001,add 0010,

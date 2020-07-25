@@ -119,22 +119,65 @@ public final class LogicALU {
 		Multiplexer.aluResult(aluOp, resAdd, resSub, resAnd, resOr, resSetLes, resShift_L, resShift_R, result);
 	}
 
+
+
+
+
+
+
+
+	public static void AluInStagePlus(
+		List<? extends Value> input1,
+		List<? extends Value> input2,
+		List<? extends Value> aluOp,
+		List<? extends Value> shiftMa,
+		List<? extends MutableValue> result,
+		MutableValue zero
+	) {
+		var resAdd = BusKt.bus(32);
+		var resSub = BusKt.bus(32);
+		var resOr = BusKt.bus(32);
+		var resXor = BusKt.bus(32);
+		var resAnd = BusKt.bus(32);
+		var resNor = BusKt.bus(32);
+		var resShift_R = BusKt.bus(32);
+		var resShift_L = BusKt.bus(32);
+		var resSetLes = BusKt.bus(32);
+
+		AddSub(input1, input2, ValueKt.constant(false), resAdd, null);
+		AddSub(input1, input2, ValueKt.constant(true), resSub, null);
+		thirtyTwoBitOr(input1, input2, resOr);
+		thirtyTwoBitAnd(input1, input2, resAnd);
+		thirtyTwoBitNor(input1, input2, resNor);
+		thirtyTwoBitXor(input1, input2, resXor);
+		ShiftHelper.thirtyTwoBitShifterRight(input1, shiftMa, resShift_R);
+		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
+		setLess(input1, input2, resSetLes);
+
+		zero.set(isEqual(input1,input2));
+
+		Multiplexer.aluResultPlus(aluOp, resAdd, resSub, resAnd, resOr,resNor,resXor, resSetLes, resShift_L, resShift_R, result);
+	}
+
+
+
+
 	public static void main(String[] args) {
-		var input1 = BusKt.toBus(521, 32);
-		var input2 = BusKt.toBus(520, 32);
+		var input1 = BusKt.toBus(1, 32);
+		var input2 = BusKt.toBus(2, 32);
 
 		// todo: wrong
 		var aluOp = BusKt.bus(4);
 		aluOp.get(0).set(false);
-		aluOp.get(1).set(true);
+		aluOp.get(1).set(false);
 		aluOp.get(2).set(false);
-		aluOp.get(3).set(false);
+		aluOp.get(3).set(true);
 
-		var shiftMa = BusKt.toBus(0, 5);
+		var shiftMa = BusKt.toBus(2, 5);
 
 		var result = BusKt.bus(32);
 		var zero = ValueKt.mut(false);
-		AluInStage(input1, input2, aluOp, shiftMa, result,zero);
+		AluInStagePlus(input1, input2, aluOp, shiftMa, result,zero);
 
 		System.out.println(BusKt.toInt(result));
 

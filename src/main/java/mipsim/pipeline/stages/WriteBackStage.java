@@ -1,6 +1,7 @@
 package mipsim.pipeline.stages;
 
 import mipsim.Processor;
+import mipsim.module.Multiplexer;
 import sim.base.BusKt;
 import sim.base.MutableValue;
 import sim.complex.MuxKt;
@@ -26,7 +27,9 @@ public class WriteBackStage extends Stage {
 		assert REGFILE != null;
 
 		//choice data memory and alu --> to write data
-		BusKt.set(writeData, MuxKt.mux2(MEMWB.memToReg, memwb.aluData, memwb.memoryData));
+		Multiplexer.writeBackValue(MEMWB.memToReg,memwb.aluData,memwb.memoryData,writeData);
+		//change it to above mux
+		//BusKt.set(writeData, MuxKt.mux2(MEMWB.memToReg, memwb.aluData, memwb.memoryData));
 
 		// todo: check regFile
 		REGFILE.regWrite.set(memwb.regWrite);
