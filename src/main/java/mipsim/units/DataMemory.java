@@ -4,9 +4,7 @@ import sim.base.*;
 
 import java.util.List;
 
-import static sim.base.BusKt.EMPTY_BUS;
 import static sim.base.BusKt.ZERO_BUS;
-import static sim.complex.MuxKt.mux2;
 
 public final class DataMemory implements Eval {
 	public final List<? extends MutableValue> _memory;
@@ -42,15 +40,13 @@ public final class DataMemory implements Eval {
 		var wordAddress = BusKt.toInt(address) >> 2; // it's address/4 to get word number
 		var word = MemoryKt.getWord(_memory, wordAddress);
 
-		{ // write data to memory
-			var writeFinalData = mux2(memWrite, EMPTY_BUS, writeData);
-			BusKt.set(word, writeFinalData);
+		if (memWrite.get()) { // write data to memory
+			BusKt.set(word, writeData);
 			EvalKt.eval(word, time);
 		}
 
-		{  // read value or zero out
-			var readFinalData = mux2(memRead, EMPTY_BUS, word);
-			BusKt.set(readDataBus, readFinalData);
+		if (memRead.get()) {  // read value or zero out
+			BusKt.set(readDataBus, BusKt.constant(word));
 		}
 	}
 }
