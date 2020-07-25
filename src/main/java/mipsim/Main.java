@@ -12,8 +12,8 @@ import static sim.tool.TestKt.testOn;
 public class Main {
 	static List<String> instructions = Arrays.asList(
 		NOP,
-		"addi $1, $0, 1",
-		"addi $t0, $0, 0",
+		"addi $1, $0, 74",
+		"addi $t0, $0, 4",
 		NOP,
 		NOP,
 		"sll $12, $1, 30",
@@ -40,6 +40,6 @@ public class Main {
 			});
 		}
 
-		testOn(processor.dataMemory, "dataMemory");
+		testOn(processor.dataMemory._memory, "dataMemory");
 	}
 }
