@@ -13,6 +13,7 @@ public class Main {
 	static List<String> instructions = Arrays.asList(
 		NOP,
 		"addi $1, $31, 15",
+		"beq $1, $1, 1",
 		"addi $2, $30, 10",
 		"add  $3, $2, $1",
 		"or   $4, $0, $3"

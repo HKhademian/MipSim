@@ -104,10 +104,10 @@ public final class Multiplexer {
 		Value stallFlag,
 		Value jumpFlag,
 		Value branchFlag,
-		List<? extends Value> pc,
+		List<? extends Value> pc4,
 		List<? extends Value> jump,
 		List<? extends Value> branch,
-		List<? extends Value> pc4,
+		List<? extends Value> pc,
 		List<? extends MutableValue> PCSelect
 	) {
 		var muxRes = mux4(jumpFlag, branchFlag, pc4, jump, branch, branch);
