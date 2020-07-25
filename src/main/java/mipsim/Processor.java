@@ -14,8 +14,8 @@ import sim.tool.DebugWriter;
 import java.util.List;
 
 public class Processor implements Eval, DebugWriter {
-	private List<? extends MutableValue> currentState = BusKt.bus(0);
-	private List<? extends MutableValue> nextState = BusKt.bus(0);
+	List<? extends MutableValue> currentState = BusKt.bus(0);
+	List<? extends MutableValue> nextState = BusKt.bus(0);
 
 
 	public final Value clock;
@@ -40,8 +40,8 @@ public class Processor implements Eval, DebugWriter {
 	public Processor() {
 		clock = ValueKt.mut(false);
 
-		instructionMemory = new InstructionMemory(clock, 32);
-		dataMemory = new DataMemory(clock, 16);
+		instructionMemory = new InstructionMemory(clock, 128);
+		dataMemory = new DataMemory(clock, 128);
 		registerFile = new RegisterFile(clock);
 
 		ifStage = new InstructionFetchStage(this);
