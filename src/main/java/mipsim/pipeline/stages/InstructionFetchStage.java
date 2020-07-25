@@ -16,9 +16,9 @@ public class InstructionFetchStage extends Stage {
 	public void init() {
 		final var idStage = processor.idStage;
 		final var exStage = processor.exStage;
-		final var pc = processor.pc;
+		final var pc = processor.wbif.pc;
 		final var ifid = processor.ifid;
-		final var PC = processor.pc_next;
+		final var PC = processor.wbif.next.pc;
 		final var IFID = processor.ifid.next;
 		assert IFID != null;
 
@@ -26,7 +26,7 @@ public class InstructionFetchStage extends Stage {
 		final var pc4 = TinyModules.easyAdder(pc, 4);
 
 		// set next pc
-		Multiplexer.pcChoice(idStage.stallFlag, idStage.jumpFlag, exStage.branchFlag, pc4, idStage.jumpAddress, exStage.branchAddress, pc, PC);
+		Multiplexer.pcChoice(idStage.stallFlag, idStage.jumpFlag, exStage.branchFlag, pc4, idStage.jumpAddress, exStage.branchAddress, pc, (List) PC);
 
 		//set pc to read data
 		BusKt.set(processor.instructionMemory.pc, pc);

@@ -1,9 +1,6 @@
 package mipsim;
 
-import mipsim.pipeline.registers.EXMEM_PipelineRegister;
-import mipsim.pipeline.registers.IDEX_PipelineRegister;
-import mipsim.pipeline.registers.IFID_PipelineRegister;
-import mipsim.pipeline.registers.MEMWB_PipelineRegister;
+import mipsim.pipeline.registers.*;
 import mipsim.pipeline.stages.*;
 import mipsim.sim.ParserKt;
 import mipsim.units.DataMemory;
@@ -34,8 +31,7 @@ public class Processor implements Eval, DebugWriter {
 	public final WriteBackStage wbStage;
 
 	// pipeline state
-	public final List<? extends Value> pc;
-	public final List<? extends MutableValue> pc_next;
+	public final WBIF_PipelineRegister wbif;
 	public final IFID_PipelineRegister ifid;
 	public final IDEX_PipelineRegister idex;
 	public final EXMEM_PipelineRegister exmem;
@@ -43,9 +39,6 @@ public class Processor implements Eval, DebugWriter {
 
 	public Processor() {
 		clock = ValueKt.mut(false);
-
-		pc = alloc(32, false);
-		pc_next = alloc(32, true);
 
 		instructionMemory = new InstructionMemory(clock, 32);
 		dataMemory = new DataMemory(clock, 16);
@@ -57,6 +50,7 @@ public class Processor implements Eval, DebugWriter {
 		memStage = new MemoryStage(this);
 		wbStage = new WriteBackStage(this);
 
+		wbif = new WBIF_PipelineRegister(this);
 		ifid = new IFID_PipelineRegister(this);
 		idex = new IDEX_PipelineRegister(this);
 		exmem = new EXMEM_PipelineRegister(this);
@@ -115,7 +109,7 @@ public class Processor implements Eval, DebugWriter {
 
 	@Override
 	public void writeDebug(@NotNull StringBuffer buffer) {
-		final var pc = BusKt.toInt(this.pc);
+		final var pc = BusKt.toInt(this.wbif.pc);
 		final var instBin = BusKt.toInt(instructionMemory.instruction);
 		final var instStr = ParserKt.parseBinToInstruction(instBin);
 

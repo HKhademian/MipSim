@@ -10,12 +10,14 @@ import java.util.List;
 import static mipsim.sim.ParserKt.parseBinToInstruction;
 
 public final class IFID_PipelineRegister extends PipelineRegister<IFID_PipelineRegister> {
+	public static final int SIZE = 65;
+
 	public final List<? extends Value> pc = BusKt.slice(memory, 0, 32);//this will be 32 bit for the branch and jump
 
 	public final List<? extends Value> instruction = BusKt.slice(memory, 32, 64);
 
 	private IFID_PipelineRegister(final Processor processor, final IFID_PipelineRegister next) {
-		super(processor, 65, next);
+		super(processor, SIZE, next);
 	}
 
 	public IFID_PipelineRegister(final Processor processor) {

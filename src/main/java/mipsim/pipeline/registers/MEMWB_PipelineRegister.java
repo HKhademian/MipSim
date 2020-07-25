@@ -8,6 +8,8 @@ import sim.base.Value;
 import java.util.List;
 
 public final class MEMWB_PipelineRegister extends PipelineRegister<MEMWB_PipelineRegister> {
+	public static final int SIZE = 71;
+
 
 	//all control flag will be passed to pipeline
 
@@ -27,7 +29,7 @@ public final class MEMWB_PipelineRegister extends PipelineRegister<MEMWB_Pipelin
 
 
 	private MEMWB_PipelineRegister(final Processor processor, final MEMWB_PipelineRegister next) {
-		super(processor, 71, next);
+		super(processor, SIZE, next);
 	}
 
 	public MEMWB_PipelineRegister(final Processor processor) {
