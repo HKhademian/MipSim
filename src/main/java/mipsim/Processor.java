@@ -84,7 +84,11 @@ public class Processor implements Eval, DebugWriter {
 
 		final var snapshotState = BusKt.constant(nextState);
 		if (idStage.stallFlag.get()) {
-			BusKt.set(currentState, BusKt.constant(nextState));
+			final var offset = wbif.SIZE + ifid.SIZE;
+			BusKt.set(
+				BusKt.slice(currentState, offset),
+				BusKt.slice(snapshotState, offset)
+			);
 		} else {
 			BusKt.set(currentState, snapshotState);
 		}
