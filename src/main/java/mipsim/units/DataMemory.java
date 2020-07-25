@@ -10,7 +10,7 @@ public final class DataMemory implements Eval {
 	public final List<? extends MutableValue> _memory;
 	private final List<? extends MutableValue> readDataBus = BusKt.bus(32);
 
-	public final List<? extends MutableValue> address = BusKt.bus(5);
+	public final List<? extends MutableValue> address = BusKt.bus(32);
 	public final List<? extends MutableValue> writeData = BusKt.bus(32);
 	public final MutableValue memWrite = ValueKt.mut(false);
 	public final MutableValue memRead = ValueKt.mut(false);
@@ -41,6 +41,7 @@ public final class DataMemory implements Eval {
 		var word = MemoryKt.getWord(_memory, wordAddress);
 
 		if (memWrite.get()) { // write data to memory
+			assert BusKt.toInt(writeData) != 0; // creates debug error to handle situation
 			BusKt.set(word, writeData);
 			EvalKt.eval(word, time);
 		}

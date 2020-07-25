@@ -1,6 +1,5 @@
 package mipsim;
 
-import kotlinx.coroutines.flow.internal.NopCollector;
 import mipsim.sim.InstructionParserKt;
 import sim.tool.DebugKt;
 
@@ -14,8 +13,14 @@ public class Main {
 	static List<String> instructions = Arrays.asList(
 		NOP,
 		"addi $1, $31, 15",
+		"addi $t0, $0, 4",
 		NOP,
-		"addi $2, $30, 10",
+		NOP,
+		NOP,
+		"sw $1, 0($t0)",
+		NOP,
+		NOP,
+		NOP,
 		"add  $3, $2, $1",
 		"or   $4, $0, $3",
 		"j  0",
@@ -33,5 +38,7 @@ public class Main {
 				processor.eval(System.nanoTime());
 			});
 		}
+
+		testOn(processor.dataMemory, "dataMemory");
 	}
 }
