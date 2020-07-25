@@ -90,9 +90,9 @@ public final class ControlUnit {
 		var opcode = BusKt.bus(6);
 		opcode.get(0).set(true);
 		opcode.get(1).set(true);
-		opcode.get(2).set(false);
-		opcode.get(3).set(false);
-		opcode.get(4).set(false);
+		opcode.get(2).set(true);
+		opcode.get(3).set(true);
+		opcode.get(4).set(true);
 		opcode.get(5).set(true);
 		System.out.println(BusKt.toInt(opcode));
 
@@ -107,7 +107,7 @@ public final class ControlUnit {
 		var jump = ValueKt.mut(false);
 		var shift16 = ValueKt.mut(false);
 		var aluOp = BusKt.bus(2);
-		ControlUnit.control(opcode, regDst, ALUsrc, memToReg, regWrite, memRead, memWrite, branch, jump, aluOp);
+		ControlUnit.controlPlus(opcode, regDst, ALUsrc, memToReg, regWrite, memRead, memWrite, branch, jump,bne,shift16, aluOp);
 
 		System.out.println("regDst: " + regDst);
 		System.out.println("ALUsrc: " + ALUsrc);

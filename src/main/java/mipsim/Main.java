@@ -12,11 +12,11 @@ import static sim.tool.TestKt.testOn;
 public class Main {
 	static List<String> instructions = Arrays.asList(
 		NOP,
-		"addi $1, $0, 27",
+		"addi $1, $0, 1",
 		"addi $t0, $0, 0",
 		NOP,
 		NOP,
-		NOP,
+		"sll $12, $1, 29",
 		"sw $1, 0($t0)",
 		NOP,
 		NOP,

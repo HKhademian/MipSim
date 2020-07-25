@@ -96,10 +96,10 @@ public final class AluControlUnit {
 	 */
 	public static void main(String[] args) {
 		var aluO = BusKt.toBus(2, 2);
-		var func = BusKt.toBus(8, 6);
+		var func = BusKt.toBus(0, 6);
 		var aluControlInput = BusKt.bus(4);
 		var jumpReg = ValueKt.mut(false);
-		AluControlUnit.aluControlUnitPlus(aluO, func,jumpReg, aluControlInput);
+		AluControlUnit.aluControlUnit(aluO, func, aluControlInput);
 		System.out.println(aluControlInput.get(3) + "" + aluControlInput.get(2) + "" + aluControlInput.get(1) + "" + aluControlInput.get(0)+"        jmp "+jumpReg);
 
 	}

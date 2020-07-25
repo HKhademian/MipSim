@@ -2,17 +2,17 @@ package mipsim.module;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sim.base.BusKt;
-import sim.base.MutableValue;
-import sim.base.Value;
-import sim.base.ValueKt;
+import sim.base.*;
 import sim.complex.MuxKt;
 import sim.complex.AdderKt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static sim.base.GateKt.*;
 import static mipsim.module.TinyModules.isEqual;
+import static sim.complex.MuxKt.mux;
+
 //tested by ramin
 public final class LogicALU {
 	public static void thirtyTwoBitOr(
@@ -110,8 +110,8 @@ public final class LogicALU {
 		thirtyTwoBitOr(input1, input2, resOr);
 		thirtyTwoBitAnd(input1, input2, resAnd);
 		thirtyTwoBitNor(input1, input2			, resNor);
-		ShiftHelper.thirtyTwoBitShifterRight(input1, shiftMa, resShift_R);
-		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
+		ShiftHelper.shifter(true,shiftMa,input1, resShift_R);
+		ShiftHelper.shifter(false, shiftMa,input1, resShift_L);
 		setLess(input1, input2, resSetLes);
 
 		zero.set(isEqual(input1,input2));
@@ -150,8 +150,8 @@ public final class LogicALU {
 		thirtyTwoBitAnd(input1, input2, resAnd);
 		thirtyTwoBitNor(input1, input2, resNor);
 		thirtyTwoBitXor(input1, input2, resXor);
-		ShiftHelper.thirtyTwoBitShifterRight(input1, shiftMa, resShift_R);
-		ShiftHelper.thirtyTwoBitShifterLeft(input1, shiftMa, resShift_L);
+		ShiftHelper.shifter(true,shiftMa,input1, resShift_R);
+		ShiftHelper.shifter(false, shiftMa,input1, resShift_L);
 		setLess(input1, input2, resSetLes);
 
 		zero.set(isEqual(input1,input2));
@@ -162,22 +162,25 @@ public final class LogicALU {
 
 
 
+
+
+
 	public static void main(String[] args) {
-		var input1 = BusKt.toBus(1, 32);
+		var input1 = BusKt.toBus(27, 32);
 		var input2 = BusKt.toBus(2, 32);
 
 		// todo: wrong
 		var aluOp = BusKt.bus(4);
 		aluOp.get(0).set(false);
 		aluOp.get(1).set(false);
-		aluOp.get(2).set(false);
-		aluOp.get(3).set(true);
+		aluOp.get(2).set(true);
+		aluOp.get(3).set(false);
 
-		var shiftMa = BusKt.toBus(2, 5);
+		var shiftMa = BusKt.toBus(10, 5);
 
 		var result = BusKt.bus(32);
 		var zero = ValueKt.mut(false);
-		AluInStagePlus(input1, input2, aluOp, shiftMa, result,zero);
+		AluInStage(input1, input2, aluOp, shiftMa, result,zero);
 
 		System.out.println(BusKt.toInt(result));
 
