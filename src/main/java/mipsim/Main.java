@@ -12,8 +12,8 @@ public class Main {
 	final static String NOP = "sll $0, $0, 0";
 	static List<String> instructions = Arrays.asList(
 		NOP,
-		"addi $1, $31, 15",
-		"addi $t0, $0, 4",
+		"addi $1, $31, 27",
+		"addi $t0, $0, 0",
 		NOP,
 		NOP,
 		NOP,
@@ -21,9 +21,10 @@ public class Main {
 		NOP,
 		NOP,
 		NOP,
-		"add  $3, $2, $1",
+		"lw  $6, 0($t0)",
 		"or   $4, $0, $3",
-		"j  0",
+		NOP,
+		"addi $8, $6, 15",
 		NOP
 	);
 
@@ -33,7 +34,7 @@ public class Main {
 		InstructionParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		for (var i = 0; i < 15; i++) {
+		for (var i = 0; i < 20; i++) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});

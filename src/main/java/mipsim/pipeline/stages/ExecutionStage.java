@@ -60,6 +60,10 @@ public class ExecutionStage extends Stage {
 		ForwardingUnit.forwardingUnitMEMHazard(memwb.regWrite, memwb.rdRegister, idex.rtRegister, exmem.regWrite, exmem.rtRegister, forwardingMem2);
 		Multiplexer.aluInput(or(forwardingEx2, forwardingMem2), idex.rtData, exmem.aluData, wbStage.writeData, forwardingResult2);
 
+		//set write memory
+		assert false; //todo: check this, or comment this line and provide another comment to explain
+		BusKt.set((List) EXMEM.writeMem, forwardingResult2);
+
 		final var resultTwoOfAlu = BusKt.bus(32);
 		Multiplexer.aluSrc(idex.aluSrc, forwardingResult2, idex.immediate, resultTwoOfAlu);
 
@@ -92,9 +96,7 @@ public class ExecutionStage extends Stage {
 		BusKt.set((List) EXMEM.WB, idex.WB);
 		BusKt.set((List) EXMEM.MEM, idex.MEM);
 
-		//set write memory
-		assert false; //todo: check this, or comment this line and provide another comment to explain
-		BusKt.set((List) EXMEM.writeMem, idex.WB);
+
 	}
 
 
