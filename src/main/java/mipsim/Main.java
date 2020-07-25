@@ -16,7 +16,7 @@ public class Main {
 		"addi $t0, $0, 0",
 		NOP,
 		NOP,
-		"sll $12, $1, 29",
+		"sll $12, $1, 30",
 		"sw $1, 0($t0)",
 		NOP,
 		NOP,

@@ -103,12 +103,6 @@ public class Processor implements Eval, DebugWriter {
 //		// 7,8,9,10. first stages then pipeline-regs (each like 1 or 2)
 //		// TODO: we must investigate to realize  which one is correct
 //		// plz do not remove this comment, to keep eye one the results
-//
-//		EvalKt.eval(ifStage, time);
-//		EvalKt.eval(idStage, time);
-//		EvalKt.eval(exStage, time);
-//		EvalKt.eval(memStage, time);
-//		EvalKt.eval(wbStage, time);
 	}
 
 	@Override
