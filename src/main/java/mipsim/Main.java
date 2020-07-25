@@ -6,10 +6,10 @@ import sim.tool.DebugKt;
 import java.util.Arrays;
 import java.util.List;
 
+import static mipsim.sim.ParserKt.NOP;
 import static sim.tool.TestKt.testOn;
 
 public class Main {
-	final static String NOP = "sll $0, $0, 0";
 	static List<String> instructions = Arrays.asList(
 		NOP,
 		"addi $1, $0, 27",

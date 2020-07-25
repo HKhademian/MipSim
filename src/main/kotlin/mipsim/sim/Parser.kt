@@ -8,7 +8,9 @@ import sim.base.MutableValue
 import java.io.File
 
 const val NOP = "sll $0, $0, 0"
-val NOP_BIN = parseInstructionToBin(NOP)
+const val NOP_STR = "NOP"
+const val NOP_BIN = 0
+
 
 /** supported commands with this parser */
 val commands = listOf(
@@ -32,6 +34,8 @@ val commands = listOf(
 
 /** registerName to real number equivalent */
 val registers: Map<String, Int> = mutableMapOf<String, Int>().also { regs ->
+	for (i in 0..31) regs["\$$i"] = i // first add numbered keys
+
 	// special keys
 	regs["\$zero"] = 0
 	regs["\$at"] = 1
@@ -40,7 +44,6 @@ val registers: Map<String, Int> = mutableMapOf<String, Int>().also { regs ->
 	regs["\$fp"] = 30
 	regs["\$ra"] = 31
 
-	for (i in 0..31) regs["\$$i"] = i // first add numbered keys
 	for (i in 0..1) regs["\$v$i"] = i + 2  // s0 .. s1
 	for (i in 0..3) regs["\$a$i"] = i + 4  // a0 .. a3
 	for (i in 0..7) regs["\$t$i"] = i + 8  // t0 .. t7
@@ -48,6 +51,7 @@ val registers: Map<String, Int> = mutableMapOf<String, Int>().also { regs ->
 	for (i in 8..9) regs["\$t$i"] = i + 16 // t8 .. t9
 	for (i in 0..1) regs["\$k$i"] = i + 26 // k0 .. k1
 }
+
 
 /** parse string to register number */
 fun parseRegister(text: String): Int {
@@ -91,6 +95,8 @@ enum class Format {
 		}
 
 		override fun parseBinToInstruction(command: Command, binary: Int): String {
+			if (binary == NOP_BIN) return NOP_STR
+
 			val regMask = ((1 shl 5) - 1)
 			val rd = (binary ushr 11) and regMask
 			val rs = (binary ushr 21) and regMask
