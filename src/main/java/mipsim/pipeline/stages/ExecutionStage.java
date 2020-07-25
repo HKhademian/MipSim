@@ -61,7 +61,7 @@ public class ExecutionStage extends Stage {
 		Multiplexer.aluInput(or(forwardingEx2, forwardingMem2), idex.rtData, exmem.aluData, wbStage.writeData, forwardingResult2);
 
 		//set write memory
-		assert false; //todo: check this, or comment this line and provide another comment to explain
+		assert false; //value to write
 		BusKt.set((List) EXMEM.writeMem, forwardingResult2);
 
 		final var resultTwoOfAlu = BusKt.bus(32);

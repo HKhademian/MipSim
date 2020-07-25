@@ -12,7 +12,7 @@ public class Main {
 	final static String NOP = "sll $0, $0, 0";
 	static List<String> instructions = Arrays.asList(
 		NOP,
-		"addi $1, $31, 27",
+		"addi $1, $0, 27",
 		"addi $t0, $0, 0",
 		NOP,
 		NOP,

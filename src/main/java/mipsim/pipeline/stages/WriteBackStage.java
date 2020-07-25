@@ -27,7 +27,7 @@ public class WriteBackStage extends Stage {
 		assert REGFILE != null;
 
 		//choice data memory and alu --> to write data
-		Multiplexer.writeBackValue(MEMWB.memToReg,memwb.aluData,memwb.memoryData,writeData);
+		Multiplexer.writeBackValue(memwb.memToReg,memwb.aluData,memwb.memoryData,writeData);
 		//change it to above mux
 		//BusKt.set(writeData, MuxKt.mux2(MEMWB.memToReg, memwb.aluData, memwb.memoryData));
 
