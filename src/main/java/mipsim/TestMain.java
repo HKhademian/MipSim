@@ -139,14 +139,7 @@ public class TestMain {
 			"addi $2,$zero,4",
 			"addi $4,$zero,4",
 			"beq  $4,$2,-2",
-			NOP,
-			NOP,
-			"addi $2,$zero,4",
-			"beq  $4,$2,-2",
-			NOP,
-			NOP,
 			NOP
-
 
 		);
 		final var processor = new Processor();
@@ -173,9 +166,9 @@ public class TestMain {
 		List<String> instructions = Arrays.asList(
 			"addi $1,$zero,13",
 			"addi $2,$zero,10",
-			"slt  $3,$1,$2",
 			"addi $1,$1,-1",
-			"beq  $3,$zero,-2",
+			"slt  $3,$1,$2",
+			"beq  $3,$zero,-3",
 			NOP,
 			NOP,
 			"j 0",

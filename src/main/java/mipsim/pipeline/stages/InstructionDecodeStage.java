@@ -5,6 +5,7 @@ import mipsim.module.Multiplexer;
 import mipsim.units.ControlUnit;
 import mipsim.units.HazardDetectionUnit;
 import sim.base.BusKt;
+import sim.base.MathKt;
 import sim.base.MutableValue;
 import sim.base.ValueKt;
 import sim.tool.TestKt;
@@ -102,7 +103,7 @@ public class InstructionDecodeStage extends Stage {
 		//set register value
 		BusKt.set((List) IDEX.rsData, rsData);
 		BusKt.set((List) IDEX.rtData, rtData);
-		BusKt.set((List) IDEX.immediate, immediate);
+		BusKt.set((List) IDEX.immediate, MathKt.signEx(immediate));
 
 		//set register number
 		BusKt.set((List) IDEX.rtRegister, rt);
