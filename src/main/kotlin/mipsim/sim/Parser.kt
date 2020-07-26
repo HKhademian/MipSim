@@ -24,7 +24,7 @@ val commands = listOf(
 	Command("AND", Format.R, "0", "24"),
 	Command("OR", Format.R, "0", "25"),
 	Command("XOR", Format.R, "0", "26"),
-	Command("أOR", Format.R, "0", "27"),
+	Command("NOR", Format.R, "0", "27"),
 	Command("SLT", Format.R, "0", "2A"),
 	Command("JR", Format.R, "0", "8"),
 	Command("BEQ", Format.I, "4"),
