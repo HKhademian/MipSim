@@ -21,14 +21,18 @@ val commands = listOf(
 	Command("AND", Format.R, "0", "24"),
 	Command("OR", Format.R, "0", "25"),
 	Command("XOR", Format.R, "0", "26"),
+	Command("أOR", Format.R, "0", "27"),
 	Command("SLT", Format.R, "0", "2A"),
+	Command("JR", Format.R, "0", "8"),
 	Command("BEQ", Format.I, "4"),
 	Command("BNQ", Format.I, "5"),
 	Command("ADDI", Format.I, "8"),
+	Command("ANDI", Format.I, "C"),
 	Command("ORI", Format.I, "D"),
 	Command("LUI", Format.I, "F"),
 	Command("LW", Format.I, "23"),
 	Command("SW", Format.I, "2B"),
+	Command("SUI", Format.I, "3F"),
 	Command("J", Format.J, "2")
 )
 
