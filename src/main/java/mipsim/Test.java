@@ -190,16 +190,9 @@ public class Test {
 
 		final var simulator = new Simulator();
 		simulator.loadInstructions(instructions);
-		// simulator.loadDataMemory();
+		// simulator.loadDataMemory(); //todo: for Main
 
-		var clockContinue = false;
-		int i = 0;
-		while (!clockContinue) {
-			if (simulator.runStep(i++)) break;
-			System.out.println("If you want to close program Enter? y");
-			clockContinue = new Scanner(System.in).nextLine().equals("y");
-
-		}
+		simulator.run(0, true);
 		testOn(simulator.processor.dataMemory._memory, "dataMemory");
 	}
 
