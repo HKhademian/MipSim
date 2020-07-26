@@ -26,29 +26,34 @@ public class Simulator {
 		BusKt.set(this.processor.registerFile._memory, 0);
 	}
 
-	void loadInstructions(final List<String> instructions) {
+	public void loadInstructions(final List<String> instructions) {
 		reset();
 		ParserKt.loadInstructions(processor.instructionMemory._memory, instructions, true);
 	}
 
-	void loadInstructions(final String... instructions) {
+	public void loadInstructions(final String... instructions) {
 		loadInstructions(Arrays.asList(instructions));
 	}
 
-	void loadInstructions(final File instructionsFile) {
+	public void loadInstructions(final File instructionsFile) {
 		reset();
 		ParserKt.loadInstructions(processor.instructionMemory._memory, instructionsFile, true);
 	}
 
-	void run() {
+	public void run() {
 		DebugKt.println(processor.instructionMemory._memory);
 
-		for (var i = 0; i < 20; i++) {
-			testOn(processor, "clock " + i, () -> {
-				processor.eval(System.nanoTime());
-			});
+		for (var i = 0; i < 100; i++) {
+			if (runStep(i)) break;
 		}
 
 		testOn(processor.dataMemory._memory, "dataMemory");
+	}
+
+	boolean runStep(int step) {
+		testOn(processor, "clock " + step, () -> {
+			processor.eval(System.nanoTime());
+		});
+		return BusKt.toInt(processor.instructionMemory.instruction) == ParserKt.HALT_BIN;
 	}
 }
