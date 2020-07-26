@@ -7,7 +7,6 @@ import sim.tool.DebugKt;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 import static sim.tool.TestKt.testOn;
 
@@ -21,15 +20,14 @@ public class Simulator {
 
 	void reset() {
 		BusKt.set(this.processor.currentState, 0);
-		// BusKt.set(this.processor.nextState, 0);
-		BusKt.set(this.processor.instructionMemory._memory, 0);
-		BusKt.set(this.processor.dataMemory._memory, 0);
+		// fixme:  BusKt.set(this.processor.instructionMemory._memory, 0);
+		// fixme:  BusKt.set(this.processor.dataMemory._memory, 0);
 		BusKt.set(this.processor.registerFile._memory, 0);
 	}
 
 	public void loadInstructions(final List<String> instructions) {
 		reset();
-		ParserKt.loadInstructions(processor.instructionMemory._memory, instructions, true);
+		ParserKt.loadInstructions(processor.instructionMemory, instructions, true);
 	}
 
 	public void loadDataMemory(final List<Integer> binaries) {
@@ -42,11 +40,11 @@ public class Simulator {
 
 	public void loadInstructions(final File instructionsFile) {
 		reset();
-		ParserKt.loadInstructions(processor.instructionMemory._memory, instructionsFile, true);
+		// fixme:  ParserKt.loadInstructions(processor.instructionMemory._memory, instructionsFile, true);
 	}
 
 	public void run(int debugLevel, boolean stepByStep) {
-		DebugKt.println(processor.instructionMemory._memory);
+		DebugKt.println(processor.instructionMemory);
 
 		for (var i = 0; i < 100; i++) {
 			if (runStep(i, debugLevel)) break;
@@ -57,7 +55,7 @@ public class Simulator {
 			}
 		}
 
-		testOn(processor.dataMemory._memory, "dataMemory");
+		testOn(processor.dataMemory, "dataMemory");
 	}
 
 	boolean runStep(int step, int debugLevel) {

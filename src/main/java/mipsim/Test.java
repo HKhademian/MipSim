@@ -104,6 +104,8 @@ public class Test {
 			"lw $2,4($1)",
 			"addi  $3,$2,3",
 			NOP,
+			NOP,
+			NOP,
 			HALT
 		);
 	}
@@ -114,6 +116,8 @@ public class Test {
 			"addi $2,$0,13",
 			"sll  $4,$1,10",
 			"srl  $3,$2,2",
+			NOP,
+			NOP,
 			NOP,
 			HALT
 		);
@@ -128,6 +132,8 @@ public class Test {
 			"add  $5,$1,$2 ",
 			"add  $6,$1,$2",
 			NOP,
+			NOP,
+			NOP,
 			HALT
 		);
 	}
@@ -141,6 +147,7 @@ public class Test {
 			"addi $2,$zero,4",
 			"addi $4,$zero,4",
 			"beq  $4,$2,-2",
+			NOP,
 			NOP,
 			NOP,
 			HALT
@@ -193,7 +200,6 @@ public class Test {
 		// simulator.loadDataMemory(); //todo: for Main
 
 		simulator.run(0, true);
-		testOn(simulator.processor.dataMemory._memory, "dataMemory");
 	}
 
 }

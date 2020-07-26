@@ -2,6 +2,7 @@ package mipsim.sim
 
 import mipsim.Processor
 import mipsim.units.InstructionMemory
+import mipsim.units.InstructionMemoryUnit
 import mipsim.units.reset
 import mipsim.units.writeWords
 import sim.base.MutableValue
@@ -119,7 +120,7 @@ enum class Format {
 			val rdStr = registers.entries.find { it.value == rd }!!.component1()
 			val rsStr = registers.entries.find { it.value == rs }!!.component1()
 
-			if(command.name == "JR") {
+			if (command.name == "JR") {
 				return "JR $rsStr"
 			}
 
@@ -234,6 +235,10 @@ fun Processor.loadInstructions(instructionLines: List<String>, nop: Boolean = fa
 /** parse instructions and write to instructionMemory */
 fun InstructionMemory.loadInstructions(instructionLines: List<String>, nop: Boolean = false) =
 	_memory.loadInstructions(instructionLines, nop)
+
+/** parse instructions and write to instructionMemory */
+fun InstructionMemoryUnit.loadInstructions(instructionLines: List<String>, nop: Boolean = false) =
+	Unit // fixme: _memory.loadInstructions(instructionLines, nop)
 
 /** parse instructions and write to instructionMemory */
 fun List<MutableValue>.loadInstructions(instructionLines: List<String>, nop: Boolean = false) {

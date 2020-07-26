@@ -3,8 +3,8 @@ package mipsim;
 import mipsim.pipeline.registers.*;
 import mipsim.pipeline.stages.*;
 import mipsim.sim.ParserKt;
-import mipsim.units.DataMemory;
-import mipsim.units.InstructionMemory;
+import mipsim.units.DataMemoryUnit;
+import mipsim.units.InstructionMemoryUnit;
 import mipsim.units.RegisterFile;
 import org.jetbrains.annotations.NotNull;
 import sim.base.*;
@@ -19,8 +19,8 @@ public class Processor implements Eval, DebugWriter {
 
 
 	public final Value clock;
-	public final InstructionMemory instructionMemory;
-	public final DataMemory dataMemory;
+	public final InstructionMemoryUnit instructionMemory;
+	public final DataMemoryUnit dataMemory;
 	public final RegisterFile registerFile;
 
 	// stages
@@ -40,8 +40,8 @@ public class Processor implements Eval, DebugWriter {
 	public Processor() {
 		clock = ValueKt.mut(false);
 
-		instructionMemory = new InstructionMemory(clock, 1024);
-		dataMemory = new DataMemory(clock, 1024);
+		instructionMemory = new InstructionMemoryUnit(clock, 1024);
+		dataMemory = new DataMemoryUnit(clock, 1024);
 		registerFile = new RegisterFile(clock);
 
 		ifStage = new InstructionFetchStage(this);
@@ -78,8 +78,14 @@ public class Processor implements Eval, DebugWriter {
 
 	@Override
 	public void eval(final long time) {
+		((MutableValue) clock).reset();
 		registerFile.eval(time);
 		instructionMemory.eval(time);
+		dataMemory.eval(time);
+
+		((MutableValue) clock).set();
+		//registerFile.eval(time);
+		//instructionMemory.eval(time);
 		dataMemory.eval(time);
 
 		final var snapshotState = BusKt.constant(nextState);
