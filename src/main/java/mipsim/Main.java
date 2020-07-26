@@ -79,21 +79,28 @@ public class Main {
 			if(myObj.nextLine().equals("y"))return true;
 			return false;
 		}
-		public static ArrayList<Integer> memoryData(){
+		public static ArrayList<Integer> memoryData() {
 			Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+			Scanner myObj1 = new Scanner(System.in);  // Create a Scanner object
+
 			ArrayList<Integer> array = new ArrayList<>();
 			array.add(0);
-			while (true){
-				System.out.println("Do you like to add number to mem?(enter)/n");
-				var x = myObj.nextLine().equals('n');
-				if(x) {
+			while (true) {
+
+				System.out.println("Do you like to add number to mem?(y)/any thing you like ");
+				var x = myObj.nextLine().equals("y");
+				if (!x) {
 					array.add(-1);
 					return array;
-				}
-				System.out.println("please Enter number:");
-				array.add(myObj.nextInt());
-			}
+				} else {
+					System.out.println("please Enter number:");
+					var y = myObj1.nextInt();
+					array.add(y);
+					array.set(0,array.get(0)+1);
 
+				}
+
+			}
 		}
 }
 

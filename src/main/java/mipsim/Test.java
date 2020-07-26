@@ -16,7 +16,6 @@ public class Test {
 	public static void Test(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		boolean contuie = true;
 		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-		System.out.println("\n\nHi Lovely\nWelcome to my cpu simulator.");
 		while (contuie) {
 			System.out.println("\n\nDo you like to test it's power.?\n1.I like to see rType function with" +
 				" hazard\n2.Do you like to see how can I sw and lw in memory and I detect Lw hazard for you\n" +
