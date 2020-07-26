@@ -6,10 +6,7 @@ import mipsim.module.Multiplexer;
 import mipsim.module.TinyModules;
 import mipsim.units.AluControlUnit;
 import mipsim.units.ForwardingUnit;
-import sim.base.MathKt;
-import sim.base.BusKt;
-import sim.base.MutableValue;
-import sim.base.ValueKt;
+import sim.base.*;
 import sim.tool.TestKt;
 
 import java.util.List;
@@ -46,7 +43,8 @@ public class ExecutionStage extends Stage {
 
 		//alu control unit
 		final var aluOp = BusKt.bus(4);
-		AluControlUnit.aluControlUnit(idex.aluOp, idex.function, aluOp);
+		final var jumpReg = ValueKt.mut(false);
+		AluControlUnit.aluControlUnitPlus(idex.aluOp, idex.function,jumpReg, aluOp);
 
 		//first alu src
 		final var resultOneOfAlu = BusKt.bus(32);
@@ -64,23 +62,32 @@ public class ExecutionStage extends Stage {
 		assert false; //value to write
 		BusKt.set((List) EXMEM.writeMem, forwardingResult2);
 
+		final var immediateFinal = BusKt.bus(32);
+		Multiplexer.shiftImi16(idex.shift16,idex.immediate,immediateFinal);
+
 		final var resultTwoOfAlu = BusKt.bus(32);
-		Multiplexer.aluSrc(idex.aluSrc, forwardingResult2, idex.immediate, resultTwoOfAlu);
+		Multiplexer.aluSrc(idex.aluSrc, forwardingResult2, immediateFinal, resultTwoOfAlu);
 
 		//alu result
 		final var zero = ValueKt.mut(false);
 		final var aluData = BusKt.bus(32);
-		LogicALU.AluInStage(resultOneOfAlu, resultTwoOfAlu, aluOp, idex.shiftMa, aluData, zero);
+		LogicALU.AluInStagePlus(resultOneOfAlu, resultTwoOfAlu, aluOp, idex.shiftMa, aluData, zero);
 		BusKt.set((List) EXMEM.aluData, aluData);
 
 
 		//set branch
 		final var shiftAddress = MathKt.shift(idex.immediate, 2);
+		final var branchLocation =BusKt.bus(32);
+		TinyModules.easyAdder(idex.PC, shiftAddress, branchLocation);
 
-		TinyModules.easyAdder(idex.PC, shiftAddress, branchAddress);
+		// here we select location to jump (note rs will shift 2 bit to left)
+		Multiplexer.selectBranchPlus(idex.branch,zero,idex.bne,jumpReg,branchLocation,idex.rsData,branchFlag,branchAddress);
 
 
-		branchFlag.set(and(idex.branch, zero));
+		// if it's R type the reg write is true but if it is jr it must be false
+		final var regWriteFinal = ValueKt.mut(false);
+		Multiplexer.changeR_type(jumpReg,idex.regWrite,regWriteFinal);
+
 
 
 
@@ -93,7 +100,8 @@ public class ExecutionStage extends Stage {
 		BusKt.set((List) EXMEM.rtRegister, rdRegister);
 
 		//set flags that passed
-		BusKt.set((List) EXMEM.WB, idex.WB);
+		BusKt.set((MutableValue) EXMEM.regWrite, regWriteFinal);
+		BusKt.set((MutableValue) EXMEM.memToReg, idex.memToReg);
 		BusKt.set((List) EXMEM.MEM, idex.MEM);
 
 

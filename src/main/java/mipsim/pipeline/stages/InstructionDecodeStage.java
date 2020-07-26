@@ -60,11 +60,13 @@ public class InstructionDecodeStage extends Stage {
 		final var memRead = ValueKt.mut(false);
 		final var memWrite = ValueKt.mut(false);
 		final var branch = ValueKt.mut(false);
+		final var bne = ValueKt.mut(false);
+		final var shift16 = ValueKt.mut(false);
 
 		final var aluOp = BusKt.bus(2);
 
-		ControlUnit.control(opcode, regDst, ALUsrc, memToReg, regWrite
-			, memRead, memWrite, branch, jumpFlag, aluOp);
+		ControlUnit.controlPlus(opcode, regDst, ALUsrc, memToReg, regWrite
+			, memRead, memWrite, branch, jumpFlag,bne,shift16, aluOp);
 
 		//this will show if hazard would happen and we need stall
 		final var ID_EX_memRead = idex.memRead;
@@ -114,6 +116,8 @@ public class InstructionDecodeStage extends Stage {
 		BusKt.set((MutableValue) IDEX.memWrite, memWriteFinal);
 		BusKt.set((MutableValue) IDEX.aluSrc, ALUsrc);
 		BusKt.set((MutableValue) IDEX.branch, branch);
+		BusKt.set((MutableValue) IDEX.bne, bne);
+		BusKt.set((MutableValue) IDEX.shift16, shift16);
 		BusKt.set((List) IDEX.aluOp, aluOp);
 
 		//set pc for branch
