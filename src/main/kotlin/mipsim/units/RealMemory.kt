@@ -11,6 +11,10 @@ import sim.tool.println
  * this module creates a M*N bit memory
  * M is number of memory blocks, M is 2 ^ size of selector bus
  * N is size of each memory block, N is size of input(data) bus
+ *
+ * it's important to mention that select bus is async and does not depends
+ * on the clock, it always works
+ *
  * @param clock memory clock wire
  * @param write whether or not to write input on the selected block
  * @param select selected module to read/write
@@ -18,23 +22,25 @@ import sim.tool.println
  * @return current value of selected memory block
  */
 fun memory(clock: Value, write: Value, select: List<Value>, input: List<Value>): List<Value> {
-	val output = bus(input.size)
-
 	val decoder = dec(Value.ONE, select) // creates a m bit decoder
 
 	val memories = (0 until (1 shl select.size)).map { index ->
-		val isSelected = decoder[index]
-		val isEnabled = and(isSelected, clock, write)
-		val memory = flipflopRE(isEnabled, input)
+		val isSelected = decoder[index] // pick target wire, which tells if the memory block is this memory block or not
+		val isEnabled = and(isSelected, clock, write) // is write to block enabled or not
+		val memory = flipflopRE(isEnabled, input) // creates memory block
 		memory
 	}.toList()
 
-	output.set(mux(select, memories))
-
+	val output = mux(select, memories) // choose selected memory block
 	return output
 }
 
-fun testBus() {
+internal fun main() {
+	test1()
+}
+
+
+internal fun test1() {
 
 	val clock = mut(false)
 	val write = mut(false)
@@ -81,11 +87,4 @@ fun testBus() {
 	mem.println()
 	assertEquals(mem.toInt(), 19)
 }
-
-
-internal fun main() {
-	testBus()
-
-}
-
 
