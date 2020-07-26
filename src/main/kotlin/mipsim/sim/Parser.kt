@@ -89,10 +89,10 @@ enum class Format {
 			res = res or command.func
 
 			if (command.name == "JR") {
-				if (inst.size != 2) throw Exception("Bad R-format instruction")
+				if (inst.size != 2) throw Exception("Bad R-format instruction: " + inst[0])
 				res = res or (parseRegister(inst[1]) shl 21) // rs
 			} else {
-				if (inst.size != 4) throw Exception("Bad R-format instruction")
+				if (inst.size != 4) throw Exception("Bad R-format instruction: " + inst[0])
 
 				res = res or (parseRegister(inst[1]) shl 11) // rd
 				res = res or (parseRegister(inst[2]) shl 21) // rs
@@ -195,7 +195,7 @@ enum class Format {
 
 	J {
 		override fun parseInstructionToBin(command: Command, inst: List<String>, nop: Boolean): List<Int> {
-			if (inst.size != 2) throw RuntimeException("Bad J-format instruction")
+			if (inst.size != 2) throw RuntimeException("Bad J-format instruction: " + inst[0])
 			var res = (command.opCode shl 26)
 			res = res or parseConstant(inst[1], 26) //address
 
