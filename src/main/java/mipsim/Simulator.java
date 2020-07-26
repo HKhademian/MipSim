@@ -20,7 +20,7 @@ public class Simulator {
 
 	void reset() {
 		BusKt.set(this.processor.currentState, 0);
-		BusKt.set(this.processor.nextState, 0);
+		// BusKt.set(this.processor.nextState, 0);
 		BusKt.set(this.processor.instructionMemory._memory, 0);
 		BusKt.set(this.processor.dataMemory._memory, 0);
 		BusKt.set(this.processor.registerFile._memory, 0);
