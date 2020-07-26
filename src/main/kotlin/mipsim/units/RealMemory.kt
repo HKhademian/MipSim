@@ -6,24 +6,10 @@ import sim.complex.dec
 import sim.complex.flipflopRE
 import sim.complex.mux
 import sim.tool.println
+import sim.tool.test
 
 fun memoryBlock(writeEnabled: Value, writeData: List<Value>): List<Value> =
 	flipflopRE(writeEnabled, writeData)
-
-/**
- * @see memory
- */
-fun memoryWithDecoder(clock: Value, write: Value, select: List<Value>, input: List<Value>): List<Value> {
-	val decoder = dec(Value.ONE, select) // creates a m bit decoder
-
-	val memories = (0 until (1 shl select.size)).map { i ->
-		val isSelected = decoder[i] // pick target wire, which tells if the memory block is this memory block or not
-		val isEnabled = and(isSelected, clock, write) // is write to block enabled or not
-		memoryBlock(isEnabled, input) // creates memory block
-	}.toList()
-
-	return mux(select, memories) // choose selected memory block
-}
 
 /**
  * this module creates a M*N bit memory
@@ -39,7 +25,22 @@ fun memoryWithDecoder(clock: Value, write: Value, select: List<Value>, input: Li
  * @param input data to write on the selected memory block
  * @return current value of selected memory block
  */
-fun memory(clock: Value, write: Value, select: List<Value>, input: List<Value>): Pair<List<List<Value>>, List<Value>> {
+fun memoryWithDecoder(clock: Value, write: Value, select: List<Value>, input: List<Value>): Pair<List<List<Value>>, Bus> {
+	val decoder = dec(Value.ONE, select) // creates a m bit decoder
+
+	val blocks = (0 until (1 shl select.size)).map { i ->
+		val isSelected = decoder[i] // pick target wire, which tells if the memory block is this memory block or not
+		val isEnabled = and(isSelected, clock, write) // is write to block enabled or not
+		memoryBlock(isEnabled, input) // creates memory block
+	}.toList()
+
+	return blocks to mux(select, blocks) // choose selected memory block
+}
+
+/**
+ * @see memoryWithDecoder
+ */
+fun memoryWithCmp(clock: Value, write: Value, select: List<Value>, input: List<Value>): Pair<List<List<Value>>, List<Value>> {
 	val blocks = (0 until (1 shl select.size)).map { i ->
 		val index = i.toBus(select.size)
 		val isSelected = nor(index xor select) // pick target wire, which tells if the memory block is this memory block or not
@@ -51,17 +52,17 @@ fun memory(clock: Value, write: Value, select: List<Value>, input: List<Value>):
 }
 
 /**
- * @see memory
+ * @see memoryWithDecoder
  * this module is like normal memory, except it's selector bus is now another memory module and it caches selector
  * you can pass
  */
 fun lockedMemory(selectorClock: Value, selectorWrite: List<Value>, clock: Value, write: Value, writeData: List<Value>): Triple<List<Value>, List<List<Value>>, List<Value>> {
 	val selectorRead = flipflopRE(selectorClock, selectorWrite)
-	val (blocks, readData) = memory(clock, write, selectorRead, writeData)
+	val (blocks, readData) = memoryWithDecoder(clock, write, selectorRead, writeData)
 	return Triple(selectorRead, blocks, readData)
 }
 
-fun writeOnBlock(enabled: MutableValue, writeData: List<MutableValue>, readData: List<Value>, value: Int) {
+fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, readData: List<Value>, value: Int) {
 	writeData.set(value)
 	enabled.set()
 	readData.read()
@@ -69,9 +70,9 @@ fun writeOnBlock(enabled: MutableValue, writeData: List<MutableValue>, readData:
 }
 
 internal fun main() {
-	println("*** test1 ***");test1()
-	println("*** testLockedSelect ***");testLockedSelect()
-	println("*** testLockedSelectSame ***");testLockedSelectSame()
+	test("*** test1 ***") { test1() }
+	test("*** testLockedSelect ***") { testLockedSelect() }
+	test("*** testLockedSelectSame ***") { testLockedSelectSame() }
 }
 
 private fun test1() {
@@ -80,7 +81,7 @@ private fun test1() {
 	val input = bus(32)
 	val select = bus(8)
 
-	val (blocks, output) = memory(clock, write, select, input)
+	val (blocks, output) = memoryWithDecoder(clock, write, select, input)
 
 	clock.reset()
 	write.set()
@@ -132,7 +133,7 @@ private fun testLockedSelect() {
 	clock.reset()
 	write.set()
 	writeData.set(74)
-	writeOnBlock(selectorClock, selectorWrite, selectorRead, 1)
+	writeOnMemoryBlock(selectorClock, selectorWrite, selectorRead, 1)
 	readData.println()
 	assertEquals(readData.toInt(), 0)
 
@@ -160,7 +161,7 @@ private fun testLockedSelect() {
 	readData.println()
 	assertEquals(readData.toInt(), 12) // select bus is not async!
 
-	writeOnBlock(selectorClock, selectorWrite, selectorRead, 2)
+	writeOnMemoryBlock(selectorClock, selectorWrite, selectorRead, 2)
 	readData.println()
 	assertEquals(readData.toInt(), 0)
 
@@ -180,7 +181,7 @@ private fun testLockedSelectSame() {
 	clock.reset()
 	write.set()
 	writeData.set(74)
-	writeOnBlock(clock, selectorWrite, selectorRead, 1)
+	writeOnMemoryBlock(clock, selectorWrite, selectorRead, 1)
 
 	readData.println()
 	assertEquals(readData.toInt(), 0)
@@ -209,7 +210,7 @@ private fun testLockedSelectSame() {
 	readData.println()
 	assertEquals(readData.toInt(), 12) // select bus is not async!
 
-	writeOnBlock(clock, selectorWrite, selectorRead, 2)
+	writeOnMemoryBlock(clock, selectorWrite, selectorRead, 2)
 	readData.println()
 	assertEquals(readData.toInt(), 0)
 
