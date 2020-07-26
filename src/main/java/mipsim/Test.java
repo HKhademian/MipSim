@@ -13,7 +13,7 @@ import static mipsim.sim.ParserKt.NOP;
 import static sim.tool.TestKt.testOn;
 
 public class Test {
-	public static void main(String... args) {
+	public static void Test(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		boolean contuie = true;
 		Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 		System.out.println("\n\nHi Lovely\nWelcome to my cpu simulator.");
@@ -23,34 +23,32 @@ public class Test {
 				"3.Time to shift your amount\n" +
 				"4.Do you like to see how can I jump to any Address you want\n5.If condition be good I can come back I have Branch backward and forward\n" +
 				"6.Time to check set less than\n" +
-				"7.Okey I'm good horse you can run any program that you like to run please Entere name of your file\n" +
-				"\n8.Exit.");
+
+				"\n8.Back to before stage.");
 			int choice = myObj.nextInt();
 			switch (choice) {
 				case 0:
-					testZero();
+					testZero( have_memeory_information,  stepByStep, debugLevel,  MemoryInformation);
 					break;
 				case 1:
-					testOne();
+					testOne( have_memeory_information,  stepByStep, debugLevel,  MemoryInformation);
 					break;
 				case 2:
-					testTwo();
+					testTwo( have_memeory_information, stepByStep,  debugLevel,  MemoryInformation);
 					break;
 				case 3:
-					testTree();
+					testTree(have_memeory_information, stepByStep, debugLevel, MemoryInformation);
 					break;
 				case 4:
-					testFour();
+					testFour(have_memeory_information, stepByStep, debugLevel,MemoryInformation);
 					break;
 				case 5:
-					testFive();
+					testFive(have_memeory_information,stepByStep, debugLevel,  MemoryInformation);
 					break;
 				case 6:
-					testSix();
+					testSix( have_memeory_information,  stepByStep, debugLevel, MemoryInformation);
 					break;
-				case 7:
-					readFile();
-					break;
+
 				case 8:
 					contuie = false;
 					break;
@@ -60,8 +58,12 @@ public class Test {
 		}
 	}
 
-	public static void testZero() {
+	public static void testZero(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		testCase(
+			have_memeory_information
+			,stepByStep
+			,debugLevel,
+			MemoryInformation,
 			NOP,
 			"addi $1, $0, 74",
 			"addi $t0, $0, 4",
@@ -85,8 +87,12 @@ public class Test {
 	/**
 	 * in this test we check hazard detection And this fact we can't write in zero register
 	 */
-	public static void testOne() {
+	public static void testOne(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		testCase(
+			have_memeory_information,
+			stepByStep,
+			debugLevel,
+			MemoryInformation,
 			"addi $1,$zero,10",
 			"addi $2,$zero,13",
 			"add  $3,$2,$1 ",
@@ -97,8 +103,12 @@ public class Test {
 		);
 	}
 
-	public static void testTwo() {
+	public static void testTwo(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		testCase(
+			have_memeory_information,
+			stepByStep,
+			debugLevel,
+			MemoryInformation,
 			"addi $1,$0,4",
 			"sw $1,4($1)",
 			"lw $2,4($1)",
@@ -110,8 +120,12 @@ public class Test {
 		);
 	}
 
-	public static void testTree() {
+	public static void testTree(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		testCase(
+			have_memeory_information,
+			stepByStep,
+			debugLevel,
+			MemoryInformation,
 			"addi $1,$0,10",
 			"addi $2,$0,13",
 			"sll  $4,$1,10",
@@ -123,8 +137,12 @@ public class Test {
 		);
 	}
 
-	public static void testFour() {
+	public static void testFour(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		testCase(
+			have_memeory_information,
+			stepByStep,
+			debugLevel,
+			MemoryInformation,
 			"addi $1,$0,10",
 			"addi $2,$0,2",
 			"j 5",
@@ -138,8 +156,12 @@ public class Test {
 		);
 	}
 
-	public static void testFive() {
+	public static void testFive(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		testCase(
+			have_memeory_information,
+			stepByStep,
+			debugLevel,
+			MemoryInformation,
 			"addi $3,$zero,4",
 			"beq  $3,$3,3",
 			NOP,
@@ -155,8 +177,11 @@ public class Test {
 		);
 	}
 
-	public static void testSix() {
-		testCase(
+	public static void testSix(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
+		testCase(have_memeory_information
+			,stepByStep
+			,debugLevel
+			,MemoryInformation,
 			"addi $1,$zero,13",
 			"addi $2,$zero,10",
 			"addi $1,$1,-1",
@@ -176,19 +201,19 @@ public class Test {
 		);
 	}
 
-	public static void readFile() {
+	public static void readFile(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation) {
 		System.out.println("Please enter mips inst file to run:");
 		final var fileName = new Scanner(System.in).nextLine();
 		final var file = new File(fileName);
-		testCase(FilesKt.readLines(file, Charsets.UTF_8));
+		testCase(have_memeory_information, stepByStep,debugLevel,  MemoryInformation,FilesKt.readLines(file, Charsets.UTF_8));
 	}
 
 
-	public static void testCase(String... instructions) {
-		testCase(Arrays.asList(instructions));
+	public static void testCase(Boolean have_memeory_information, Boolean stepByStep, int debugLevel, List<Integer> MemoryInformation, String... instructions) {
+		testCase( have_memeory_information,  stepByStep,  debugLevel,  MemoryInformation,Arrays.asList(instructions));
 	}
 
-	public static void testCase(List<String> instructions) {
+	public static void testCase(Boolean have_memeory_information,Boolean stepByStep,int debugLevel,List<Integer>MemoryInformation,List<String> instructions) {
 		for (String instruction : instructions) {
 			System.out.println(instruction);
 		}
@@ -197,9 +222,10 @@ public class Test {
 
 		final var simulator = new Simulator();
 		simulator.loadInstructions(instructions);
-		// simulator.loadDataMemory(); //todo: for Main
+		if (have_memeory_information)
+			simulator.loadDataMemory(MemoryInformation); //todo: for Main
 
-		simulator.run(0, true);
+		simulator.run(debugLevel, stepByStep);
 	}
 
 }

@@ -7,6 +7,7 @@ import sim.tool.DebugKt;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import static sim.tool.TestKt.testOn;
 
@@ -51,7 +52,9 @@ public class Simulator {
 
 			if (stepByStep) {
 				System.out.println("If you want to close program Enter? y");
-				// fixme: new Scanner(System.in).nextLine().equals("y");
+
+				var exite = new Scanner(System.in).nextLine().equals("y");
+				if (exite) break;
 			}
 		}
 
