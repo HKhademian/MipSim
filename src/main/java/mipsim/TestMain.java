@@ -4,6 +4,7 @@ import mipsim.sim.ParserKt;
 import sim.tool.DebugKt;
 
 import java.io.File;
+import java.security.Security;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -25,6 +26,11 @@ public class TestMain {
 			"sub  $3,$3,$2",
 			"and  $zero,$3,$1"
 		);
+		for (int i = 0 ; i < instructions.size();i++){
+			System.out.println(instructions.get(i));
+		}
+		System.out.println("Please Enter to see happen that care in cpu");
+		var x =new Scanner(System.in).nextLine();
 		final var processor = new Processor();
 		processor.init();
 		ParserKt.loadInstructions(processor, instructions, false);
@@ -52,6 +58,11 @@ public class TestMain {
 			"lw $2,4($1)",
 			"addi  $3,$2,3"
 		);
+		for (int i = 0 ; i < instructions.size();i++){
+			System.out.println(instructions.get(i));
+		}
+		System.out.println("Please Enter to see happen that care in cpu");
+		var x =new Scanner(System.in).nextLine();
 		final var processor = new Processor();
 		processor.init();
 		ParserKt.loadInstructions(processor, instructions, false);
@@ -81,6 +92,11 @@ public class TestMain {
 			"srl  $3,$2,2"
 
 		);
+		for (int i = 0 ; i < instructions.size();i++){
+			System.out.println(instructions.get(i));
+		}
+		System.out.println("Please Enter to see happen that care in cpu");
+		var x =new Scanner(System.in).nextLine();
 		final var processor = new Processor();
 		processor.init();
 		ParserKt.loadInstructions(processor, instructions, false);
@@ -110,6 +126,11 @@ public class TestMain {
 			"add  $5,$1,$2 ",
 			"add  $6,$1,$2"
 		);
+		for (int i = 0 ; i < instructions.size();i++){
+			System.out.println(instructions.get(i));
+		}
+		System.out.println("Please Enter to see happen that care in cpu");
+		var x =new Scanner(System.in).nextLine();
 		final var processor = new Processor();
 		processor.init();
 		ParserKt.loadInstructions(processor, instructions, false);
@@ -142,6 +163,11 @@ public class TestMain {
 			NOP
 
 		);
+		for (int i = 0 ; i < instructions.size();i++){
+			System.out.println(instructions.get(i));
+		}
+		System.out.println("Please Enter to see happen that care in cpu");
+		var x =new Scanner(System.in).nextLine();
 		final var processor = new Processor();
 		processor.init();
 		ParserKt.loadInstructions(processor, instructions, false);
@@ -176,6 +202,11 @@ public class TestMain {
 			NOP
 
 		);
+		for (int i = 0 ; i < instructions.size();i++){
+			System.out.println(instructions.get(i));
+		}
+		System.out.println("Please Enter to see happen that care in cpu");
+		var x =new Scanner(System.in).nextLine();
 		final var processor = new Processor();
 		processor.init();
 		ParserKt.loadInstructions(processor, instructions, false);
