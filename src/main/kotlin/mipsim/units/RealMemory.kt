@@ -25,7 +25,7 @@ fun memoryBlock(writeEnabled: Value, writeData: List<Value>): List<Value> =
  * @param input data to write on the selected memory block
  * @return current value of selected memory block
  */
-fun memoryWithDecoder(clock: Value, write: Value, select: List<Value>, input: List<Value>): Pair<List<List<Value>>, Bus> {
+fun memoryWithDecoder(clock: Value, write: Value, select: List<Value>, input: List<Value>): List<Value> {
 	val decoder = dec(Value.ONE, select) // creates a m bit decoder
 
 	val blocks = (0 until (1 shl select.size)).map { i ->
@@ -34,13 +34,13 @@ fun memoryWithDecoder(clock: Value, write: Value, select: List<Value>, input: Li
 		memoryBlock(isEnabled, input) // creates memory block
 	}.toList()
 
-	return blocks to mux(select, blocks) // choose selected memory block
+	return mux(select, blocks) // choose selected memory block
 }
 
 /**
  * @see memoryWithDecoder
  */
-fun memoryWithCmp(clock: Value, write: Value, select: List<Value>, input: List<Value>): Pair<List<List<Value>>, List<Value>> {
+fun memoryWithCmp(clock: Value, write: Value, select: List<Value>, input: List<Value>): List<Value> {
 	val blocks = (0 until (1 shl select.size)).map { i ->
 		val index = i.toBus(select.size)
 		val isSelected = nor(index xor select) // pick target wire, which tells if the memory block is this memory block or not
@@ -48,7 +48,7 @@ fun memoryWithCmp(clock: Value, write: Value, select: List<Value>, input: List<V
 		memoryBlock(isEnabled, input) // creates memory block
 	}.toList()
 
-	return blocks to mux(select, blocks) // choose selected memory block
+	return mux(select, blocks) // choose selected memory block
 }
 
 /**
@@ -56,10 +56,9 @@ fun memoryWithCmp(clock: Value, write: Value, select: List<Value>, input: List<V
  * this module is like normal memory, except it's selector bus is now another memory module and it caches selector
  * you can pass
  */
-fun lockedMemory(selectorClock: Value, selectorWrite: List<Value>, clock: Value, write: Value, writeData: List<Value>): Triple<List<Value>, List<List<Value>>, List<Value>> {
+fun lockedMemory(selectorClock: Value, selectorWrite: List<Value>, clock: Value, write: Value, writeData: List<Value>): Pair<List<Value>, List<Value>> {
 	val selectorRead = flipflopRE(selectorClock, selectorWrite)
-	val (blocks, readData) = memoryWithDecoder(clock, write, selectorRead, writeData)
-	return Triple(selectorRead, blocks, readData)
+	return selectorRead to memoryWithDecoder(clock, write, selectorRead, writeData)
 }
 
 fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, readData: List<Value>, value: Int) {
@@ -81,7 +80,7 @@ private fun test1() {
 	val input = bus(32)
 	val select = bus(8)
 
-	val (blocks, output) = memoryWithDecoder(clock, write, select, input)
+	val output = memoryWithDecoder(clock, write, select, input)
 
 	clock.reset()
 	write.set()
@@ -128,7 +127,7 @@ private fun testLockedSelect() {
 	val clock = mut(false)
 	val write = mut(false)
 	val writeData = bus(32)
-	val (selectorRead, blocks, readData) = lockedMemory(selectorClock, selectorWrite, clock, write, writeData)
+	val (selectorRead, readData) = lockedMemory(selectorClock, selectorWrite, clock, write, writeData)
 
 	clock.reset()
 	write.set()
@@ -176,7 +175,7 @@ private fun testLockedSelectSame() {
 	val clock = mut(false)
 	val write = mut(false)
 	val writeData = bus(32)
-	val (selectorRead, blocks, readData) = lockedMemory(clock, selectorWrite, clock, write, writeData)
+	val (selectorRead, readData) = lockedMemory(clock, selectorWrite, clock, write, writeData)
 
 	clock.reset()
 	write.set()
