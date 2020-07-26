@@ -7,9 +7,12 @@ import mipsim.units.writeWords
 import sim.base.MutableValue
 import java.io.File
 
-const val NOP = "sll $0, $0, 0"
-const val NOP_STR = "NOP"
+// const val NOP = "sll $0, $0, 0"
+const val NOP = "NOP"
 const val NOP_BIN = 0
+
+const val HALT = "HALT"
+const val HALT_BIN = -1
 
 
 /** supported commands with this parser */
@@ -99,7 +102,7 @@ enum class Format {
 		}
 
 		override fun parseBinToInstruction(command: Command, binary: Int): String {
-			if (binary == NOP_BIN) return NOP_STR
+			if (binary == NOP_BIN) return NOP
 
 			val regMask = ((1 shl 5) - 1)
 			val rd = (binary ushr 11) and regMask
@@ -237,12 +240,18 @@ fun parseInstructionToBin(instruction: String): Int = parseInstructionToBin(inst
 fun parseInstructionToBin(instruction: String, nop: Boolean): List<Int> {
 	val inst = instruction.toUpperCase().trim().split(",", " ").filterNot { it.isBlank() }
 	val commandStr = inst[0]
+
+	if (HALT.contentEquals(commandStr)) return listOf(HALT_BIN)
+	if (NOP.contentEquals(commandStr)) return listOf(NOP_BIN)
+
 	val command = commands.find { it.name.toUpperCase() == commandStr } ?: throw RuntimeException("unsupported command")
 	val format = command.format
 	return format.parseInstructionToBin(command, inst, nop)
 }
 
 fun parseBinToInstruction(binaryInstruction: Int): String {
+	if (binaryInstruction == NOP_BIN) return NOP
+	if (binaryInstruction == HALT_BIN) return HALT
 	val opcode = binaryInstruction ushr 26
 	val func = binaryInstruction and ((1 shl 6) - 1)
 	val command = commands.find { it.opCode == opcode && (opcode != 0 || it.func == func) }
