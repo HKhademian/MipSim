@@ -47,9 +47,9 @@ public class TestMain {
 
 	public static void testTwo() {
 		List<String> instructions = Arrays.asList(
-			"addi $1,$zero,4",
-			"$sw $1,4($1)",
-			"$lw $2,4($1)",
+			"addi $1,$0,4",
+			"sw $1,4($1)",
+			"lw $2,4($1)",
 			"addi  $3,$2,3"
 		);
 		final var processor = new Processor();
@@ -75,10 +75,10 @@ public class TestMain {
 
 	public static void testTree() {
 		List<String> instructions = Arrays.asList(
-			"addi $1,$zero,10",
-			"addi $2,$zero,13",
-			"sll  ٫$4,$1,10",
-			"srl  $3,$3,$2"
+			"addi $1,$0,10",
+			"addi $2,$0,13",
+			"sll  $4,$1,10",
+			"srl  $3,$2,2"
 
 		);
 		final var processor = new Processor();
@@ -103,12 +103,12 @@ public class TestMain {
 
 	public static void testFour() {
 		List<String> instructions = Arrays.asList(
-			"addi $1,$zero,10",
-			"addi $1.$zero,2",
-			"j 2",
-			"add  $3,$2,$1 ",
-			"sub  $3,$3,$2",
-			"and  $3,$3,$1"
+			"addi $1,$0,10",
+			"addi $2,$0,2",
+			"j 5",
+			NOP,
+			"add  $5,$1,$2 ",
+			"add  $6,$1,$2"
 		);
 		final var processor = new Processor();
 		processor.init();
@@ -133,11 +133,20 @@ public class TestMain {
 	public static void testFive() {
 		List<String> instructions = Arrays.asList(
 			"addi $3,$zero,4",
-			"beq  $3,$3,5",
+			"beq  $3,$3,3",
+			NOP,
+			NOP,
 			"addi $2,$zero,4",
 			"addi $4,$zero,4",
 			"beq  $4,$2,-2",
+			NOP,
+			NOP,
+			"addi $2,$zero,4",
+			"beq  $4,$2,-2",
+			NOP,
+			NOP,
 			NOP
+
 
 		);
 		final var processor = new Processor();
@@ -166,8 +175,10 @@ public class TestMain {
 			"addi $2,$zero,10",
 			"slt  $3,$1,$2",
 			"addi $1,$1,-1",
-			"beq  $3,$zero,-1",
-			"jmp 0",
+			"beq  $3,$zero,-2",
+			NOP,
+			NOP,
+			"j 0",
 			NOP,
 			NOP
 
