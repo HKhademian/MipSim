@@ -7,6 +7,7 @@ import sim.tool.DebugKt;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import static sim.tool.TestKt.testOn;
 
@@ -31,6 +32,10 @@ public class Simulator {
 		ParserKt.loadInstructions(processor.instructionMemory._memory, instructions, true);
 	}
 
+	public void loadDataMemory(final List<Integer> binaries) {
+
+	}
+
 	public void loadInstructions(final String... instructions) {
 		loadInstructions(Arrays.asList(instructions));
 	}
@@ -40,17 +45,22 @@ public class Simulator {
 		ParserKt.loadInstructions(processor.instructionMemory._memory, instructionsFile, true);
 	}
 
-	public void run() {
+	public void run(int debugLevel, boolean stepByStep) {
 		DebugKt.println(processor.instructionMemory._memory);
 
 		for (var i = 0; i < 100; i++) {
-			if (runStep(i)) break;
+			if (runStep(i, debugLevel)) break;
+
+			if (stepByStep) {
+				System.out.println("If you want to close program Enter? y");
+				// fixme: new Scanner(System.in).nextLine().equals("y");
+			}
 		}
 
 		testOn(processor.dataMemory._memory, "dataMemory");
 	}
 
-	boolean runStep(int step) {
+	boolean runStep(int step, int debugLevel) {
 		testOn(processor, "clock " + step, () -> {
 			processor.eval(System.nanoTime());
 		});

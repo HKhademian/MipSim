@@ -40,8 +40,8 @@ public class Processor implements Eval, DebugWriter {
 	public Processor() {
 		clock = ValueKt.mut(false);
 
-		instructionMemory = new InstructionMemory(clock, 128);
-		dataMemory = new DataMemory(clock, 128);
+		instructionMemory = new InstructionMemory(clock, 1024);
+		dataMemory = new DataMemory(clock, 1024);
 		registerFile = new RegisterFile(clock);
 
 		ifStage = new InstructionFetchStage(this);
