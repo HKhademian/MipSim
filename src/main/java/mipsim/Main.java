@@ -27,8 +27,9 @@ public class Main {
 				"6.Time to check set less than\n" +
 				"7.Okey I'm good horse you can run any program that you like to run please Entere name of your file\n" +
 				"\n8.Exit.");
-			String choice = myObj.nextLine();
-			switch (Integer.valueOf(choice)) {
+			int choice = myObj.nextInt();
+
+			switch (choice) {
 
 				case 1:
 					TestMain.testOne();
@@ -54,6 +55,10 @@ public class Main {
 				case 8:
 					contuie = false;
 					break;
+				default:
+					System.out.println("your input is wrong");
+
+
 			}
 		}
 	}

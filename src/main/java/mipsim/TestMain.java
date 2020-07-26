@@ -37,15 +37,15 @@ public class TestMain {
 		ParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		var clockContinue = true;
+		var clockContinue = false;
 		int i = 0;
-		while (clockContinue) {
+		while (!clockContinue) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});
 			i++;
-			System.out.println("\n Do you like to see next clock cycle ? Y/N");
-			clockContinue = new Scanner(System.in).nextLine().equals("Y");
+			System.out.println("\n Do you like to see next clock cycle ? y");
+			clockContinue = new Scanner(System.in).nextLine().equals("y");
 
 		}
 
@@ -69,15 +69,15 @@ public class TestMain {
 		ParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		var clockContinue = true;
+		var clockContinue = false;
 		int i = 0;
-		while (clockContinue) {
+		while (!clockContinue) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});
 			i++;
-			System.out.println("\n Do you like to see next clock cycle ? Y/N");
-			clockContinue = new Scanner(System.in).nextLine().equals("Y");
+			System.out.println("\n Do you like to see next clock cycle ? y");
+			clockContinue = new Scanner(System.in).nextLine().equals("y");
 
 		}
 
@@ -103,15 +103,15 @@ public class TestMain {
 		ParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		var clockContinue = true;
+		var clockContinue = false;
 		int i = 0;
-		while (clockContinue) {
+		while (!clockContinue) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});
 			i++;
-			System.out.println("\n Do you like to see next clock cycle ? Y/N");
-			clockContinue = new Scanner(System.in).nextLine().equals("Y");
+			System.out.println("\n Do you like to see next clock cycle ? y");
+			clockContinue = new Scanner(System.in).nextLine().equals("y");
 
 		}
 
@@ -137,15 +137,15 @@ public class TestMain {
 		ParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		var clockContinue = true;
+		var clockContinue = false;
 		int i = 0;
-		while (clockContinue) {
+		while (!clockContinue) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});
 			i++;
-			System.out.println("\n Do you like to see next clock cycle ? Y/N");
-			clockContinue = new Scanner(System.in).nextLine().equals("Y");
+			System.out.println("\n Do you like to see next clock cycle ? y");
+			clockContinue = new Scanner(System.in).nextLine().equals("y");
 
 		}
 
@@ -174,15 +174,15 @@ public class TestMain {
 		ParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		var clockContinue = true;
+		var clockContinue = false;
 		int i = 0;
-		while (clockContinue) {
+		while (!clockContinue) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});
 			i++;
 			System.out.println("\n Do you like to see next clock cycle ? Y/N");
-			clockContinue = new Scanner(System.in).nextLine().equals("Y");
+			clockContinue = new Scanner(System.in).nextLine().equals("y");
 
 		}
 
@@ -213,15 +213,15 @@ public class TestMain {
 		ParserKt.loadInstructions(processor, instructions, false);
 		DebugKt.println(processor.instructionMemory._memory);
 
-		var clockContinue = true;
+		var clockContinue = false;
 		int i = 0;
-		while (clockContinue) {
+		while (!clockContinue) {
 			testOn(processor, "clock " + i, () -> {
 				processor.eval(System.nanoTime());
 			});
 			i++;
-			System.out.println("\n Do you like to see next clock cycle ? Y/N");
-			clockContinue = new Scanner(System.in).nextLine().equals("Y");
+			System.out.println("If you want to close program Enter? y");
+			clockContinue = new Scanner(System.in).nextLine().equals("y");
 
 		}
 
