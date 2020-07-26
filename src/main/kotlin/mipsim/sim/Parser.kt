@@ -85,17 +85,23 @@ private fun splitAddress(rsAndOffset: String): List<String> {
 enum class Format {
 	R {
 		override fun parseInstructionToBin(command: Command, inst: List<String>, nop: Boolean): List<Int> {
-			if (inst.size != 4) throw Exception("Bad R-format instruction")
 			var res = (command.opCode shl 26)
 			res = res or command.func
 
-			res = res or (parseRegister(inst[1]) shl 11) // rd
-			res = res or (parseRegister(inst[2]) shl 21) // rs
-
-			res = res or if (command.shamt) {
-				(parseConstant(inst[3], 5) shl 6) // shift amount
+			if (command.name == "JR") {
+				if (inst.size != 2) throw Exception("Bad R-format instruction")
+				res = res or (parseRegister(inst[1]) shl 21) // rs
 			} else {
-				(parseRegister(inst[3]) shl 16) // rt
+				if (inst.size != 4) throw Exception("Bad R-format instruction")
+
+				res = res or (parseRegister(inst[1]) shl 11) // rd
+				res = res or (parseRegister(inst[2]) shl 21) // rs
+
+				res = res or if (command.shamt) {
+					(parseConstant(inst[3], 5) shl 6) // shift amount
+				} else {
+					(parseRegister(inst[3]) shl 16) // rt
+				}
 			}
 
 			return listOf(res)
@@ -112,6 +118,10 @@ enum class Format {
 
 			val rdStr = registers.entries.find { it.value == rd }!!.component1()
 			val rsStr = registers.entries.find { it.value == rs }!!.component1()
+
+			if(command.name == "JR") {
+				return "JR $rsStr"
+			}
 
 			return if (command.shamt) {
 				"${command.name} $rdStr, $rsStr, $sa"
@@ -275,5 +285,6 @@ internal fun main() {
 	testInst("addi \$s1, \$t2, 74")
 	testInst("lw \$t1, 4(\$t2)")
 	testInst("J 1000")
+	testInst("JR \$ra")
 
 }
