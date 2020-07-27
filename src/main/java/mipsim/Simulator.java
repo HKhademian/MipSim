@@ -31,7 +31,7 @@ public class Simulator {
 	}
 
 	public void loadInstructions(final List<String> instructions) {
-		ParserKt.loadInstructions(processor, instructions, true);
+		ParserKt.loadInstructions(processor, instructions, false);
 	}
 
 	public void loadInstructions(final String... instructions) {
@@ -39,7 +39,7 @@ public class Simulator {
 	}
 
 	public void loadInstructions(final File instructionsFile) {
-		ParserKt.loadInstructions(processor, instructionsFile, true);
+		ParserKt.loadInstructions(processor, instructionsFile, false);
 	}
 
 	public void run(int debugLevel, boolean stepByStep) {
