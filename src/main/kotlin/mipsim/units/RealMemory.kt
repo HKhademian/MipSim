@@ -4,6 +4,7 @@ import sim.base.*
 import sim.complex.dec
 import sim.complex.flipflopRE
 import sim.complex.mux
+import sim.tool.keepSource
 import sim.tool.println
 import sim.tool.test
 import kotlin.test.assertEquals
@@ -73,38 +74,23 @@ fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, rea
 }
 
 fun writeBulkOnMemoryBlock(clock: Value, write: MutableValue, writeData: List<MutableValue>, select: List<Value>, blocks: List<List<Value>>, values: List<Int>) {
-	val localClock = mut(false, "LocalClock")
-	val localWrite = const(true, "LocalWrite")
-	val localWriteData = bus(writeData.size, "LocalWriteData")
-	val localSelect = bus(select.size, "LocalSelect")
+	clock.keepSource(mut(false, "LocalClock")) { _, _, localClock ->
+		write.keepSource(mut(false, "LocalWrite")) { _, _, localWrite ->
+			writeData.keepSource(bus(writeData.size, "LocalWriteData")) { _, _, localWriteData ->
+				select.keepSource(bus(select.size, "LocalSelect")) { _, _, localSelect ->
 
-	// store source values
-	val _clock = (clock as MutableSingleInputElement).let { val source = it.input; it.input = localClock; source }
-	val _write = (write as MutableSingleInputElement).let { val source = it.input; it.input = localWrite; source }
-	val _writeData = writeData.mapIndexed { i, it ->
-		(it as MutableSingleInputElement)
-		val source = it.input
-		it.input = localWriteData[i]
-		source
-	}
-	val _select = select.mapIndexed { i, it ->
-		(it as MutableSingleInputElement)
-		val source = it.input
-		it.input = localSelect[i]
-		source
-	}
+					localWrite.set()
 
-	// do bulk write
-	blocks.zip(values).forEachIndexed { i, (block, value) ->
-		localSelect.set(i)
-		writeOnMemoryBlock(localClock, localWriteData, block, value)
-	}
+					// do bulk write
+					blocks.zip(values).forEachIndexed { i, (block, value) ->
+						localSelect.set(i)
+						writeOnMemoryBlock(localClock, localWriteData, block, value)
+					}
 
-	// restore source values
-	(clock as MutableSingleInputElement).input = _clock
-	(write as MutableSingleInputElement).input = _write
-	writeData.mapIndexed { i, it -> (it as MutableSingleInputElement).input = _writeData[i] }
-	select.mapIndexed { i, it -> (it as MutableSingleInputElement).input = _select[i] }
+				}
+			}
+		}
+	}
 }
 
 internal fun main() {
@@ -269,8 +255,10 @@ private fun testBulkWrite() {
 	writeBulkOnMemoryBlock(clock, write, writeData, select, blocks, (1..8).toList())
 
 	select.set(1)
+	readData.println()
 	assertEquals(readData.toInt(), 2)
 
 	select.set(3)
+	readData.println()
 	assertEquals(readData.toInt(), 4)
 }
