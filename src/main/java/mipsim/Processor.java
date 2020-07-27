@@ -5,7 +5,7 @@ import mipsim.pipeline.stages.*;
 import mipsim.sim.ParserKt;
 import mipsim.units.DataMemoryUnit;
 import mipsim.units.InstructionMemoryUnit;
-import mipsim.units.RegisterFile;
+import mipsim.units.RegisterFileUnit;
 import org.jetbrains.annotations.NotNull;
 import sim.base.*;
 import sim.tool.DebugKt;
@@ -21,7 +21,7 @@ public class Processor implements Eval, DebugWriter {
 	public final Value clock;
 	public final InstructionMemoryUnit instructionMemory;
 	public final DataMemoryUnit dataMemory;
-	public final RegisterFile registerFile;
+	public final RegisterFileUnit registerFile;
 
 	// stages
 	public final InstructionFetchStage ifStage;
@@ -42,7 +42,7 @@ public class Processor implements Eval, DebugWriter {
 
 		instructionMemory = new InstructionMemoryUnit(clock, 128);
 		dataMemory = new DataMemoryUnit(clock, 128);
-		registerFile = new RegisterFile(clock);
+		registerFile = new RegisterFileUnit(clock);
 
 		ifStage = new InstructionFetchStage(this);
 		idStage = new InstructionDecodeStage(this);
@@ -84,8 +84,8 @@ public class Processor implements Eval, DebugWriter {
 		dataMemory.eval(time);
 
 		((MutableValue) clock).set();
-		//registerFile.eval(time);
-		//instructionMemory.eval(time);
+		registerFile.eval(time);
+		instructionMemory.eval(time);
 		dataMemory.eval(time);
 
 		final var snapshotState = BusKt.constant(nextState);

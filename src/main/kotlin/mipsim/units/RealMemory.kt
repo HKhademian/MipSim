@@ -1,6 +1,7 @@
 package mipsim.units
 
 import sim.base.*
+import sim.base.Value.Companion.ZERO
 import sim.complex.dec
 import sim.complex.flipflopRE
 import sim.complex.mux
@@ -32,7 +33,7 @@ fun memoryWithDecoder(clock: Value, write: Value, select: List<Value>, input: Li
 	val decoder = dec(Value.ONE, select) // creates a m bit decoder
 
 	val blocks = (0 until (1 shl select.size)).map { i ->
-		val isSelected = decoder[i] // pick target wire, which tells if the memory block is this memory block or not
+		val isSelected = if (i == 0) ZERO else decoder[i] // pick target wire, which tells if the memory block is this memory block or not
 		val isEnabled = and(isSelected, clock, write) // is write to block enabled or not
 		memoryBlock(isEnabled, input) // creates memory block
 	}.toList()
@@ -46,7 +47,7 @@ fun memoryWithDecoder(clock: Value, write: Value, select: List<Value>, input: Li
 fun memoryWithCmp(clock: Value, write: Value, select: List<Value>, input: List<Value>): Pair<List<List<Value>>, List<Value>> {
 	val blocks = (0 until (1 shl select.size)).map { i ->
 		val index = i.toBus(select.size)
-		val isSelected = nor(index xor select) // pick target wire, which tells if the memory block is this memory block or not
+		val isSelected = if (i == 0) ZERO else nor(index xor select) // pick target wire, which tells if the memory block is this memory block or not
 		val isEnabled = and(isSelected, clock, write) // is write to block enabled or not
 		memoryBlock(isEnabled, input) // creates memory block
 	}.toList()
@@ -66,13 +67,13 @@ fun lockedMemory(selectorClock: Value, selectorWrite: List<Value>, clock: Value,
 }
 
 fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, readData: List<Value>, value: Int) {
-	//enabled.reset()
-	//readData.read()
+	enabled.reset()
+	readData.read()
 	writeData.set(value)
 	enabled.set()
 	readData.read()
-	//enabled.reset()
-	//readData.read()
+	enabled.reset()
+	readData.read()
 }
 
 fun writeBulkOnMemory(clock: Value, write: MutableValue, writeData: List<MutableValue>, select: List<Value>, readData: List<Value>, values: List<Int>) {
@@ -116,39 +117,42 @@ fun readBulkOnMemory(clock: Value, write: MutableValue, select: List<Value>, rea
 	}
 }
 
-class RealMemory(val wordCount: Int, val additionalReader: Boolean = false) : Eval, DebugWriter {
-	val selectorSize: Int = log2(wordCount.toDouble()).toInt()
-	val clock: MutableValue = mut(false, "Clock")
+class RealMemory(private val wordCount: Int, private val additionalReader: Boolean = false, inputClock: Value = ZERO) : Eval, DebugWriter {
+	private val selectorSize: Int = log2(wordCount.toDouble()).toInt()
+	private val clock: MutableValue = mut(false, "Clock").also { it.set(inputClock) }
 	val write: MutableValue = mut(false, "Write")
 	val writeData: List<MutableValue> = bus(32, "WriteData")
-	val select1: List<MutableValue> = bus(selectorSize, "Select1")
-	val select2: List<MutableValue> = if (!additionalReader) emptyList() else bus(selectorSize, "Select2")
-	val blocks: List<List<Value>>
+	val writeSelect: List<MutableValue> = bus(selectorSize, "WriteSelect")
+	val readSelect1: List<MutableValue> = bus(selectorSize, "ReadSelect1")
+	val readSelect2: List<MutableValue> = if (!additionalReader) emptyList() else bus(selectorSize, "ReadSelect2")
+	private val blocks: List<List<Value>>
+	private val readData: List<Value>
 	val readData1: List<Value>
 	val readData2: List<Value>
 
 	init {
-		val mem = memoryWithDecoder(clock, write, select1, writeData)
+		val mem = memoryWithDecoder(clock, write, writeSelect, writeData)
 		blocks = mem.first
-		readData1 = mem.second
-		readData2 = if (!additionalReader) emptyList() else mux(select2, blocks)
+		readData = mem.second
+		readData1 = mux(readSelect1, blocks)
+		readData2 = if (!additionalReader) emptyList() else mux(readSelect2, blocks)
 	}
 
 	fun bulkRead(): List<Int> =
-		readBulkOnMemory(clock, write, select1, readData1)
+		readBulkOnMemory(clock, write, writeSelect, readData)
 
 	fun bulkWrite(values: List<Int>) =
-		writeBulkOnMemory(clock, write, writeData, select1, readData1, values)
+		writeBulkOnMemory(clock, write, writeData, writeSelect, readData, values)
 
 	fun clear() {
 		bulkWrite((0 until wordCount).map { 0 })
 	}
 
 	override fun eval(time: Long) {
-		select1.read()
+		readSelect1.read()
 		readData1.read()
 		if (additionalReader) {
-			select2.read()
+			readSelect2.read()
 			readData2.read()
 		}
 	}

@@ -23,7 +23,7 @@ public class Simulator {
 		BusKt.set(this.processor.currentState, 0);
 		this.processor.instructionMemory._memory.clear();
 		this.processor.dataMemory._memory.clear();
-		BusKt.set(this.processor.registerFile._memory, 0);
+		this.processor.registerFile._memory.clear();
 	}
 
 	public void loadInstructions(final List<String> instructions) {
