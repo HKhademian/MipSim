@@ -1,5 +1,6 @@
-package mipsim;
+package mipsim.sim;
 
+import mipsim.Processor;
 import mipsim.sim.ParserKt;
 import sim.base.BusKt;
 import sim.tool.DebugKt;

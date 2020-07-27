@@ -1,7 +1,8 @@
-package mipsim;
+package mipsim.console;
 
 import kotlin.io.FilesKt;
 import kotlin.text.Charsets;
+import mipsim.sim.Simulator;
 
 import java.io.File;
 import java.util.ArrayList;
