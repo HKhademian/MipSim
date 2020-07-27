@@ -63,16 +63,55 @@ fun lockedMemory(selectorClock: Value, selectorWrite: List<Value>, clock: Value,
 }
 
 fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, readData: List<Value>, value: Int) {
+	enabled.reset()
+	readData.read()
 	writeData.set(value)
 	enabled.set()
 	readData.read()
 	enabled.reset()
+	readData.read()
+}
+
+fun writeBulkOnMemoryBlock(clock: Value, write: MutableValue, writeData: List<MutableValue>, select: List<Value>, blocks: List<List<Value>>, values: List<Int>) {
+	val localClock = mut(false, "LocalClock")
+	val localWrite = const(true, "LocalWrite")
+	val localWriteData = bus(writeData.size, "LocalWriteData")
+	val localSelect = bus(select.size, "LocalSelect")
+
+	// store source values
+	val _clock = (clock as MutableSingleInputElement).let { val source = it.input; it.input = localClock; source }
+	val _write = (write as MutableSingleInputElement).let { val source = it.input; it.input = localWrite; source }
+	val _writeData = writeData.mapIndexed { i, it ->
+		(it as MutableSingleInputElement)
+		val source = it.input
+		it.input = localWriteData[i]
+		source
+	}
+	val _select = select.mapIndexed { i, it ->
+		(it as MutableSingleInputElement)
+		val source = it.input
+		it.input = localSelect[i]
+		source
+	}
+
+	// do bulk write
+	blocks.zip(values).forEachIndexed { i, (block, value) ->
+		localSelect.set(i)
+		writeOnMemoryBlock(localClock, localWriteData, block, value)
+	}
+
+	// restore source values
+	(clock as MutableSingleInputElement).input = _clock
+	(write as MutableSingleInputElement).input = _write
+	writeData.mapIndexed { i, it -> (it as MutableSingleInputElement).input = _writeData[i] }
+	select.mapIndexed { i, it -> (it as MutableSingleInputElement).input = _select[i] }
 }
 
 internal fun main() {
 	test("*** test1 ***") { test1() }
 	test("*** testLockedSelect ***") { testLockedSelect() }
 	test("*** testLockedSelectSame ***") { testLockedSelectSame() }
+	test("*** testBulkWrite ***") { testBulkWrite() }
 }
 
 private fun test1() {
@@ -218,4 +257,20 @@ private fun testLockedSelectSame() {
 	clock.set()
 	readData.println()
 	assertEquals(readData.toInt(), 19)
+}
+
+private fun testBulkWrite() {
+	val clock = mut(false, "Clock")
+	val write = mut(false, "Write")
+	val writeData = bus(8, "WriteData")
+	val select = bus(3, "Select")
+	val (blocks, readData) = memoryWithDecoder(clock, write, select, writeData)
+
+	writeBulkOnMemoryBlock(clock, write, writeData, select, blocks, (1..8).toList())
+
+	select.set(1)
+	assertEquals(readData.toInt(), 2)
+
+	select.set(3)
+	assertEquals(readData.toInt(), 4)
 }
