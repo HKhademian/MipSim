@@ -1,12 +1,23 @@
+;	array:$1 is address of ??
 addi $1,$zero,20
+; $2 = *array
 lw $2,0($1)
+; array+=4
 addi $1,$1,4
+; sum:$3 = *array
 lw $3,0($1)
+; x:$4=1
 addi $4,$zero,1
-jmp:
+;jmp:6*4
+;if(x==$2) jumpTo ??
 beq $4,$2,
+;array+=4
 addi $1,$1,4
+;$4=*array
 lw $4,0($1)
+; sum+=$4
 addi $3,$4,$3
+; $2+=1
 addi $2,$2,1
-j jmp
+;jumpTo jmp
+j 24
