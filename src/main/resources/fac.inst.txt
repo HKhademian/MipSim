@@ -19,9 +19,3 @@ beq  $7,$4,xxx
 addi $3,$3,$3
 addi $7,$7,1
 j yyy
-NOP
-NOP
-NOP
-NOP
-NOP
-halt

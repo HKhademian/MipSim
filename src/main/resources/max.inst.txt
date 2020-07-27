@@ -10,12 +10,5 @@ lw $4,0($1)
 slt $7,$3,$4
 beq $7,$zero,
 addi $3,$4,0
-
 addi $2,$2,1
 j jmp
-NOP
-NOP
-NOP
-NOP
-NOP
-halt
