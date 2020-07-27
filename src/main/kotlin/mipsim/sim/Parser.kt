@@ -253,11 +253,12 @@ fun RealMemory.loadInstructions(instructions: List<Int>) {
 fun parseInstructionToBin(instruction: String): Int = parseInstructionToBin(instruction, false).first()
 
 fun parseInstructionToBin(instruction: String, nop: Boolean): List<Int> {
-	val inst = instruction.toUpperCase().trim().split(",", " ").filterNot { it.isBlank() }
+	val inst = instruction.toUpperCase().trim().split(",", " ").map { it.trim() }.filterNot { it.isBlank() }
 	val commandStr = inst[0]
 
 	if (HALT.contentEquals(commandStr)) return listOf(HALT_BIN)
 	if (NOP.contentEquals(commandStr)) return listOf(NOP_BIN)
+	if (commandStr.startsWith(";") || commandStr.startsWith("#")) return emptyList()
 
 	val command = commands.find { it.name.toUpperCase() == commandStr } ?: throw RuntimeException("unsupported command")
 	val format = command.format

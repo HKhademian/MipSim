@@ -66,6 +66,9 @@ fun lockedMemory(selectorClock: Value, selectorWrite: List<Value>, clock: Value,
 	return Triple(selectorRead, blocks, readData)
 }
 
+/**
+ * write a value to memory block
+ */
 fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, readData: List<Value>, value: Int) {
 	enabled.reset()
 	readData.read()
@@ -76,6 +79,10 @@ fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, rea
 	readData.read()
 }
 
+/**
+ * fill memory with all values
+ * attention: because mem#0 is always 0, so this function starts to write from word 1
+ */
 fun writeBulkOnMemory(clock: Value, write: MutableValue, writeData: List<MutableValue>, select: List<Value>, readData: List<Value>, values: List<Int>) {
 	clock.keepSource(mut(false, "LocalClock")) { _, _, localClock ->
 		write.keepSource(mut(false, "LocalWrite")) { _, _, localWrite ->
@@ -86,7 +93,7 @@ fun writeBulkOnMemory(clock: Value, write: MutableValue, writeData: List<Mutable
 
 					// do bulk write
 					values.forEachIndexed { i, value ->
-						localSelect.set(i)
+						localSelect.set(i + 1)
 						writeOnMemoryBlock(localClock, localWriteData, readData, value)
 					}
 
@@ -96,6 +103,9 @@ fun writeBulkOnMemory(clock: Value, write: MutableValue, writeData: List<Mutable
 	}
 }
 
+/**
+ * read all values in memory block
+ */
 fun readBulkOnMemory(clock: Value, write: MutableValue, select: List<Value>, readData: List<Value>): List<Int> {
 	return clock.keepSource(mut(false, "LocalClock")) { _, _, localClock ->
 		write.keepSource(mut(false, "LocalWrite")) { _, _, localWrite ->
@@ -117,6 +127,12 @@ fun readBulkOnMemory(clock: Value, write: MutableValue, select: List<Value>, rea
 	}
 }
 
+/**
+ * a word-aligned memory module with 2 read and 1 separate write inputs
+ * it uses flipflips to create memory grid
+ * every thing in this module is gate-level
+ * (programmin logics uses to wire things together but not to calculate/evaluate values)
+ */
 class RealMemory(private val wordCount: Int, private val additionalReader: Boolean = false, inputClock: Value = ZERO) : Eval, DebugWriter {
 	private val selectorSize: Int = log2(wordCount.toDouble()).toInt()
 	private val clock: MutableValue = mut(false, "Clock").also { it.set(inputClock) }
@@ -134,18 +150,23 @@ class RealMemory(private val wordCount: Int, private val additionalReader: Boole
 		val mem = memoryWithDecoder(clock, write, writeSelect, writeData)
 		blocks = mem.first
 		readData = mem.second
-		readData1 = mux(readSelect1, blocks)
+		readData1 = mux(readSelect1, blocks) // separate reads and writes selectors
 		readData2 = if (!additionalReader) emptyList() else mux(readSelect2, blocks)
 	}
 
+	/** read all values in memory flipflops before simulate */
 	fun bulkRead(): List<Int> =
 		readBulkOnMemory(clock, write, writeSelect, readData)
 
+	/** write given values to memory flipflops before simulate */
 	fun bulkWrite(values: List<Int>) =
 		writeBulkOnMemory(clock, write, writeData, writeSelect, readData, values)
 
-	fun clear() {
-		bulkWrite((0 until wordCount).map { 0 })
+	/** fill memory with zeros */
+	@JvmOverloads
+	fun clear(max: Int = -1) {
+		val count = if (max in 1 until wordCount) max else wordCount
+		bulkWrite((0 until count).map { 0 })
 	}
 
 	override fun eval(time: Long) {

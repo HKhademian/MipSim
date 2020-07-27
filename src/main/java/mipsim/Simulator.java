@@ -21,18 +21,17 @@ public class Simulator {
 
 	void reset() {
 		BusKt.set(this.processor.currentState, 0);
-		this.processor.instructionMemory._memory.clear();
-		this.processor.dataMemory._memory.clear();
+		this.processor.instructionMemory._memory.clear(64);
+		this.processor.dataMemory._memory.clear(64);
 		this.processor.registerFile._memory.clear();
 	}
 
-	public void loadInstructions(final List<String> instructions) {
-		reset();
-		ParserKt.loadInstructions(processor, instructions, true);
+	public void loadDataMemory(final List<Integer> binaries) {
+		processor.dataMemory._memory.bulkWrite(binaries);
 	}
 
-	public void loadDataMemory(final List<Integer> binaries) {
-
+	public void loadInstructions(final List<String> instructions) {
+		ParserKt.loadInstructions(processor, instructions, true);
 	}
 
 	public void loadInstructions(final String... instructions) {
@@ -40,7 +39,6 @@ public class Simulator {
 	}
 
 	public void loadInstructions(final File instructionsFile) {
-		reset();
 		ParserKt.loadInstructions(processor, instructionsFile, true);
 	}
 
