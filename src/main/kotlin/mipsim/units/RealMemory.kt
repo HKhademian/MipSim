@@ -73,7 +73,7 @@ fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, rea
 	readData.read()
 }
 
-fun writeBulkOnMemoryBlock(clock: Value, write: MutableValue, writeData: List<MutableValue>, select: List<Value>, blocks: List<List<Value>>, values: List<Int>) {
+fun writeBulkOnMemoryBlock(clock: Value, write: MutableValue, writeData: List<MutableValue>, select: List<Value>, readData: List<Value>, values: List<Int>) {
 	clock.keepSource(mut(false, "LocalClock")) { _, _, localClock ->
 		write.keepSource(mut(false, "LocalWrite")) { _, _, localWrite ->
 			writeData.keepSource(bus(writeData.size, "LocalWriteData")) { _, _, localWriteData ->
@@ -82,9 +82,9 @@ fun writeBulkOnMemoryBlock(clock: Value, write: MutableValue, writeData: List<Mu
 					localWrite.set()
 
 					// do bulk write
-					blocks.zip(values).forEachIndexed { i, (block, value) ->
+					values.forEachIndexed { i, value ->
 						localSelect.set(i)
-						writeOnMemoryBlock(localClock, localWriteData, block, value)
+						writeOnMemoryBlock(localClock, localWriteData, readData, value)
 					}
 
 				}
@@ -252,7 +252,7 @@ private fun testBulkWrite() {
 	val select = bus(3, "Select")
 	val (blocks, readData) = memoryWithDecoder(clock, write, select, writeData)
 
-	writeBulkOnMemoryBlock(clock, write, writeData, select, blocks, (1..8).toList())
+	writeBulkOnMemoryBlock(clock, write, writeData, select, readData, (1..8).toList())
 
 	select.set(1)
 	readData.println()
