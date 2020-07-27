@@ -21,14 +21,14 @@ public class Simulator {
 
 	void reset() {
 		BusKt.set(this.processor.currentState, 0);
-		// fixme:  BusKt.set(this.processor.instructionMemory._memory, 0);
-		// fixme:  BusKt.set(this.processor.dataMemory._memory, 0);
+		this.processor.instructionMemory._memory.clear();
+		this.processor.dataMemory._memory.clear();
 		BusKt.set(this.processor.registerFile._memory, 0);
 	}
 
 	public void loadInstructions(final List<String> instructions) {
 		reset();
-		ParserKt.loadInstructions(processor.instructionMemory, instructions, true);
+		ParserKt.loadInstructions(processor, instructions, true);
 	}
 
 	public void loadDataMemory(final List<Integer> binaries) {
@@ -41,7 +41,7 @@ public class Simulator {
 
 	public void loadInstructions(final File instructionsFile) {
 		reset();
-		// fixme:  ParserKt.loadInstructions(processor.instructionMemory._memory, instructionsFile, true);
+		ParserKt.loadInstructions(processor, instructionsFile, true);
 	}
 
 	public void run(int debugLevel, boolean stepByStep) {

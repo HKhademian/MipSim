@@ -1,11 +1,8 @@
 package mipsim.sim
 
 import mipsim.Processor
-import mipsim.units.InstructionMemory
 import mipsim.units.InstructionMemoryUnit
-import mipsim.units.reset
-import mipsim.units.writeWords
-import sim.base.MutableValue
+import mipsim.units.RealMemory
 import java.io.File
 
 // const val NOP = "sll $0, $0, 0"
@@ -224,8 +221,12 @@ class Command(val name: String, val format: Format, val opCode: Int, val func: I
 		this(name, format, opCode.toInt(16), func.toIntOrNull(16) ?: 0, shamt)
 }
 
-/** load instructions from a file and write to memory */
-fun List<MutableValue>.loadInstructions(instructionFile: File, nop: Boolean = false) =
+/** parse instructions and write to instructionMemory */
+fun Processor.loadInstructions(instructionFile: File, nop: Boolean = false) =
+	instructionMemory.loadInstructions(instructionFile, nop)
+
+/** parse instructions and write to instructionMemory */
+fun InstructionMemoryUnit.loadInstructions(instructionFile: File, nop: Boolean = false) =
 	loadInstructions(instructionFile.readLines(), nop)
 
 /** parse instructions and write to instructionMemory */
@@ -233,20 +234,19 @@ fun Processor.loadInstructions(instructionLines: List<String>, nop: Boolean = fa
 	instructionMemory.loadInstructions(instructionLines, nop)
 
 /** parse instructions and write to instructionMemory */
-fun InstructionMemory.loadInstructions(instructionLines: List<String>, nop: Boolean = false) =
+fun InstructionMemoryUnit.loadInstructions(instructionLines: List<String>, nop: Boolean = false) {
 	_memory.loadInstructions(instructionLines, nop)
+}
 
 /** parse instructions and write to instructionMemory */
-fun InstructionMemoryUnit.loadInstructions(instructionLines: List<String>, nop: Boolean = false) =
-	Unit // fixme: _memory.loadInstructions(instructionLines, nop)
-
-/** parse instructions and write to instructionMemory */
-fun List<MutableValue>.loadInstructions(instructionLines: List<String>, nop: Boolean = false) {
+fun RealMemory.loadInstructions(instructionLines: List<String>, nop: Boolean = false) {
 	val instructions = instructionLines.map { parseInstructionToBin(it, nop) }.flatten() // convert to int
-	val memory = this
-	val time = System.currentTimeMillis()
-	memory.reset()
-	memory.writeWords(instructions, time)
+	loadInstructions(instructions)
+}
+
+/** parse instructions and write to instructionMemory */
+fun RealMemory.loadInstructions(instructions: List<Int>) {
+	bulkWrite(instructions)
 }
 
 

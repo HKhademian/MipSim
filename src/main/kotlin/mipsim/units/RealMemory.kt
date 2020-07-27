@@ -4,9 +4,11 @@ import sim.base.*
 import sim.complex.dec
 import sim.complex.flipflopRE
 import sim.complex.mux
+import sim.tool.DebugWriter
 import sim.tool.keepSource
 import sim.tool.println
 import sim.tool.test
+import kotlin.math.log2
 import kotlin.test.assertEquals
 
 fun memoryBlock(writeEnabled: Value, writeData: List<Value>): List<Value> =
@@ -64,16 +66,16 @@ fun lockedMemory(selectorClock: Value, selectorWrite: List<Value>, clock: Value,
 }
 
 fun writeOnMemoryBlock(enabled: MutableValue, writeData: List<MutableValue>, readData: List<Value>, value: Int) {
-	enabled.reset()
-	readData.read()
+	//enabled.reset()
+	//readData.read()
 	writeData.set(value)
 	enabled.set()
 	readData.read()
-	enabled.reset()
-	readData.read()
+	//enabled.reset()
+	//readData.read()
 }
 
-fun writeBulkOnMemoryBlock(clock: Value, write: MutableValue, writeData: List<MutableValue>, select: List<Value>, readData: List<Value>, values: List<Int>) {
+fun writeBulkOnMemory(clock: Value, write: MutableValue, writeData: List<MutableValue>, select: List<Value>, readData: List<Value>, values: List<Int>) {
 	clock.keepSource(mut(false, "LocalClock")) { _, _, localClock ->
 		write.keepSource(mut(false, "LocalWrite")) { _, _, localWrite ->
 			writeData.keepSource(bus(writeData.size, "LocalWriteData")) { _, _, localWriteData ->
@@ -93,11 +95,95 @@ fun writeBulkOnMemoryBlock(clock: Value, write: MutableValue, writeData: List<Mu
 	}
 }
 
+fun readBulkOnMemory(clock: Value, write: MutableValue, select: List<Value>, readData: List<Value>): List<Int> {
+	return clock.keepSource(mut(false, "LocalClock")) { _, _, localClock ->
+		write.keepSource(mut(false, "LocalWrite")) { _, _, localWrite ->
+			select.keepSource(bus(select.size, "LocalSelect")) { _, _, localSelect ->
+
+				localWrite.reset()
+
+				// do bulk write
+				(0 until (1 shl select.size)).map { i ->
+					localSelect.set(i)
+					localClock.reset()
+					readData.toInt()
+					localClock.set()
+					readData.toInt()
+				}
+
+			}
+		}
+	}
+}
+
+class RealMemory(val wordCount: Int, val additionalReader: Boolean = false) : Eval, DebugWriter {
+	val selectorSize: Int = log2(wordCount.toDouble()).toInt()
+	val clock: MutableValue = mut(false, "Clock")
+	val write: MutableValue = mut(false, "Write")
+	val writeData: List<MutableValue> = bus(32, "WriteData")
+	val select1: List<MutableValue> = bus(selectorSize, "Select1")
+	val select2: List<MutableValue> = if (!additionalReader) emptyList() else bus(selectorSize, "Select2")
+	val blocks: List<List<Value>>
+	val readData1: List<Value>
+	val readData2: List<Value>
+
+	init {
+		val mem = memoryWithDecoder(clock, write, select1, writeData)
+		blocks = mem.first
+		readData1 = mem.second
+		readData2 = if (!additionalReader) emptyList() else mux(select2, blocks)
+	}
+
+	fun bulkRead(): List<Int> =
+		readBulkOnMemory(clock, write, select1, readData1)
+
+	fun bulkWrite(values: List<Int>) =
+		writeBulkOnMemory(clock, write, writeData, select1, readData1, values)
+
+	fun clear() {
+		bulkWrite((0 until wordCount).map { 0 })
+	}
+
+	override fun eval(time: Long) {
+		select1.read()
+		readData1.read()
+		if (additionalReader) {
+			select2.read()
+			readData2.read()
+		}
+	}
+
+	fun forceEval() {
+		clock.keepSource(mut(false, "LocalClock")) { _, _, localClock ->
+			localClock.reset()
+			eval(System.nanoTime())
+			localClock.set()
+			eval(System.nanoTime())
+			localClock.reset()
+			eval(System.nanoTime())
+		}
+	}
+
+
+	override fun writeDebug(buffer: StringBuffer) {
+		val values = bulkRead()
+		val wordCount = this.wordCount
+		for (i in 0 until Integer.min(10, wordCount)) {
+			buffer
+				.append("WORD#")
+				.append(i)
+				.append("=")
+				.append(Integer.toHexString(values[i]))
+				.append("\t\t")
+		}
+	}
+}
+
 internal fun main() {
 	test("*** test1 ***") { test1() }
 	test("*** testLockedSelect ***") { testLockedSelect() }
 	test("*** testLockedSelectSame ***") { testLockedSelectSame() }
-	test("*** testBulkWrite ***") { testBulkWrite() }
+	test("*** testBulkReadWrite ***") { testBulkReadWrite() }
 }
 
 private fun test1() {
@@ -245,14 +331,14 @@ private fun testLockedSelectSame() {
 	assertEquals(readData.toInt(), 19)
 }
 
-private fun testBulkWrite() {
+private fun testBulkReadWrite() {
 	val clock = mut(false, "Clock")
 	val write = mut(false, "Write")
 	val writeData = bus(8, "WriteData")
 	val select = bus(3, "Select")
 	val (blocks, readData) = memoryWithDecoder(clock, write, select, writeData)
 
-	writeBulkOnMemoryBlock(clock, write, writeData, select, readData, (1..8).toList())
+	writeBulkOnMemory(clock, write, writeData, select, readData, (1..8).toList())
 
 	select.set(1)
 	readData.println()
@@ -261,4 +347,6 @@ private fun testBulkWrite() {
 	select.set(3)
 	readData.println()
 	assertEquals(readData.toInt(), 4)
+
+	readBulkOnMemory(clock, write, select, readData).println()
 }
