@@ -153,7 +153,7 @@ public class Test {
 		simulator.loadInstructions(insts);
 		simulator.loadDataMemory(memoryData);
 
-		System.out.println("Please Enter to see happen that care in cpu");
+		System.out.println("Please Enter to run processor: ");
 		Main.scanner.nextLine();
 
 		simulator.run(debugLevel, stepByStep);

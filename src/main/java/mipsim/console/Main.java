@@ -6,6 +6,17 @@ import java.util.Scanner;
 public class Main {
 	public static final Scanner scanner = new Scanner(System.in);
 
+	public static boolean yesNo(final String message, boolean def) {
+		System.out.print(message);
+		if (def) {
+			System.out.print("([Y]es/[n]o)");
+			return !scanner.nextLine().toLowerCase().equals("n");
+		} else {
+			System.out.print("([y]es/[N]o)");
+			return !scanner.nextLine().toLowerCase().equals("y");
+		}
+	}
+
 	//todo: plz make me
 	public static void main(String... args) {
 		System.out.println("*** MipSim ***");
@@ -15,6 +26,7 @@ public class Main {
 		while (true) {
 			System.out.println("1. Run a pre baked program examples/testCases");
 			System.out.println("2. Run your Own code from File");
+			System.out.println("3. Run Bundled Programs");
 			System.out.println("0. Exit from Program");
 			System.out.println("---------");
 			System.out.print("Print enter your command: ");
@@ -37,27 +49,17 @@ public class Main {
 					fillMemoryData(numbers);
 				}
 				Test.readFile(isStepByStep, debugLevel, numbers);
+			} else if (choice == 3) {
+				// todo:
 			} else if (choice == 0) {
 				System.out.println("Good Bye");
 				break;
 			} else {
 				System.out.println("Wrong Input!");
 			}
-
 		}
-
 	}
 
-	//A) input all numbers end with -1
-//B) 0: count 1...n:  numbers
-//C) load all data mem
-//E) Exec
-//1. sort
-//2. find
-//3. fib
-//4. sum
-//5. max
-//6. fac
 	public static int find_DebugLevel() {
 		System.out.println("please choice Debug level:");
 		System.out.println("1.Easy");
@@ -69,20 +71,17 @@ public class Main {
 	}
 
 	public static boolean find_stepShow() {
-		System.out.println("Do you like to see step by step of code that you Run in Cpu ? (yes/No)");
-		return scanner.nextLine().toLowerCase().equals("yes");
+		return yesNo("Do you like to see step by step of code that you Run in Cpu ?", false);
 	}
 
 	public static boolean find_heWantToSaveInMemory() {
-		System.out.println("Do you like to save some information in memory? (yes/No)");
-		return scanner.nextLine().toLowerCase().equals("yes");
+		return yesNo("Do you like to save some information in memory?", false);
 	}
 
 	public static void fillMemoryData(ArrayList<Integer> array) {
 		array.add(0);
 		while (true) {
-			System.out.print("Do you like to add number to mem? (yes/ No)");
-			if (!scanner.nextLine().equals("y")) {
+			if (!yesNo("Do you like to add number to mem?", false)) {
 				array.add(-1);
 				return;
 			} else {
