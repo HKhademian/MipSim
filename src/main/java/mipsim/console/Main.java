@@ -1,9 +1,20 @@
 package mipsim.console;
 
+import kotlin.Pair;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public final class Main {
+	private static final Pair<String, String> bundles[] = new Pair[]{
+		new Pair<>("Sum", "sum.inst.txt"),
+		new Pair<>("Max", "max.inst.txt"),
+		new Pair<>("Fac", "fac.inst.txt"),
+		new Pair<>("Fib", "fibo.inst.txt"),
+		new Pair<>("Sort", "bubble_sort.inst.txt"),
+	};
+
 	public static final Scanner scanner = new Scanner(System.in);
 
 	public static boolean yesNo(final String message, boolean def) {
@@ -48,9 +59,31 @@ public class Main {
 				if (find_heWantToSaveInMemory()) {
 					fillMemoryData(numbers);
 				}
-				Test.readFile(isStepByStep, debugLevel, numbers);
+				Test.testFile(isStepByStep, debugLevel, numbers);
 			} else if (choice == 3) {
-				// todo:
+				for (var i = 0; i < bundles.length; i++) {
+					final var bundle = bundles[i];
+					System.out.println(String.format("%01d) %s", i + 1, bundle.getFirst()));
+				}
+				System.out.println(String.format("%01d) %s", 0, "Back to menu"));
+				int choose;
+				while (true) {
+					choose = scanner.nextInt();
+					scanner.nextLine();
+					if (choose < 0 || choose > bundles.length) continue;
+					break;
+				}
+				if (choose != 0) {
+					final var loader = ClassLoader.getSystemClassLoader();
+					final var numbers = new ArrayList<Integer>();
+					final var bundle = bundles[choose - 1];
+					final var path = bundle.getSecond();
+					final var file = new File(loader.getResource(path).getFile());
+					fillMemoryData(numbers);
+					final var debugLevel = find_DebugLevel();
+					final var isStepByStep = find_stepShow();
+					Test.testCase(isStepByStep, debugLevel, numbers, file);
+				}
 			} else if (choice == 0) {
 				System.out.println("Good Bye");
 				break;
@@ -81,13 +114,13 @@ public class Main {
 	public static void fillMemoryData(ArrayList<Integer> array) {
 		array.add(0);
 		while (true) {
-			if (!yesNo("Do you like to add number to mem?", false)) {
+			System.out.print("please Enter number: ");
+			array.add(scanner.nextInt());
+			array.set(0, array.get(0) + 1);
+
+			if (!yesNo("add another number to mem?", false)) {
 				array.add(-1);
 				return;
-			} else {
-				System.out.print("please Enter number: ");
-				array.add(scanner.nextInt());
-				array.set(0, array.get(0) + 1);
 			}
 		}
 	}

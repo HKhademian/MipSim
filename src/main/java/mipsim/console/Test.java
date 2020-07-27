@@ -122,10 +122,14 @@ public class Test {
 		);
 	}
 
-	public static void readFile(boolean stepByStep, int debugLevel, List<Integer> memoryData) {
+	public static void testFile(boolean stepByStep, int debugLevel, List<Integer> memoryData) {
 		System.out.println("Please enter mips inst file to run:");
 		final var fileName = Main.scanner.nextLine();
-		final var instructions = FilesKt.readLines(new File(fileName), Charsets.UTF_8);
+		testCase(stepByStep, debugLevel, memoryData, FilesKt.readLines(new File(fileName), Charsets.UTF_8));
+	}
+
+	public static void testCase(boolean stepByStep, int debugLevel, List<Integer> memoryData, File instructionFile) {
+		final var instructions = FilesKt.readLines(instructionFile, Charsets.UTF_8);
 		testCase(stepByStep, debugLevel, memoryData, instructions);
 	}
 
@@ -141,11 +145,10 @@ public class Test {
 		}
 
 		final var insts = new ArrayList<>(instructions);
-		insts.add(NOP);
-		insts.add(NOP);
-		insts.add(NOP);
-		insts.add(NOP);
-		insts.add(HALT);
+		for (var i = 0; i < 5; i++)
+			insts.add(NOP);
+		for (var i = 0; i < 10; i++)
+			insts.add(HALT);
 
 		System.out.println("Warm up simulator");
 

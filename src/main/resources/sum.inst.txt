@@ -16,7 +16,7 @@ addi $1,$1,4
 ;$5=*array
 lw $5,0($1)
 ; sum+=$5
-addi $3,$3,$5
+add $3,$3,$5
 ; $2+=1
 addi $2,$2,1
 ;jumpTo jmp
