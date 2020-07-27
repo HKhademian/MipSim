@@ -13,7 +13,7 @@ public class Main {
 			return !scanner.nextLine().toLowerCase().equals("n");
 		} else {
 			System.out.print("([y]es/[N]o)");
-			return !scanner.nextLine().toLowerCase().equals("y");
+			return scanner.nextLine().toLowerCase().equals("y");
 		}
 	}
 
