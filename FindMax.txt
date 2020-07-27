@@ -1,0 +1,21 @@
+addi $1,$zero,20
+lw $2,0($1)
+addi $1,$1,1
+lw $3,0($1)
+addi $4,$zero,1
+jmp:
+beq $4,$2,
+addi $1,$1,1
+lw $4,0($1)
+slt $7,$3,$4
+beq $7,$zero,
+addi $3,$4,0
+
+addi $2,$2,1
+j jmp
+NOP
+NOP
+NOP
+NOP
+NOP
+halt

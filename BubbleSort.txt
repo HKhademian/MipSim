@@ -1,0 +1,38 @@
+addi $1,$zero,20
+addi $2,$zero,0
+lw $4,0($1)
+
+addi $4,$4,-1
+jmp:
+beq $2,$4,
+
+addi $3,$zero,0
+addi $9,$4,-1
+sub  $9,$9,$2
+jmp3
+beq  $3,$9,
+addi $1,$1,1
+lw $5,0($1)
+addi $1,$1,1
+lw $6,0($1)
+slt $7,$6,$5
+beq $7,$zero,
+addi $8,$6,0
+addi $6,$5,0
+addi $5,$8,0
+addi $1,$1,-1
+sw $5,0($1)
+addi$1,$1,1
+sw $6,0($1)
+addi $3,$3,1
+j jmp3
+
+addi $2,$2,1
+j jmp
+NOP
+NOP
+NOP
+NOP
+NOP
+NOP
+halt
