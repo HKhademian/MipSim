@@ -9,6 +9,7 @@ import sim.tool.DebugWriter
 import sim.tool.keepSource
 import sim.tool.println
 import sim.tool.test
+import java.lang.Integer.min
 import kotlin.math.log2
 import kotlin.test.assertEquals
 
@@ -106,15 +107,22 @@ fun writeBulkOnMemory(clock: Value, write: MutableValue, writeData: List<Mutable
 /**
  * read all values in memory block
  */
-fun readBulkOnMemory(clock: Value, write: MutableValue, select: List<Value>, readData: List<Value>): List<Int> {
+fun readBulkOnMemory(
+	clock: Value,
+	write: MutableValue,
+	select: List<Value>,
+	readData: List<Value>,
+	max: Int
+): List<Int> {
 	return clock.keepSource(mut(false, "LocalClock")) { _, _, localClock ->
 		write.keepSource(mut(false, "LocalWrite")) { _, _, localWrite ->
 			select.keepSource(bus(select.size, "LocalSelect")) { _, _, localSelect ->
 
 				localWrite.reset()
 
+				val count = min(max, 1 shl select.size)
 				// do bulk write
-				(0 until (1 shl select.size)).map { i ->
+				(0 until count).map { i ->
 					localSelect.set(i)
 					localClock.reset()
 					readData.toInt()
@@ -155,8 +163,8 @@ class RealMemory(private val wordCount: Int, private val additionalReader: Boole
 	}
 
 	/** read all values in memory flipflops before simulate */
-	fun bulkRead(): List<Int> =
-		readBulkOnMemory(clock, write, writeSelect, readData)
+	fun bulkRead(count: Int): List<Int> =
+		readBulkOnMemory(clock, write, writeSelect, readData, count)
 
 	/** write given values to memory flipflops before simulate */
 	fun bulkWrite(values: List<Int>) =
@@ -191,14 +199,15 @@ class RealMemory(private val wordCount: Int, private val additionalReader: Boole
 
 
 	override fun writeDebug(buffer: StringBuffer) {
-		val values = bulkRead()
 		val wordCount = this.wordCount
-		for (i in 0 until Integer.min(10, wordCount)) {
+		val count = min(16, wordCount)
+		val values = bulkRead(count)
+		values.forEachIndexed { i, it ->
 			buffer
 				.append("WORD#")
 				.append(i)
 				.append("=")
-				.append(Integer.toHexString(values[i]))
+				.append(Integer.toHexString(it))
 				.append("\t\t")
 		}
 	}
@@ -361,7 +370,7 @@ private fun testBulkReadWrite() {
 	val write = mut(false, "Write")
 	val writeData = bus(8, "WriteData")
 	val select = bus(3, "Select")
-	val (blocks, readData) = memoryWithDecoder(clock, write, select, writeData)
+	val (_, readData) = memoryWithDecoder(clock, write, select, writeData)
 
 	writeBulkOnMemory(clock, write, writeData, select, readData, (1..8).toList())
 
@@ -373,5 +382,5 @@ private fun testBulkReadWrite() {
 	readData.println()
 	assertEquals(readData.toInt(), 4)
 
-	readBulkOnMemory(clock, write, select, readData).println()
+	readBulkOnMemory(clock, write, select, readData, 10).println()
 }

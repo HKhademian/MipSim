@@ -36,7 +36,7 @@ class RegisterFileUnit(clock: Value) : Eval, DebugWriter {
 	}
 
 	override fun writeDebug(buffer: StringBuffer) {
-		val values = _memory.bulkRead()
+		val values = _memory.bulkRead(32)
 		for (i in 0..31) {
 			val value: Int = values[i]
 			buffer.append(String.format("$%d=%04xH ", i, value))
