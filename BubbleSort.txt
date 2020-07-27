@@ -11,18 +11,18 @@ addi $9,$4,-1
 sub  $9,$9,$2
 jmp3
 beq  $3,$9,
-addi $1,$1,1
+addi $1,$1,4
 lw $5,0($1)
-addi $1,$1,1
+addi $1,$1,4
 lw $6,0($1)
 slt $7,$6,$5
 beq $7,$zero,
 addi $8,$6,0
 addi $6,$5,0
 addi $5,$8,0
-addi $1,$1,-1
+addi $1,$1,-4
 sw $5,0($1)
-addi$1,$1,1
+addi$1,$1,4
 sw $6,0($1)
 addi $3,$3,1
 j jmp3

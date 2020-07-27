@@ -1,11 +1,11 @@
 addi $1,$zero,20
 lw $2,0($1)
-addi $1,$1,1
+addi $1,$1,4
 lw $3,0($1)
 addi $4,$zero,1
 jmp:
 beq $4,$2,
-addi $1,$1,1
+addi $1,$1,4
 lw $4,0($1)
 j mul
 xxx
