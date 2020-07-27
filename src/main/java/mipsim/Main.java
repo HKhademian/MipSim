@@ -23,6 +23,7 @@ public class Main {
 				final var numbers = new ArrayList<Integer>();
 				final var debugLevel = find_DebugLevel();
 				final var isStepByStep = find_stepShow();
+
 				if (find_heWantToSaveInMemory()) {
 					fillMemoryData(numbers);
 				}
@@ -62,17 +63,19 @@ public class Main {
 		System.out.println("1.Easy");
 		System.out.println("2.medium");
 		System.out.println("3.advance");
-		return scanner.nextInt();
+		int result = scanner.nextInt();
+		scanner.nextLine();
+		return result;
 	}
 
 	public static boolean find_stepShow() {
-		System.out.print("Do you like to see step by step of code that you Run in Cpu ? (yes/No)");
-		return scanner.nextLine().equals("y");
+		System.out.println("Do you like to see step by step of code that you Run in Cpu ? (yes/No)");
+		return scanner.nextLine().toLowerCase().equals("yes");
 	}
 
 	public static boolean find_heWantToSaveInMemory() {
-		System.out.print("Do you like to save some information in memory? (yes/No)");
-		return scanner.nextLine().equals("y");
+		System.out.println("Do you like to save some information in memory? (yes/No)");
+		return scanner.nextLine().toLowerCase().equals("yes");
 	}
 
 	public static void fillMemoryData(ArrayList<Integer> array) {

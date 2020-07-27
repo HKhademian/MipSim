@@ -117,8 +117,7 @@ public class Test {
 			"slt  $3,$1,$2",
 			"beq  $3,$zero,-3",
 			NOP,
-			NOP,
-			"j 0"
+			NOP
 		);
 	}
 
