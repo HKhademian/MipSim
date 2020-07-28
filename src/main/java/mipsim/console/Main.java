@@ -72,26 +72,15 @@ public final class Main {
 			System.out.println(String.format("%01d) %s", 0, "Back to menu"));
 			choose = Console.askInteger("please choose program to run:", 0);
 			if (choose < 0 || choose > Console.bundles.length) continue;
-			if (choose != 0) {
-				final var bundle = Console.bundles[choose - 1];
-				final var numbers = new ArrayList<Integer>();
-				fillMemoryData(numbers);
-				final var debugLevel = find_DebugLevel();
-				final var isStepByStep = find_stepShow();
-				Test.testBundle(bundle, isStepByStep, debugLevel, numbers);
-			}
 			break;
 		}
 		if (choose != 0) {
-			final var loader = ClassLoader.getSystemClassLoader();
-			final var numbers = new ArrayList<Integer>();
 			final var bundle = Console.bundles[choose - 1];
-			final var path = bundle.getSecond();
-			final var file = new File(loader.getResource(path).getFile());
+			final var numbers = new ArrayList<Integer>();
 			fillMemoryData(numbers);
 			final var debugLevel = find_DebugLevel();
 			final var isStepByStep = find_stepShow();
-			Test.testCase(isStepByStep, debugLevel, numbers, file);
+			Test.testBundle(bundle, isStepByStep, debugLevel, numbers);
 		}
 	}
 
