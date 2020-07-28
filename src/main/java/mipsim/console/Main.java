@@ -116,6 +116,7 @@ public final class Main {
 		while (true) {
 			System.out.print("please Enter number: ");
 			array.add(scanner.nextInt());
+			scanner.nextLine();
 			array.set(0, array.get(0) + 1);
 
 			if (!yesNo("add another number to mem?", false)) {
