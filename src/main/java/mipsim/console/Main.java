@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public final class Main {
 	private static final Pair<String, String> bundles[] = new Pair[]{
-		new Pair<>("Sum", "sum.inst.txt"),
+		new Pair<>("Sum", "sum.asm"),
 		new Pair<>("Max", "max.inst.txt"),
 		new Pair<>("Fac", "fac.inst.txt"),
 		new Pair<>("Fib", "fibo.inst.txt"),
