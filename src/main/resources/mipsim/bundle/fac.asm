@@ -1,21 +1,21 @@
-addi $1,$zero,20
+addi $1,$zero,0
 lw $2,0($1)
 addi $1,$1,4
 lw $3,0($1)
 addi $4,$zero,1
-jmp:
-beq $4,$2,
+beq $4,$2,11
 addi $1,$1,4
 lw $4,0($1)
-j mul
-xxx
+j 13
 addi $3,$4,$3
 addi $2,$2,1
-j jmp
-mul:
+j 6
 addi $7,$zero,0
-yyy:
-beq  $7,$4,xxx
+beq  $7,$4,-4
 addi $3,$3,$3
 addi $7,$7,1
-j yyy
+j 14
+NOP
+NOP
+NOP
+NOP
