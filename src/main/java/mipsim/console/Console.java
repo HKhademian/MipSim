@@ -8,11 +8,11 @@ public final class Console {
 	public static final Scanner scanner = new Scanner(System.in);
 
 	public static final Pair<String, String>[] bundles = new Pair[]{
-		new Pair<>("Sum(numbers)", "sum.asm"),
-		new Pair<>("Maximum(numbers)", "max.asm"),
-		new Pair<>("Factorial(n)", "fac.asm"),
-		new Pair<>("Fibonacci(n)", "fibo.asm"),
-		new Pair<>("BubbleSort(numbers)", "sort.asm"),
+		new Pair<>("Sum(numbers)", "mipsim/bundle/sum.asm"),
+		new Pair<>("Maximum(numbers)", "mipsim/bundle/max.asm"),
+		new Pair<>("Factorial(n)", "mipsim/bundle/fac.asm"),
+		new Pair<>("Fibonacci(n)", "mipsim/bundle/fibo.asm"),
+		new Pair<>("BubbleSort(numbers)", "mipsim/bundle/sort.asm"),
 	};
 
 	public static boolean askYesNo(final String message, boolean def) {
