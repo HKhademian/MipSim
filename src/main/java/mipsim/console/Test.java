@@ -15,7 +15,7 @@ import static mipsim.sim.ParserKt.NOP;
 
 public class Test {
 	public static void test(boolean stepByStep, int debugLevel, List<Integer> memoryData) {
-		boolean repeat = true;
+		var repeat = true;
 		while (repeat) {
 			System.out.println("\n\nDo you like to test it's power.?\n1.I like to see rType function with" +
 				" hazard\n2.Do you like to see how can I sw and lw in memory and I detect Lw hazard for you\n" +
@@ -25,7 +25,7 @@ public class Test {
 
 				"\n0.Back to before stage.");
 
-			switch (Main.scanner.nextInt()) {
+			switch (Main.askInteger("Enter your tasl: ", -1)) {
 				case 0 -> repeat = false;
 				case 1 -> testOne(stepByStep, debugLevel, memoryData);
 				case 2 -> testTwo(stepByStep, debugLevel, memoryData);
@@ -149,6 +149,8 @@ public class Test {
 	}
 
 	public static void testCase(boolean stepByStep, int debugLevel, List<Integer> memoryData, List<String> instructions) {
+		final var simulator = new Simulator();
+
 		System.out.println("Running following instructions: ");
 		for (var i = 0; i < instructions.size(); i++) {
 			System.out.println(String.format("%02d) %s", i + 1, instructions.get(i)));
@@ -162,9 +164,9 @@ public class Test {
 
 		System.out.println("Warm up simulator");
 
-		final var simulator = new Simulator();
 		simulator.loadInstructions(insts);
-		simulator.loadDataMemory(memoryData);
+		if (memoryData != null)
+			simulator.loadDataMemory(memoryData);
 
 		System.out.println("Please Enter to run processor: ");
 		Main.scanner.nextLine();

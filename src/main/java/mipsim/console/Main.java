@@ -17,8 +17,8 @@ public final class Main {
 
 	public static final Scanner scanner = new Scanner(System.in);
 
-	public static boolean yesNo(final String message, boolean def) {
-		System.out.print(message);
+	public static boolean askYesNo(final String message, boolean def) {
+		if (message != null) System.out.print(message);
 		if (def) {
 			System.out.print("([Y]es/[n]o)");
 			return !scanner.nextLine().toLowerCase().equals("n");
@@ -28,107 +28,128 @@ public final class Main {
 		}
 	}
 
+	public static Integer askInteger(final String message, Integer def) {
+		if (message != null) System.out.print(message);
+		try {
+			return Integer.parseInt(scanner.nextLine());
+		} catch (Exception ignored) {
+		}
+		return def;
+	}
+
 	//todo: plz make me
 	public static void main(String... args) {
 		System.out.println("*** MipSim ***");
 		System.out.println("Welcome to Mips Gate-Level Multi-Cycle Real Simulator");
 		System.out.println();
 
-		while (true) {
+		boolean loop = true;
+		while (loop) {
 			System.out.println("1. Run a pre baked program examples/testCases");
 			System.out.println("2. Run your Own code from File");
 			System.out.println("3. Run Bundled Programs");
 			System.out.println("0. Exit from Program");
 			System.out.println("---------");
-			System.out.print("Print enter your command: ");
-			var choice = scanner.nextInt();
-			if (choice == 1) {
-				final var numbers = new ArrayList<Integer>();
-				final var debugLevel = find_DebugLevel();
-				final var isStepByStep = find_stepShow();
-
-				if (find_heWantToSaveInMemory()) {
-					fillMemoryData(numbers);
-				}
-				Test.test(isStepByStep, debugLevel, numbers);
-
-			} else if (choice == 2) {
-				final var numbers = new ArrayList<Integer>();
-				final var debugLevel = find_DebugLevel();
-				final var isStepByStep = find_stepShow();
-				if (find_heWantToSaveInMemory()) {
-					fillMemoryData(numbers);
-				}
-				Test.testFile(isStepByStep, debugLevel, numbers);
-			} else if (choice == 3) {
-				int choose;
-				while (true) {
-					for (var i = 0; i < bundles.length; i++) {
-						final var bundle = bundles[i];
-						System.out.println(String.format("%01d) %s", i + 1, bundle.getFirst()));
+			boolean ask = true;
+			while (ask) {
+				switch (askInteger("Print enter your command: ", -1)) {
+					case 0 -> {
+						ask = false;
+						loop = false;
 					}
-					System.out.println(String.format("%01d) %s", 0, "Back to menu"));
-					choose = scanner.nextInt();
-					scanner.nextLine();
-					if (choose < 0 || choose > bundles.length) continue;
-					if (choose != 0) {
-						final var bundle = bundles[choose - 1];
-						final var numbers = new ArrayList<Integer>();
-						fillMemoryData(numbers);
-						final var debugLevel = find_DebugLevel();
-						final var isStepByStep = find_stepShow();
-						Test.testBundle(bundle, isStepByStep, debugLevel, numbers);
+					case 1 -> {
+						ask = false;
+						runTest();
 					}
-					break;
+					case 2 -> {
+						ask = false;
+						runFile();
+					}
+					case 3 -> {
+						ask = false;
+						runProgram();
+					}
 				}
-				if (choose != 0) {
-					final var loader = ClassLoader.getSystemClassLoader();
-					final var numbers = new ArrayList<Integer>();
-					final var bundle = bundles[choose - 1];
-					final var path = bundle.getSecond();
-					final var file = new File(loader.getResource(path).getFile());
-					fillMemoryData(numbers);
-					final var debugLevel = find_DebugLevel();
-					final var isStepByStep = find_stepShow();
-					Test.testCase(isStepByStep, debugLevel, numbers, file);
-				}
-			} else if (choice == 0) {
-				System.out.println("Good Bye");
-				break;
-			} else {
-				System.out.println("Wrong Input!");
 			}
+		}
+		System.out.println("Good Bye");
+	}
+
+	public static void runTest() {
+		final var numbers = new ArrayList<Integer>();
+		final var debugLevel = find_DebugLevel();
+		final var isStepByStep = find_stepShow();
+		if (find_heWantToSaveInMemory()) {
+			fillMemoryData(numbers);
+		}
+		Test.test(isStepByStep, debugLevel, numbers);
+	}
+
+	public static void runFile() {
+		final var numbers = new ArrayList<Integer>();
+		final var debugLevel = find_DebugLevel();
+		final var isStepByStep = find_stepShow();
+		if (find_heWantToSaveInMemory()) {
+			fillMemoryData(numbers);
+		}
+		Test.testFile(isStepByStep, debugLevel, numbers);
+	}
+
+	public static void runProgram() {
+		int choose;
+		while (true) {
+			for (var i = 0; i < bundles.length; i++) {
+				final var bundle = bundles[i];
+				System.out.println(String.format("%01d) %s", i + 1, bundle.getFirst()));
+			}
+			System.out.println(String.format("%01d) %s", 0, "Back to menu"));
+			choose = askInteger("please choose program to run:", 0);
+			if (choose < 0 || choose > bundles.length) continue;
+			if (choose != 0) {
+				final var bundle = bundles[choose - 1];
+				final var numbers = new ArrayList<Integer>();
+				fillMemoryData(numbers);
+				final var debugLevel = find_DebugLevel();
+				final var isStepByStep = find_stepShow();
+				Test.testBundle(bundle, isStepByStep, debugLevel, numbers);
+			}
+			break;
+		}
+		if (choose != 0) {
+			final var loader = ClassLoader.getSystemClassLoader();
+			final var numbers = new ArrayList<Integer>();
+			final var bundle = bundles[choose - 1];
+			final var path = bundle.getSecond();
+			final var file = new File(loader.getResource(path).getFile());
+			fillMemoryData(numbers);
+			final var debugLevel = find_DebugLevel();
+			final var isStepByStep = find_stepShow();
+			Test.testCase(isStepByStep, debugLevel, numbers, file);
 		}
 	}
 
 	public static int find_DebugLevel() {
-		System.out.println("please choice Debug level:");
-		System.out.println("1.Easy");
-		System.out.println("2.medium");
-		System.out.println("3.advance");
-		int result = scanner.nextInt();
-		scanner.nextLine();
-		return result;
+		System.out.println("--- Debug Levels ---");
+		System.out.println("1. Easy   : ");
+		System.out.println("2. medium : ");
+		System.out.println("3. advance: ");
+		return askInteger("please choice Debug level:", 0);
 	}
 
 	public static boolean find_stepShow() {
-		return yesNo("Do you like to see step by step of code that you Run in Cpu ?", false);
+		return askYesNo("Do you like to see step by step of code that you Run in Cpu ?", false);
 	}
 
 	public static boolean find_heWantToSaveInMemory() {
-		return yesNo("Do you like to save some information in memory?", false);
+		return askYesNo("Do you like to save some information in memory?", false);
 	}
 
 	public static void fillMemoryData(ArrayList<Integer> array) {
 		array.add(0);
 		while (true) {
-			System.out.print("please Enter a number or empty to end: ");
-			try {
-				var inp = Integer.parseInt(scanner.nextLine());
-				array.add(inp);
-			} catch (Exception ex) {
-				break;
-			}
+			var res = askInteger("please Enter a number or empty to end: ", null);
+			if (res == null) break;
+			array.add(res);
 		}
 		array.set(0, array.size() - 1);
 	}
