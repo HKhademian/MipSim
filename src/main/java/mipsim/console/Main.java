@@ -61,16 +61,24 @@ public final class Main {
 				}
 				Test.testFile(isStepByStep, debugLevel, numbers);
 			} else if (choice == 3) {
-				for (var i = 0; i < bundles.length; i++) {
-					final var bundle = bundles[i];
-					System.out.println(String.format("%01d) %s", i + 1, bundle.getFirst()));
-				}
-				System.out.println(String.format("%01d) %s", 0, "Back to menu"));
 				int choose;
 				while (true) {
+					for (var i = 0; i < bundles.length; i++) {
+						final var bundle = bundles[i];
+						System.out.println(String.format("%01d) %s", i + 1, bundle.getFirst()));
+					}
+					System.out.println(String.format("%01d) %s", 0, "Back to menu"));
 					choose = scanner.nextInt();
 					scanner.nextLine();
 					if (choose < 0 || choose > bundles.length) continue;
+					if (choose != 0) {
+						final var bundle = bundles[choose - 1];
+						final var numbers = new ArrayList<Integer>();
+						fillMemoryData(numbers);
+						final var debugLevel = find_DebugLevel();
+						final var isStepByStep = find_stepShow();
+						Test.testBundle(bundle, isStepByStep, debugLevel, numbers);
+					}
 					break;
 				}
 				if (choose != 0) {
@@ -114,17 +122,14 @@ public final class Main {
 	public static void fillMemoryData(ArrayList<Integer> array) {
 		array.add(0);
 		while (true) {
-			System.out.print("please Enter number: ");
-			array.add(scanner.nextInt());
-			scanner.nextLine();
-			array.set(0, array.get(0) + 1);
-
-			if (!yesNo("add another number to mem?", false)) {
-				array.add(-1);
-				return;
+			System.out.print("please Enter a number or empty to end: ");
+			try {
+				var inp = Integer.parseInt(scanner.nextLine());
+				array.add(inp);
+			} catch (Exception ex) {
+				break;
 			}
 		}
+		array.set(0, array.size() - 1);
 	}
 }
-
-//"7.Okey I'm good horse you can run any program that you like to run please Entere name of your file\n" +

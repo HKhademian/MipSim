@@ -1,5 +1,6 @@
 package mipsim.console;
 
+import kotlin.Pair;
 import kotlin.io.FilesKt;
 import kotlin.text.Charsets;
 import mipsim.sim.Simulator;
@@ -121,6 +122,15 @@ public class Test {
 			NOP
 		);
 	}
+
+
+	public static void testBundle(Pair<String, String> bundle, boolean stepByStep, int debugLevel, List<Integer> memoryData) {
+		final var loader = ClassLoader.getSystemClassLoader();
+		final var path = bundle.getSecond();
+		final var file = new File(loader.getResource(path).getFile());
+		Test.testCase(stepByStep, debugLevel, memoryData, file);
+	}
+
 
 	public static void testFile(boolean stepByStep, int debugLevel, List<Integer> memoryData) {
 		System.out.println("Please enter mips inst file to run:");
