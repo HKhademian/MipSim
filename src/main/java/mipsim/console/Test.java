@@ -25,7 +25,7 @@ public class Test {
 
 				"\n0.Back to before stage.");
 
-			switch (Main.askInteger("Enter your tasl: ", -1)) {
+			switch (Console.askInteger("Enter your tasl: ", -1)) {
 				case 0 -> repeat = false;
 				case 1 -> testOne(stepByStep, debugLevel, memoryData);
 				case 2 -> testTwo(stepByStep, debugLevel, memoryData);
@@ -134,7 +134,7 @@ public class Test {
 
 	public static void testFile(boolean stepByStep, int debugLevel, List<Integer> memoryData) {
 		System.out.println("Please enter mips inst file to run:");
-		final var fileName = Main.scanner.nextLine();
+		final var fileName = Console.scanner.nextLine();
 		testCase(stepByStep, debugLevel, memoryData, FilesKt.readLines(new File(fileName), Charsets.UTF_8));
 	}
 
@@ -169,7 +169,7 @@ public class Test {
 			simulator.loadDataMemory(memoryData);
 
 		System.out.println("Please Enter to run processor: ");
-		Main.scanner.nextLine();
+		Console.scanner.nextLine();
 
 		simulator.run(debugLevel, stepByStep);
 	}

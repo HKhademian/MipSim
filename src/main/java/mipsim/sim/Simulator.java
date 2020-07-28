@@ -1,14 +1,13 @@
 package mipsim.sim;
 
 import mipsim.Processor;
-import mipsim.sim.ParserKt;
+import mipsim.console.Console;
 import sim.base.BusKt;
 import sim.tool.DebugKt;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 import static sim.tool.TestKt.testOn;
 
@@ -45,16 +44,12 @@ public class Simulator {
 
 	public void run(int debugLevel, boolean stepByStep) {
 		DebugKt.println(processor.instructionMemory);
+		testOn(processor.dataMemory, "dataMemory");
 
 		for (var i = 0; i < 100; i++) {
 			if (runStep(i, debugLevel)) break;
 
-			if (stepByStep) {
-				System.out.println("If you want to close program Enter? y");
-
-				var exite = new Scanner(System.in).nextLine().equals("y");
-				if (exite) break;
-			}
+			if (stepByStep && !Console.askYesNo("Do tou want to continue?", true)) break;
 		}
 
 		testOn(processor.dataMemory, "dataMemory");
