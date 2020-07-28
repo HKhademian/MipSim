@@ -1,6 +1,7 @@
 package mipsim.console;
 
-import java.io.File;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public final class Main {
@@ -100,10 +101,10 @@ public final class Main {
 		return Console.askYesNo("Do you like to save some information in memory?", false);
 	}
 
-	public static void fillMemoryData(ArrayList<Integer> array) {
+	public static void fillMemoryData(@NotNull ArrayList<Integer> array) {
 		array.add(0);
 		while (true) {
-			var res = Console.askInteger("please Enter a number or empty to end: ", null);
+			var res = Console.askInteger("please Enter number #" + array.size() + " or empty to end: ", null);
 			if (res == null) break;
 			array.add(res);
 		}

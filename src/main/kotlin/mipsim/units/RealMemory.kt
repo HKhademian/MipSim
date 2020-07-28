@@ -11,7 +11,8 @@ import sim.tool.println
 import sim.tool.test
 import java.lang.Integer.min
 import kotlin.math.log2
-import kotlin.test.assertEquals
+//import kotlin.test.assertEquals
+import sim.tool.assertEquals
 
 fun memoryBlock(writeEnabled: Value, writeData: List<Value>): List<Value> =
 	flipflopRE(writeEnabled, writeData)
