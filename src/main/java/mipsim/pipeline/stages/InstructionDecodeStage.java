@@ -128,6 +128,10 @@ public class InstructionDecodeStage extends Stage {
 
 		//set shift
 		BusKt.set((List) IDEX.shiftMa, shiftMa);
+
+		//DEBUG
+		BusKt.set((List) IDEX.pc, ifid.pc);
+		BusKt.set((List) IDEX.instruction, ifid.instruction);
 	}
 
 	/**

@@ -13,9 +13,14 @@ import sim.tool.DebugWriter;
 
 import java.util.List;
 
+import static sim.base.GateKt.nor;
+import static sim.base.GateKt.or;
+
 public class Processor implements Eval, DebugWriter {
 	public List<? extends MutableValue> currentState = BusKt.bus(0);
 	public List<? extends MutableValue> nextState = BusKt.bus(0);
+
+	public final Value done;
 
 	public final Value clock;
 	public final InstructionMemoryUnit instructionMemory;
@@ -37,6 +42,7 @@ public class Processor implements Eval, DebugWriter {
 	public final MEMWB_PipelineRegister memwb;
 
 	public Processor() {
+		done = ValueKt.mut(false);
 		clock = ValueKt.mut(false);
 
 		instructionMemory = new InstructionMemoryUnit(clock, 1024);
@@ -65,6 +71,14 @@ public class Processor implements Eval, DebugWriter {
 	}
 
 	public void init() {
+		((MutableValue) done).set(nor(
+			or(instructionMemory.instruction),
+			or(ifid.instruction),
+			or(idex.instruction),
+			or(exmem.instruction),
+			or(memwb.instruction)
+		));
+
 		// pc.init()
 		ifStage.init();
 		idStage.init();
@@ -114,18 +128,38 @@ public class Processor implements Eval, DebugWriter {
 	public void writeDebug(@NotNull StringBuffer buffer) {
 		{
 			final var pc = BusKt.toInt(this.wbif.pc);
-			buffer.append(String.format("pc in if: %04xH\n", pc));
-		}
-
-		{
 			final var instBin = BusKt.toInt(instructionMemory.instruction);
 			final var instStr = ParserKt.parseBinToInstruction(instBin);
-			buffer.append(String.format("inst in mem: %08xH = ' %s '\n", instBin, instStr));
+			buffer.append(String.format("pc in   if: %04xH\t", pc));
+			buffer.append(String.format("inst in   mem: %08xH = ' %s '\n", instBin, instStr));
 		}
 		{
+			final var pc = BusKt.toInt(ifid.pc);
 			final var instBin = BusKt.toInt(ifid.instruction);
 			final var instStr = ParserKt.parseBinToInstruction(instBin);
-			buffer.append(String.format("inst in ifid: %08xH = ' %s '\n", instBin, instStr));
+			buffer.append(String.format("pc in  ifid: %04xH\t", pc));
+			buffer.append(String.format("inst in  ifid: %08xH = ' %s '\n", instBin, instStr));
+		}
+		{
+			final var pc = BusKt.toInt(idex.pc);
+			final var instBin = BusKt.toInt(idex.instruction);
+			final var instStr = ParserKt.parseBinToInstruction(instBin);
+			buffer.append(String.format("pc in  idex: %04xH\t", pc));
+			buffer.append(String.format("inst in  idex: %08xH = ' %s '\n", instBin, instStr));
+		}
+		{
+			final var pc = BusKt.toInt(exmem.pc);
+			final var instBin = BusKt.toInt(exmem.instruction);
+			final var instStr = ParserKt.parseBinToInstruction(instBin);
+			buffer.append(String.format("pc in exmem: %04xH\t", pc));
+			buffer.append(String.format("inst in exmem: %08xH = ' %s '\n", instBin, instStr));
+		}
+		{
+			final var pc = BusKt.toInt(memwb.pc);
+			final var instBin = BusKt.toInt(memwb.instruction);
+			final var instStr = ParserKt.parseBinToInstruction(instBin);
+			buffer.append(String.format("pc in memwb: %04xH\t", pc));
+			buffer.append(String.format("inst in memwb: %08xH = ' %s '\n", instBin, instStr));
 		}
 
 		DebugKt.writeTo(registerFile, buffer);

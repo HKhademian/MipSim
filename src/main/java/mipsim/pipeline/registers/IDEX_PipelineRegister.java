@@ -9,8 +9,7 @@ import sim.base.ValueKt;
 import java.util.List;
 
 public final class IDEX_PipelineRegister extends PipelineRegister<IDEX_PipelineRegister> {
-	public static final int SIZE = 165;
-
+	public static final int SIZE = 165+64;
 
 	//all control flag will be passed to pipeline
 
@@ -57,6 +56,10 @@ public final class IDEX_PipelineRegister extends PipelineRegister<IDEX_PipelineR
 
 	public final Value bne = memory.get(163);
 	public final Value shift16 = memory.get(164);
+
+	// DEBUG purpos only
+	public final List<? extends Value> pc = BusKt.slice(memory, 165, 165+32);//this will be 32 bit for the branch and jump
+	public final List<? extends Value> instruction = BusKt.slice(memory, 165+32, 165+64);
 
 	private IDEX_PipelineRegister(final Processor processor, final IDEX_PipelineRegister next) {
 		super(processor, SIZE, next);

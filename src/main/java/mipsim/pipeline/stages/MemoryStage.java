@@ -36,5 +36,9 @@ public class MemoryStage extends Stage {
 		BusKt.set(DATAMEM.memRead, exmem.memRead);
 
 		BusKt.set((List) MEMWB.memoryData, dataMem.readData);
+
+		//DEBUG
+		BusKt.set((List) MEMWB.pc, exmem.pc);
+		BusKt.set((List) MEMWB.instruction, exmem.instruction);
 	}
 }

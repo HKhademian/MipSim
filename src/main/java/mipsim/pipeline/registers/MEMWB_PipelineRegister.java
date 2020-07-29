@@ -8,7 +8,7 @@ import sim.base.Value;
 import java.util.List;
 
 public final class MEMWB_PipelineRegister extends PipelineRegister<MEMWB_PipelineRegister> {
-	public static final int SIZE = 71;
+	public static final int SIZE = 71 + 64;
 
 
 	//all control flag will be passed to pipeline
@@ -27,6 +27,9 @@ public final class MEMWB_PipelineRegister extends PipelineRegister<MEMWB_Pipelin
 	//this would be register code that will be write on it,5 bit
 	public final List<? extends Value> rdRegister = BusKt.slice(memory, 66, 71);
 
+	// DEBUG purpos only
+	public final List<? extends Value> pc = BusKt.slice(memory, 71, 71 + 32);//this will be 32 bit for the branch and jump
+	public final List<? extends Value> instruction = BusKt.slice(memory, 71 + 32, 71 + 64);
 
 	private MEMWB_PipelineRegister(final Processor processor, final MEMWB_PipelineRegister next) {
 		super(processor, SIZE, next);

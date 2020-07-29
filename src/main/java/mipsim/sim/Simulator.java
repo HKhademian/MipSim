@@ -44,10 +44,18 @@ public class Simulator {
 	public void run(int debugLevel, boolean stepByStep) {
 		testOn(processor.dataMemory, "dataMemory - before run");
 
-		for (var i = 0; i < 100; i++) {
+		for (var i = 0; ; i++) {
 			if (runStep(i, debugLevel)) break;
 
-			if (stepByStep && !Console.askYesNo("Do tou want to continue?", true)) break;
+			if (i > 128) {
+				System.out.println("too many cycles runned!");
+				break;
+			}
+
+			if (stepByStep && !Console.askYesNo("Do tou want to continue?", true)) {
+				System.out.println("processor stopped by user!");
+				break;
+			}
 		}
 
 		testOn(processor.registerFile, "registerFile - after run");
@@ -58,6 +66,14 @@ public class Simulator {
 		testOn(processor, "clock " + step, () -> {
 			processor.eval(System.nanoTime());
 		});
-		return BusKt.toInt(processor.instructionMemory.instruction) == ParserKt.HALT_BIN;
+		if (BusKt.toInt(processor.instructionMemory.instruction) == ParserKt.HALT_BIN) {
+			System.out.println("Processor Halt!");
+			return true;
+		}
+		if (step > 1 && processor.done.get()) {
+			System.out.println("Processor Done!");
+			return true;
+		}
+		return false;
 	}
 }

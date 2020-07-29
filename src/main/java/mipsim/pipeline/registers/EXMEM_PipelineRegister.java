@@ -8,7 +8,7 @@ import sim.base.Value;
 import java.util.List;
 
 public final class EXMEM_PipelineRegister extends PipelineRegister<EXMEM_PipelineRegister> {
-	public static final int SIZE = 201;
+	public static final int SIZE = 201+64;
 
 	public final List<? extends Value> WB = BusKt.slice(memory, 0, 2);
 	public final Value memToReg = WB.get(0);
@@ -23,6 +23,10 @@ public final class EXMEM_PipelineRegister extends PipelineRegister<EXMEM_Pipelin
 	public final List<? extends Value> writeMem = BusKt.slice(memory, 36, 68);
 
 	public final List<? extends Value> rtRegister = BusKt.slice(memory, 68, 73);
+
+	// DEBUG purpos only
+	public final List<? extends Value> pc = BusKt.slice(memory, 73, 73+32);//this will be 32 bit for the branch and jump
+	public final List<? extends Value> instruction = BusKt.slice(memory, 73+32, 73+64);
 
 	private EXMEM_PipelineRegister(final Processor processor, final EXMEM_PipelineRegister next) {
 		super(processor, SIZE, next);

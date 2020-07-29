@@ -46,8 +46,8 @@ try {
 			attributes["Implementation-Version"] = archiveVersion
 			attributes["Main-Class"] = mainCLass
 		}
-		from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-		// from(main.output.classesDirs, main.compileDependencyFiles)
+//		from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+//		// from(main.output.classesDirs, main.compileDependencyFiles)
 		with(tasks.jar.get() as CopySpec)
 	}
 } catch (_: Throwable) {

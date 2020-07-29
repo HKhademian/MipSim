@@ -104,6 +104,9 @@ public class ExecutionStage extends Stage {
 		BusKt.set((MutableValue) EXMEM.memToReg, idex.memToReg);
 		BusKt.set((List) EXMEM.MEM, idex.MEM);
 
+		//DEBUG
+		BusKt.set((List) EXMEM.pc, idex.pc);
+		BusKt.set((List) EXMEM.instruction, idex.instruction);
 
 	}
 
