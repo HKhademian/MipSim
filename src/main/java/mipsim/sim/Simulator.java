@@ -3,7 +3,6 @@ package mipsim.sim;
 import mipsim.Processor;
 import mipsim.console.Console;
 import sim.base.BusKt;
-import sim.tool.DebugKt;
 
 import java.io.File;
 import java.util.Arrays;
@@ -43,8 +42,7 @@ public class Simulator {
 	}
 
 	public void run(int debugLevel, boolean stepByStep) {
-		DebugKt.println(processor.instructionMemory);
-		testOn(processor.dataMemory, "dataMemory");
+		testOn(processor.dataMemory, "dataMemory - before run");
 
 		for (var i = 0; i < 100; i++) {
 			if (runStep(i, debugLevel)) break;
@@ -52,7 +50,8 @@ public class Simulator {
 			if (stepByStep && !Console.askYesNo("Do tou want to continue?", true)) break;
 		}
 
-		testOn(processor.dataMemory, "dataMemory");
+		testOn(processor.registerFile, "registerFile - after run");
+		testOn(processor.dataMemory, "dataMemory - after run");
 	}
 
 	boolean runStep(int step, int debugLevel) {

@@ -112,15 +112,22 @@ public class Processor implements Eval, DebugWriter {
 
 	@Override
 	public void writeDebug(@NotNull StringBuffer buffer) {
-		final var pc = BusKt.toInt(this.wbif.pc);
-		final var instBin = BusKt.toInt(instructionMemory.instruction);
-		final var instStr = ParserKt.parseBinToInstruction(instBin);
+		{
+			final var pc = BusKt.toInt(this.wbif.pc);
+			buffer.append(String.format("pc in if: %04xH\n", pc));
+		}
 
-		buffer.append(String.format("pc pipe: %04xH\t", pc));
-		buffer.append(String.format("pc inst: %04xH\t", BusKt.toInt(instructionMemory.pc)));
-		buffer.append(String.format("pc ifid: %04xH\n", BusKt.toInt(ifid.pc)));
-		buffer.append(String.format("inst read: %08xH = ' %s '\t", instBin, instStr));
-		buffer.append(String.format("inst ifid: %08xH\n", BusKt.toInt(ifid.instruction)));
+		{
+			final var instBin = BusKt.toInt(instructionMemory.instruction);
+			final var instStr = ParserKt.parseBinToInstruction(instBin);
+			buffer.append(String.format("inst in mem: %08xH = ' %s '\n", instBin, instStr));
+		}
+		{
+			final var instBin = BusKt.toInt(ifid.instruction);
+			final var instStr = ParserKt.parseBinToInstruction(instBin);
+			buffer.append(String.format("inst in ifid: %08xH = ' %s '\n", instBin, instStr));
+		}
+
 		DebugKt.writeTo(registerFile, buffer);
 	}
 

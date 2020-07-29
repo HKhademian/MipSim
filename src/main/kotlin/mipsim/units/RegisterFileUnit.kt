@@ -39,18 +39,19 @@ class RegisterFileUnit(clock: Value) : Eval, DebugWriter {
 		val values = _memory.bulkRead(32)
 		for (i in 0..31) {
 			val value: Int = values[i]
-			buffer.append(String.format("$%d=%04xH ", i, value))
+			buffer.append(String.format("$%-2d=%08xH   ", i, value))
+			if (i % 8 == 7) buffer.appendln()
 		}
-		buffer.append("\n")
-		buffer.append("ReadReg1: ").append(readReg1.toInt()).append("\t")
-		buffer.append("ReadReg2: ").append(readReg2.toInt()).append("\t")
-		buffer.append("WriteReg: ").append(writeReg.toInt()).append("\n")
-		buffer.append("RegWrite: ").append(regWrite).append("\t")
-		buffer.append("ReadData1: ").append(readData1.toInt()).append("\t")
-		buffer.append("ReadData2: ").append(readData2.toInt()).append("\t")
-		buffer.append("WriteData: ").append(writeData.toInt())
-	}
+		buffer.append(String.format("WriteReg: %02d\t", writeReg.toInt()))
+		buffer.append(String.format("WriteData: %d\t", writeData.toInt()))
+		buffer.append(String.format("RegWrite: %d\n", regWrite.toInt()))
 
+		buffer.append(String.format("ReadReg1: %02d\t", readReg1.toInt()))
+		buffer.append(String.format("ReadData1: %d\n", readData1.toInt()))
+
+		buffer.append(String.format("ReadReg2: %02d\t", readReg2.toInt()))
+		buffer.append(String.format("ReadData2: %d\n", readData2.toInt()))
+	}
 }
 
 internal fun main1() {

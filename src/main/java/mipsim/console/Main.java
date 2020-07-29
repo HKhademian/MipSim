@@ -87,14 +87,14 @@ public final class Main {
 
 	public static int find_DebugLevel() {
 		System.out.println("--- Debug Levels ---");
-		System.out.println("1. Easy   : ");
-		System.out.println("2. medium : ");
-		System.out.println("3. advance: ");
+		System.out.print("1. Easy\t");
+		System.out.print("2. medium\t");
+		System.out.println("3. advance");
 		return Console.askInteger("please choice Debug level:", 0);
 	}
 
 	public static boolean find_stepShow() {
-		return Console.askYesNo("Do you like to see step by step of code that you Run in Cpu ?", false);
+		return Console.askYesNo("Do you like to see step by step of code that you Run in Cpu ?", true);
 	}
 
 	public static boolean find_heWantToSaveInMemory() {
